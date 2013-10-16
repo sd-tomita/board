@@ -3,7 +3,7 @@ class AccountController extends Sdx_Controller_Action_Http
 {
     public function createAction()
     {
-        $form = new Sdx_Form();
+        $form = new Sdx_Form();//インスタンスを作成
         $form
                 ->setActionCurrentPage()//アクション先を現在のURLに設定
                 ->setMethodToPost();//メソッドをPOSTに変更
@@ -87,22 +87,3 @@ class AccountController extends Sdx_Controller_Action_Http
         
      }
 }
-class Bd_Orm_Main_Account extends Bd_Orm_Main_Base_Account
-{
-  public static function hashPassword($raw_password)
-  {
-    $salt = 'NoG70PKuxcY6t6c0jgR+675F0y5N5a/aDcjp16R65kI=2eOnXGUJZiaZgnNz7BPlesy5uSr86MGhEuJPD7UP/uE=lMppqWLCZOJYMNtM9w0EAvSGJFDdcTH6Q50By7JFXsE=';
-    $value = '';
-    for($i = 0; $i < 10000; ++$i){
-      $value = hash('sha256', $value . $raw_password . $salt);
-    }
-    return $value;
-  }
- 
-  public function setRawPassword($raw_password)
-  {
-    $this->setPassword(self::hashPassword($raw_password));
-    return $this;
-  }
-}
-?>
