@@ -1,0 +1,23 @@
+model:        Bd_Orm_Main_Thread
+page_name:    Thread
+ 
+form:
+  fields:
+    id:
+      settings:   {label: ID}
+    title:
+      settings:   {label: タイトル}
+ 
+list:
+  per_page:      10
+  display:
+    - label:     編集
+      action:    edit
+    - label:     ID
+      column:    id
+    - label:     タイトル
+      column:    title
+    - label:     登録日時
+      column:    created_at
+    - label:     削除
+      action:    delete
