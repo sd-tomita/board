@@ -59,9 +59,9 @@ class AccountController extends Sdx_Controller_Action_Http
                 if($form->execValidate())
                 {
                 //全てのエラーチェックを通過
-                    $account
+                    $account//ここで値をセットする。
                      ->setLoginId($this->_getParam('login_id'))
-                     ->setPassword($this->_getParam('password'))
+                     ->setRawPassword($this->_getParam('password'))
                      ->setName($this->_getParam('name'));
              
                     $account->save();
