@@ -1,0 +1,3 @@
+secure: true
+acl_list:
+  -  Bd_Acl_Admin
