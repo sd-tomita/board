@@ -19,6 +19,6 @@ class Configuration extends Bd_Configuration
 		//$context->registerAutoloadNamespace('Other');
 		
 		//If you want to enable access control, Remove this comment out.
-		//$context->registerControllerPlugin(new Sdx_Controller_Plugin_AccessControl());
+		$context->registerControllerPlugin(new Sdx_Controller_Plugin_AccessControl());
 	}
 }
