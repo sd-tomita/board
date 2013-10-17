@@ -11,6 +11,7 @@ class Bd_Controller_Action_Helper_Secure extends Sdx_Controller_Action_Helper_Se
 {
 	protected function _getAdapter($id, $password)
 	{
-		return new Bd_Auth_Adapter_($id, $password);
+		return new Bd_Auth_Adapter_Db($id, $password);
+                //見本：require 'Bd/Auth/Adapter/.php';
 	}
 }
