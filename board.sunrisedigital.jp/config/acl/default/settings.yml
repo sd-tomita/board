@@ -4,8 +4,8 @@ forward:
   authentication:
     module:     default
     controller: secure
-    action:     login
+    action:     login # 失敗したときは再度ログインページへ
   authorization:
     module:     default
     controller: secure
-    action:     deny
+    action:     deny # 失敗したときは承認否決ページへ

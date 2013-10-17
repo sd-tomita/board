@@ -1,3 +1,7 @@
-secure: true
-acl_list:
-  -  Bd_Acl_Admin
+secure: false #「認証ユーザーにのみアクセス可能にするか」という設定。ここで認証のON/OFFをコントロールします。
+#acl_list: 
+#  -  Bd_Acl_Admin #アクセスコントロールクラスのリスト。
+
+#本設定ファイルは一番上の階層にあるので、それ以下の階層全てに反映されます。
+#今回はControllerのみへの反映なので、secureはfalseに設定しています。
+#acl_listもこのファイルのものは必要ないので、今回はコメントアウトしています。
