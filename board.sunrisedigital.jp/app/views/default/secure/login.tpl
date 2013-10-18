@@ -19,6 +19,7 @@
             <div class="text-center">
                 <input type="submit" name="submit" name="Login" class="btn btn-success" >
             </div>
+            <div>{$form[$auto_login_cookie]->setLabel("Auto Login")->renderWithLabel() nofilter}</div>
 	</form> 
   </div>
 </div>
