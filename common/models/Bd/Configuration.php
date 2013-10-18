@@ -22,17 +22,3 @@ abstract class Bd_Configuration extends Sdx_Configuration
     $this->_addHelper(new Sdx_Controller_Action_Helper_UriNormalizer());
   }
 }
-
-class Configuration extends Bd_Configuration
-{  
-  protected function _initHttp(Sdx_Context $context)
-  {
-    parent::_initHttp($context);
- 
-    //If you want to register other auto load namespase, Remove this comment out.
-    //$context->registerAutoloadNamespace('Other');
- 
-    $context->registerControllerPlugin(new Sdx_Controller_Plugin_AccessControl());
-    $context->registerControllerPlugin(new Bd_Controller_Plugin_AutoLogin('.board.sunrisedigital.jp'));
-  }
-}
