@@ -43,9 +43,9 @@ abstract class Bd_Orm_Main_Base_Thread extends Bd_Db_Record
     /**
      * @return Bd_Orm_Main_Form_Thread
      */
-    public static function createForm(array $except = array())
+    public static function createForm(array $except = array(), Sdx_Db_Record $record = null)
     {
-        return new Bd_Orm_Main_Form_Thread('', array(), $except);
+        return new Bd_Orm_Main_Form_Thread('', array(), $except, $record);
     }
 
     public function getId()

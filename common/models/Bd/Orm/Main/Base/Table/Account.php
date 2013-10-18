@@ -52,6 +52,14 @@ abstract class Bd_Orm_Main_Base_Table_Account extends Bd_Db_Table
         		'Bd_Orm_Main_Entry',
         		null
         	);
+        	self::$_relations['AutoLogin'] = Sdx_Db_Relation::create(
+        		Sdx_Db_Relation::TYPE_ONE_MANY,
+        		'AutoLogin',
+        		'Account',
+        		array('reference'=>'id', 'foreign'=>'account_id'),
+        		'Bd_Orm_Main_AutoLogin',
+        		null
+        	);
         }
     }
 
