@@ -18,7 +18,7 @@
             </a>
             <ul class="dropdown-menu">
               {if $sdx_user->hasId()}
-              <li class="dropdown-header">{$sdx_user->getLoginId()}</li>
+              <li class="dropdown-header">{$sdx_context->get('signed_account')->getName()}</li>
               <li><a href="/secure/logout"><i class="icon-signout"></i> ログアウト</a></li>
               {else}
               <li><a href="/account/create"><i class="icon-plus-sign-alt"></i> ユーザー登録</a>
