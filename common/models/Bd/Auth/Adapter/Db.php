@@ -61,7 +61,9 @@ class Bd_Auth_Adapter_Db extends Sdx_Auth_Adapter_Db2
     }
  
     return array(
-      'login_id' => $account->getLoginId(),
+        'id' => $account->getId(),
+        'login_id' => $account->getLoginId(),
+        'name' => $account->getName(),
     );
   }
 
