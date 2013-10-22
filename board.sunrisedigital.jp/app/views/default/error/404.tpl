@@ -1,5 +1,5 @@
-<body style="background-color: yellowgreen">
-<h2 style="background-color:white;font-color:red">404Error</h2>
+<body style="background-color: #ccff99">
+<h2 style="background-color:white; color:blue">404Error</h2>
 <ul style="border: solid">
 <li>{$message}</li>
 <li>Module:{$module}</li>
