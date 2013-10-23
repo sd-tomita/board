@@ -1,3 +1,4 @@
+#JOINのSELECTを組み立てるための関連付け設定です。
 board_master:
   database:
     reference:     board_slave
@@ -11,7 +12,7 @@ board_master:
     record_list:   Bd_Db_Record_List
  
   tables: #各テーブルごとのルートを定義
-    account:
+    account: #accountテーブルがどのテーブルに対してのルートを定義しているか
       relations:
         - type:       one_many
           table:      entry

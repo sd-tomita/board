@@ -61,7 +61,8 @@ class FooController extends Sdx_Controller_Action_Http
            
            //テーブルクラスの取得
            $t_account = Bd_Orm_Main_Account::createTable();
-           //主キー1のレコードを取得
+           //主キー(DB作成時にPrimaryに指定したキー)の値が1のレコードを取得。
+           //ここでは、idがPRIに指定されているので、id=1のレコードが取得される。
            $account = $t_account->findByPkey(1);
            
            //toArray()はレコードの配列表現を取得するメソッドです。
@@ -82,7 +83,9 @@ class FooController extends Sdx_Controller_Action_Http
            
            //簡単なJOIN
            //JOIN対象のテーブルを全て生成
+           //accountテーブルのクラスを取得
            $t_account = Bd_Orm_Main_Account::createTable();
+           //Entryテーブルのクラスを取得
            $t_entry = Bd_Orm_Main_Entry::createTable();
            
            //INNER JOIN
