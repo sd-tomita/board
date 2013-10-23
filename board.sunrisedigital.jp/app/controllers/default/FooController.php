@@ -42,7 +42,7 @@ class FooController extends Sdx_Controller_Action_Http
           $account = new Bd_Orm_Main_Account();
           
           $account
-                  ->setLoginId('test')
+                  ->setLoginId('test1023')
                   ->setPassword('flkdjf0');
           
           //このレコードが使用する接続を取得
