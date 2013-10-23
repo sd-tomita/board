@@ -16,8 +16,8 @@ board_master:
       relations:
         - type:       one_many
           table:      entry
-          references: id
-          foreign:    account_id
+          references: id #自テーブル(ここではaccount)での関連カラム名
+          foreign:    account_id #相手(entry)の対象カラム名
           
         - type:       one_many
           table:      auto_login
