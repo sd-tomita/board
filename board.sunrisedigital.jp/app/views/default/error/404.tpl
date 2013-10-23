@@ -1,4 +1,7 @@
+<!doctype html>
+<html lang="ja">
 <head>
+  <meta charset="UTF-8">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css">
   <style>
@@ -15,13 +18,19 @@
       font-family: FontAwesome;
     }
   </style>
+  {block css}{/block}
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  {block js}{/block}
+  <title>Board {block title}{/block}</title>
 </head>
-<body<!--style="background-color: #ccff99"-->>
-<h2<!--style="background-color:white; color:blue"-->>404Error</h2>
-<ul<!--style="border: solid"-->>
+<body>
+<h2>404Error</h2>
+<ul>
 <li>{$message}</li>
 <li>Module:{$module}</li>
 <li>Controller:{$controller}</li>
 <li>Action:{$action}</li>
 </ul>
 </body>
+</html>
