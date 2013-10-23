@@ -89,6 +89,8 @@ class FooController extends Sdx_Controller_Action_Http
            $t_entry = Bd_Orm_Main_Entry::createTable();
            
            //INNER JOIN
+           //※orm.ymlで対象のカラムは指定済みなので、
+           //ここではINNER JOINしろ　という命令だけになる。
            $t_account->addJoinInner($t_entry);
            
            //selectを取得するメソッドがgetSelectWithJoinなので注意
