@@ -16,7 +16,7 @@ class AccountController extends Sdx_Controller_Action_Http
                 ->setName('login_id')
                 ->addValidator(new Sdx_Validate_NotEmpty())//入力値があるかどうか
                 ->addValidator(new Sdx_Validate_Regexp(//正規表現とマッチしているか
-                        '/^[a-zA-Z0-9_]+$/u',
+                        '/^[a-zA-Z0-9_@-]+$/u',
                         '英数字と@_-のみ使用可能です')
                         )
                 ->addValidator(new Sdx_Validate_Db_Unique($t_account, 
