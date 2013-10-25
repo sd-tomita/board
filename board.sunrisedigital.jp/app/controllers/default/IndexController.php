@@ -22,6 +22,7 @@ class IndexController extends Sdx_Controller_Action_Http
             $list = $t_thread->fetchAll($select);
             
             Sdx_Debug::dump($list, 'kaeriti');
+            Sdx_Debug::dump($list->toArray, 'record');
         }
         
 }
