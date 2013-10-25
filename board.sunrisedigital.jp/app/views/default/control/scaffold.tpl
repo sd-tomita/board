@@ -1,9 +1,12 @@
 {extends file='default/base.tpl'}
  
 {block title append} {$page_name}{/block}
- 
-{block css append}
+
+{block js append}
     {include 'sdx/include/scaffold/js.tpl'}
+{/block} 
+{block css append}
+    {include 'sdx/include/scaffold/css.tpl'}
 <link rel="stylesheet" type="text/css" href="/css/sdx/scaffold.bootstrap.css">
 {/block}
  
