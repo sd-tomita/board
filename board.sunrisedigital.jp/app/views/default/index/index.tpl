@@ -6,4 +6,7 @@
     <h3 class="panel-title">indexです</h3>
   </div>
 </div>
+<div>
+    <p>ここにこれからトップページを作っていきます</p>
+</div>
 {/block}
