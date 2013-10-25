@@ -42,7 +42,7 @@ class AccountController extends Sdx_Controller_Action_Http
         
         $form->setElement($elem);
         //formがsubmitされていたら
-        if($this->_getParam('submit'))
+        if($this->_getParam('submit'))//submitボタンが押されていれば
         {
          //Validateを実行するためにformに値をセット
          //エラーがあったとき、各エレメントに値を戻す処理も兼ねる
