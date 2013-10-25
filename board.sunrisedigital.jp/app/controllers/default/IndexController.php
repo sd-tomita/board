@@ -12,7 +12,16 @@ class IndexController extends Sdx_Controller_Action_Http
 {
 	public function indexAction()
 	{
-            Sdx_Debug::dump($this->_getParam('thread_id'), 'title');
-	}
-
+            $this->_disableViewRenderer();
+            
+            //threadテーブルクラスの取得
+            $t_thread = Bd_Orm_Main_Thread::createTable();
+            //selectの取得
+            $select = $t_thread->getSelect();
+            //SQLの発行
+            $list = $t_thread->fetchAll($select);
+            
+            Sdx_Debug::dump($list, 'kaeriti');
+        }
+        
 }
