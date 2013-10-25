@@ -8,7 +8,7 @@
  * @version  v 1.0 2010/03/21 18:50:08 Miyata
  **/
 
-class IndexController extends Sdx_Controller_Action_Http
+class IdexController extends Sdx_Controller_Action_Http
 {
 	public function indexAction()
 	{
