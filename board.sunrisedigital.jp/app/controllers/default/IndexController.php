@@ -21,13 +21,7 @@ class IndexController extends Sdx_Controller_Action_Http
             $thread = $t_thread->findByPkey(7);
             //結果を出力
             Sdx_Debug::dump($thread->toArray(), 'Pkey');
-            //selectの取得
-            $select = $t_thread->getSelect();
-            //SQLの発行
-            $list = $t_thread->fetchAll($select);
             
-            Sdx_Debug::dump($list, 'kaeriti');
-            Sdx_Debug::dump($list->toArray, 'record');
         }
         
 }
