@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css">
   <style>
     .sdx_error{
-      font-size: 12px;
+      font-size: 24px;
       margin: 0;
       padding: 0;
       font-weight: bold;
