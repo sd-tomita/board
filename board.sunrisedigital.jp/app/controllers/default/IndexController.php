@@ -16,8 +16,10 @@ class IndexController extends Sdx_Controller_Action_Http
             
             //threadテーブルクラスの取得
             $t_thread = Bd_Orm_Main_Thread::createTable();
-            //主キーで取得。全部取得しないので引数は指定しない。
-            $thread = $t_thread->findByPkey(6);
+            //主キーで取得。DBへの接続トランザクションは見るだけなので必要なし。
+            //なお、全部取得したいので、引数を考える。
+            //↓の代わりにコメントアウト$thread = $t_thread->findByPkey(6);
+            $thread = $t_thread->getSelect();
             //結果を出力
             Sdx_Debug::dump($thread->toArray(), 'Pkey');
             //selectの取得
