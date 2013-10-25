@@ -19,7 +19,7 @@ class IndexController extends Sdx_Controller_Action_Http
             //データを取得。DBへの接続トランザクションは見るだけなので必要なし。
             $thread = $t_thread->getSelect();
             //結果を出力
-            Sdx_Debug::dump($thread, 'Pkey');
+            Sdx_Debug::dump($t_thread, 'Pkey');
         }
         
 }
