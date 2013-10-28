@@ -18,6 +18,9 @@
       font-family: FontAwesome;
     }
     .origin_footer{
+        border-radius: 5px;        /* CSS3草案 */  
+        -webkit-border-radius: 5px;    /* Safari,Google Chrome用 */  
+        -moz-border-radius: 5px;   /* Firefox用 */   
         padding: 10px;
 	border-top: solid 1px #CCC;
 	background-color: #101010;
