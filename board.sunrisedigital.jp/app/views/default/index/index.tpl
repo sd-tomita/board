@@ -3,10 +3,15 @@
 {block main_contents}
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">indexです</h3>
+    <h1 class="panel-title">indexです</h1>
   </div>
 </div>
 <div>
-    <p>ここにこれからトップページを作っていきます</p>
+    <ul>
+          {foreach $threadlist as $record}
+             <li>{$record->getTitle()}</li>
+          {/foreach}
+    </ul>
 </div>
+
 {/block}

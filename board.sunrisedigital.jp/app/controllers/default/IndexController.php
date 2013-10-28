@@ -19,9 +19,19 @@ class IndexController extends Sdx_Controller_Action_Http
             //threadテーブルクラスの取得
             $t_thread = Bd_Orm_Main_Thread::createTable();
             //データを取得。DBへの接続トランザクションは見るだけなので必要なし。
-            $thread = $t_thread->fetchAll();//fetchAllメソッドで全データを取得できる
-            //結果を出力
-            Sdx_Debug::dump($thread->toArray(), 'スレッド一覧');//toArrayメソッドでDBのデータを出力できる
+            //fetchAllメソッドで全データを取得できる
+            //toArrayメソッドでレコードを配列で出力できる
+            $thread = $t_thread->fetchAll();
+            foreach ($thread as $record)
+            {
+                Sdx_Debug::dump($record->getTitle(), '繰り返しスレッド一覧');
+            }
+            
+            //結果を出力。テンプレができたらここはもう消す
+            Sdx_Debug::dump($thread, 'スレッド一覧');
+            
+            //テンプレで使えるように$threadの内容をテンプレにアサインしている。
+            $this->view->assign("thread_list", $thread);
         }
         
 }
