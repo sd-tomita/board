@@ -7,7 +7,11 @@
   </div>
 </div>
 <div>
-    <p>ここにこれからトップページを作っていきます</p>
+    <ul>
+          {foreach $threadlist as $record}
+             <li>{$record->getTitle()}</li>
+          {/foreach}
+    </ul>
 </div>
 
 {/block}
