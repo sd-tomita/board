@@ -21,10 +21,17 @@ class IndexController extends Sdx_Controller_Action_Http
             //データを取得。DBへの接続トランザクションは見るだけなので必要なし。
             //fetchAllメソッドで全データを取得できる
             //toArrayメソッドでレコードを配列で出力できる
-            $thread = $t_thread->fetchAll()->toArray();
+            $thread = $t_thread->fetchAll();
+            foreach ($thread as $record)
+            {
+                Sdx_Debug::dump($record->getTitle(), '繰り返しスレッド一覧');
+            }
             
             //結果を出力。テンプレができたらここはもう消す
             Sdx_Debug::dump($thread, 'スレッド一覧');
+            
+            //テンプレで使えるように$threadの内容をテンプレにアサインしている。
+            $this->view->assign("thread_list", $thread);
         }
         
 }
