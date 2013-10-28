@@ -7,17 +7,19 @@
   </div>
 </div>
 <div>
-    <table>
-        <tr>
+    <table class="table">
+        <tr class="success">
             <th>スレッド番号</th>
             <th>スレッド名</th>
             <th>作成日時</th>
+            <th>コメントする</th>
         </tr>
        {foreach $thread_list as $record}
         <tr>
              <td>{$record->getId()}</td>
              <td>{$record->getTitle()}</td>
              <td>{$record->getCreated_at()}</td>
+             <td><a href="#">編集</a></td>
         </tr>
         {/foreach}
     </table>
