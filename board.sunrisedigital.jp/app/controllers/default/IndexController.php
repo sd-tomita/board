@@ -18,7 +18,7 @@ class IndexController extends Sdx_Controller_Action_Http
             
             //threadテーブルクラスの取得
             $t_thread = Bd_Orm_Main_Thread::createTable();
-            //データを取得。DBへの接続トランザクションは見るだけなので必要なし。
+            //データを取得。今回はデータを見るだけなのでDBへの接続トランザクションは必要なし。
             //fetchAllメソッドで全データを取得できる
             //toArrayメソッドでレコードを配列で出力できる
             $thread = $t_thread->fetchAll();
