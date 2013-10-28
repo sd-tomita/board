@@ -7,11 +7,21 @@
   </div>
 </div>
 <div>
-    <ul>
-          {foreach $threadlist as $record}
-             <li>{$record->getTitle()}</li>
-          {/foreach}
-    </ul>
+    <table>
+        <tr>
+            <th>スレッド番号</th>
+            <th>スレッド名</th>
+            <th>作成日時</th>
+        </tr>
+       {foreach $thread_list as $record}
+        <tr>
+             <td>{$record->getId()}</td>
+             <td>{$record->getTitle()}</td>
+             <td>{$record->getCreated_at()}</td>
+        </tr>
+        {/foreach}
+    </table>
+     
 </div>
 
 {/block}
