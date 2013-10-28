@@ -17,6 +17,14 @@
       content: "\f14a";
       font-family: FontAwesome;
     }
+    .origin_footer{
+        padding: 10px;
+	border-top: solid 1px #CCC;
+	background-color: #101010;
+	color: #FFF;
+	font-size: 100%;
+	text-align: center;
+    }
   </style>
   {block css}{/block}
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -52,5 +60,8 @@
     </div>
   </header>
   {block main_contents}{/block}
+  <footer class="origin_footer">
+      &copy;Copyright Sunrise Digital Corporation. All rights reserved. 
+  </footer>
 </body>
 </html>
