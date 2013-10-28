@@ -3,10 +3,18 @@
 {block main_contents}
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">indexです</h3>
+    <h1 class="panel-title">indexです</h1>
   </div>
 </div>
 <div>
     <p>ここにこれからトップページを作っていきます</p>
+</div>
+<div>
+<?php
+for($i=0, $i<count($thread->toArray()), $i++)
+    {
+        echo 'sample."$i"';
+    }
+?>
 </div>
 {/block}

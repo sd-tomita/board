@@ -20,7 +20,7 @@ class IndexController extends Sdx_Controller_Action_Http
             $t_thread = Bd_Orm_Main_Thread::createTable();
             //データを取得。DBへの接続トランザクションは見るだけなので必要なし。
             $thread = $t_thread->fetchAll();//fetchAllメソッドで全データを取得できる
-            //結果を出力
+            //結果を出力。テンプレができたらここはもう消す
             Sdx_Debug::dump($thread->toArray(), 'スレッド一覧');//toArrayメソッドでDBのデータを出力できる
         }
         
