@@ -30,7 +30,7 @@ class IndexController extends Sdx_Controller_Action_Http
             //結果を出力。テンプレができたらここはもう消す
             //Sdx_Debug::dump($thread, 'スレッド一覧');
             
-            //テンプレで使えるように$threadの内容をテンプレにアサインしている。
+            //テンプレで使えるように$threadの内容をテンプレにアサインする。
             $this->view->assign("thread_list", $thread);
         }
         
