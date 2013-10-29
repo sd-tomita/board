@@ -3,7 +3,8 @@ class EntryController extends Sdx_Controller_Action_Http
 {
     public function commentAction()
     {
-        $this->_disableViewRenderer();
+        //テンプレを使うときはコメントアウトを解除する
+        //$this->_disableViewRenderer();
         
         //entryテーブルクラスの取得
         $t_entry = Bd_Orm_Main_Entry::createTable();
@@ -14,6 +15,7 @@ class EntryController extends Sdx_Controller_Action_Http
         $this->view->assign("entry_list", $entry);
         
         //確認用のダンプ出力。公開時は消す
+        //この時点ではインスタンスの出力がされればおｋ
         Sdx_Debug::dump($entry, "Sdx_Debug::dumpの出力結果");
         
     }
