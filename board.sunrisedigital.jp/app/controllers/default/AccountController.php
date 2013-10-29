@@ -86,4 +86,23 @@ class AccountController extends Sdx_Controller_Action_Http
         $this->view->assign('form', $form);
         
      }
+     public function listAction()
+     {
+         //JOINに使う各テーブルのクラスを取得
+         $t_account = Bd_Orm_Main_Account::createTable();
+         $t_entry = Bd_Orm_Main_Entry::createTable();
+         $t_thread = Bd_Orm_Main_Thread::createTable();
+         
+         //JOIN操作
+         $t_account->addJoinLeft($t_entry);
+         $t_entry->addJoinLeft($t_thread);
+         
+         //selectを作成
+         $select = $t_account->getSelectWithJoin();
+         $select->order('id DESC');
+         
+         $list = $t_account->fetchAll($select);
+         $this->view->assign('account_list', $list);
+         
+      }
 }
