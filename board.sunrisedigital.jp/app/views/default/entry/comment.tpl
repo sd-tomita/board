@@ -20,9 +20,9 @@
              <td>{$record->getId()}</td>
              <td>{$record->getThread_id()}</td>
              <td>{$record->getAccount_id()}</td>
-             <td>{$record->getName()}</td>
+             <td>{$record->getAccountList()->getName()}</td>
              <td>{$record->getBody()}</td>
-             <td>{$record->getAccountList()->getUpdated_at()}</td>
+             <td>{$record->getUpdated_at()}</td>
              <td>{$record->getCreated_at()}</td>
         </tr>
         {/foreach}
