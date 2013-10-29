@@ -1,6 +1,8 @@
 {extends file='default/base.tpl'}
 {block title append} アカウントリスト{/block}
 {block main_contents}
+    <p>ログインIDリストです。Entryテーブルに書き込んだ<br>
+    実績のあるログインIDの人はその内容が記載されます</p>
 <ul>
   {foreach $account_list as $account}
   <li>
