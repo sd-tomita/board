@@ -20,7 +20,7 @@
              <td>{$record->getId()}</td>
              <td>{$record->getThread_id()}</td>
              <td>{$record->getAccount_id()}</td>
-             <td>※AccountテーブルからNameを取得予定</td>
+             <td>{$record->getName()}</td>
              <td>{$record->getBody()}</td>
              <td>{$record->getUpdated_at()}</td>
              <td>{$record->getCreated_at()}</td>
