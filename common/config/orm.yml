@@ -14,13 +14,13 @@ board_master:
   tables: #各テーブルごとのルートを定義
     account: #accountテーブルがどのテーブルに対してのルートを定義しているか
       relations:
-        - type:       one_many
-          table:      entry
-          references: id #自テーブル(ここではaccount)での関連カラム名
-          foreign:    account_id #相手(entry)の対象カラム名
+        - type:       one_many # 1(one)対多(many) をあらわす
+          table:      entry # 対象の相手
+          references: id # 自テーブル(ここではaccount)での関連カラム名
+          foreign:    account_id # 相手(entry)の対象カラム名
           
         - type:       one_many
-          table:      auto_login
+          table:      auto_login 
           references: id
           foreign:    account_id
       
