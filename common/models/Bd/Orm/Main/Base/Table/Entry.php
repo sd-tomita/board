@@ -52,6 +52,14 @@ abstract class Bd_Orm_Main_Base_Table_Entry extends Bd_Db_Table
         		'Bd_Orm_Main_Account',
         		null
         	);
+        	self::$_relations['Thread'] = Sdx_Db_Relation::create(
+        		Sdx_Db_Relation::TYPE_MANY_ONE,
+        		'Thread',
+        		'Entry',
+        		array('reference'=>'thread_id', 'foreign'=>'id'),
+        		'Bd_Orm_Main_Thread',
+        		null
+        	);
         }
     }
 
