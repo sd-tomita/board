@@ -14,8 +14,10 @@ class EntryController extends Sdx_Controller_Action_Http
         //$entryの内容をテンプレに渡しておく
         $this->view->assign("entry_list", $entry);
         
-        //確認用のダンプ出力。公開時は消す
-        //この時点ではインスタンスの出力がされればおｋ
+        //確認用のダンプ出力。公開時は消すが、$entry_listに
+        //格納されているメソッドなどを見ながら作業したいので
+        //ひとまず書いておく。
+        //なお、この時点ではインスタンスの出力がされればおｋ
         Sdx_Debug::dump($entry, "Sdx_Debug::dumpの出力結果");
         
     }
