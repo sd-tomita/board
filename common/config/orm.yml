@@ -23,7 +23,13 @@ board_master:
           table:      auto_login 
           references: id
           foreign:    account_id
-      
+
+    thread:
+      relations:
+        - type:       one_many
+          table:      entry
+          references: id
+          foreign:    thread_id
 #  tables:
 #    table_name:
 #      const:
