@@ -22,7 +22,7 @@
              <td>{$record->getAccount_id()}</td>
              <td>{$record->getName()}</td>
              <td>{$record->getBody()}</td>
-             <td>{$record->getUpdated_at()}</td>
+             <td>{$record->getAccountList()->getUpdated_at()}</td>
              <td>{$record->getCreated_at()}</td>
         </tr>
         {/foreach}
