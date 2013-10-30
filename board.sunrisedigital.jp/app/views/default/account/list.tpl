@@ -19,12 +19,30 @@
   </li>
   {/foreach}
 </ul>  
-<h3>動作確認用(ここはマニュアルにない)</h3>
-<p>$accountからThreadテーブルの内容を取り出せるか実験</p>
+
+    
+    
+    
+    
+    
+    <div class="panel panel-default">
+    <div class="panel-heading">
+    <h1 class="panel-title">動作確認用スペース</h1>
+    </div>
+</div>
+<p>いろいろ書き換えてみる用</p>
     <ul>
-        {foreach $account_list as $account}
-            <li>{$account->getTitle()}</li>
-            <li>{$account->getCreated_at()}</li>
-        {/foreach}   
+  {foreach $account_list as $account}
+      <li>
+          {foreach $account->getEntryList() as $record}
+      <li>
+        <div>{$record->getThread()->getCreatedAt()}</div>
+        <div>{$record->getThread()->getTitle()}</div>
+        <div>{$record->getBody()}</div>
+      </li>
+      {/foreach}
+      </li>
+  {/foreach}
     </ul>
+
 {/block}

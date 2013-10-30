@@ -99,7 +99,7 @@ class AccountController extends Sdx_Controller_Action_Http
          
          //selectを作成
          $select = $t_account->getSelectWithJoin();
-         $select->order('id DESC');
+         $select->order('id DESC');//ORDER BY id DESC(idを降順でSELECT)
          
          $list = $t_account->fetchAll($select);
          $this->view->assign('account_list', $list);
