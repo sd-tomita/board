@@ -19,7 +19,7 @@
       font-family: FontAwesome;
     }
     {*bootstrapがフッターに対応していないのでフッター用の
-    CSSを自作しています*}
+    CSSは自作しています*}
     .origin_footer{
         border-radius: 5px;        /* CSS3草案 */  
         -webkit-border-radius: 5px;    /* Safari,Google Chrome用 */  
