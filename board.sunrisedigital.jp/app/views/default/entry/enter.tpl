@@ -15,22 +15,22 @@
   <div class="panel-body">
     {$form->renderStartTag() nofilter}
       <div class="form-group">
-        {$form.login_id->setLabel('スレッドID')->renderLabel() nofilter}
-        {$form.login_id->render([class=>"form-control", placeholder=>$form.thread_id->getLabel()]) nofilter}
-        {$form.login_id->renderError() nofilter}
+        {$form.thread_id->setLabel('スレッドID')->renderLabel() nofilter}
+        {$form.thread_id->render([class=>"form-control", placeholder=>$form.thread_id->getLabel()]) nofilter}
+        {$form.thread_id->renderError() nofilter}
       </div>
       <div class="form-group">
-        {$form.login_id->setLabel('アカウントID')->renderLabel() nofilter}
-        {$form.login_id->render([class=>"form-control", placeholder=>$form.account_id->getLabel()]) nofilter}
-        {$form.login_id->renderError() nofilter}
+        {$form.account_id->setLabel('アカウントID')->renderLabel() nofilter}
+        {$form.account_id->render([class=>"form-control", placeholder=>$form.account_id->getLabel()]) nofilter}
+        {$form.account_id->renderError() nofilter}
       </div>
       <div class="form-group">
-        {$form.login_id->setLabel('コメント')->renderLabel() nofilter}
-        {$form.login_id->render([class=>"form-control", placeholder=>$form.body->getLabel()]) nofilter}
-        {$form.login_id->renderError() nofilter}
+        {$form.body->setLabel('コメント')->renderLabel() nofilter}
+        {$form.body->render([class=>"form-control", placeholder=>$form.body->getLabel()]) nofilter}
+        {$form.body->renderError() nofilter}
       </div>
       <div class="text-center">
-        <input type="submit" name="submit" value="保存" class="btn btn-success">
+        <input type="submit" name="submit" value="投稿" class="btn btn-success">
       </div>
     </form>
   </div>
