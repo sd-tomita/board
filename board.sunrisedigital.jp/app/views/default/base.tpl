@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css">
   <style>
+      {*フォームのエラー表示(404等)を整えるためのCSS*}
     .sdx_error{
       font-size: 12px;
       margin: 0;
@@ -17,6 +18,8 @@
       content: "\f14a";
       font-family: FontAwesome;
     }
+    {*bootstrapがフッターに対応していないのでフッター用の
+    CSSを自作しています*}
     .origin_footer{
         border-radius: 5px;        /* CSS3草案 */  
         -webkit-border-radius: 5px;    /* Safari,Google Chrome用 */  
