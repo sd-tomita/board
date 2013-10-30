@@ -19,4 +19,12 @@
   </li>
   {/foreach}
 </ul>  
+<h3>動作確認用(ここはマニュアルにない)</h3>
+<p>$accountからThreadテーブルの内容を取り出せるか実験</p>
+    <ul>
+        {foreach $account_list as $account}
+            <li>{$account->getTitle()}</li>
+            <li>{$account->getCreated_at()}</li>
+        {/foreach}   
+    </ul>
 {/block}
