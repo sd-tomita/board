@@ -34,5 +34,30 @@ class EntryController extends Sdx_Controller_Action_Http
         Sdx_Debug::dump($entry, "Sdx_Debug::dumpの出力結果");
         
     }
+    public function enterAction()
+    {
+    $form = new Sdx_Form();//インスタンス作成
+    $form
+      ->setActionCurrentPage() //アクション先を現在のURLに設定
+      ->setMethodToPost();     //メソッドをポストに変更
+ 
+    //各エレメントをフォームにセット
+    //スレッドID
+    $elem = new Sdx_Form_Element_Text();
+    $elem->setName('thread_id');
+    $form->setElement($elem);
+    
+    //アカウントID
+    $elem = new Sdx_Form_Element_Text();
+    $elem->setName('account_id');
+    $form->setElement($elem);
+    
+    //コメント
+    $elem = new Sdx_Form_Element_Text();
+    $elem->setName('body');
+    $form->setElement($elem);
+ 
+    $this->view->assign('form', $form);
+    }
 }
 ?>
