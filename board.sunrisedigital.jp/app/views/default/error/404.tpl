@@ -25,7 +25,7 @@
 <body>
 <h2 class="sdx_error">404Error</h2>
 <ul>
-<li>{$message}</li>
+<li>ページが見つかりません</li>
 <li>Module:{$module}</li>
 <li>Controller:{$controller}</li>
 <li>Action:{$action}</li>
