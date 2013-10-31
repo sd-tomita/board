@@ -40,7 +40,7 @@ class ThreadController extends Sdx_Controller_Action_Http
         //確認用ダンプ出力。いらなくなったら消す
         //Sdx_Debug::dump($entry, '$entryの出力結果');
         
-        //フォームを作るメソッド
+        //コメント投稿関係はこっちのメソッドに任せる。
         $this->formCreation();
 
     }
@@ -56,7 +56,8 @@ class ThreadController extends Sdx_Controller_Action_Http
         $elem = new Sdx_Form_Element_Textarea();
         $elem
                 ->setName('body')
-                ->addValidator(new Sdx_Validate_NotEmpty());
+                //とりあえずコメントだけなのでNULL値チェックだけでよいかと。
+                ->addValidator(new Sdx_Validate_NotEmpty('なんか言ってくれよ'));
         $form->setElement($elem);
         
         //formがsubmitされていたら
