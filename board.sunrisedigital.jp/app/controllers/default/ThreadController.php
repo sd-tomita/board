@@ -15,8 +15,8 @@ class ThreadController extends Sdx_Controller_Action_Http
     }
     public function listAction()
     {
-        //とりあえず後述で使用したいので$_GETの値だけなので
-        //必要な分だけを$numに代入。
+        //URLからthread_idを取得。
+        //なお、thread_idはroute.ymlに付けた変数名。
         $num = $this->_getParam('thread_id');
         //entryテーブルクラスの取得
         $t_entry = Bd_Orm_Main_Entry::createTable();
