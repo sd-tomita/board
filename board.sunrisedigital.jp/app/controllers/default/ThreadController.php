@@ -40,14 +40,15 @@ class ThreadController extends Sdx_Controller_Action_Http
         //確認用ダンプ出力。いらなくなったら消す
         //Sdx_Debug::dump($entry, '$entryの出力結果');
         
-        //フォームを作るメソッドは
+        //フォームを作るメソッド
         $this->formCreation();
+
     }
     private function formCreation()
     {
         $form = new Sdx_Form();//インスタンス作成
         $form
-        ->setAction('comment') //アクション先をthread/commentに設定
+        ->setActionCurrentPage() //アクション先をこのページに設定
         ->setMethodToPost();     //メソッドをポストに変更
  
         //各エレメントをフォームにセット
@@ -57,6 +58,20 @@ class ThreadController extends Sdx_Controller_Action_Http
                 ->setName('body')
                 ->addValidator(new Sdx_Validate_NotEmpty());
         $form->setElement($elem);
+        
+        //formがsubmitされていたら
+        if($this->_getParam('submit'))
+        {
+          //Validateを実行するためにformに値をセット
+          //エラーが有った時各エレメントに値を戻す処理も兼ねてます
+          $form->bind($this->_getAllParams());
+
+          //Validateを実行
+          if($form->execValidate())
+          {
+            //全てのエラーチェックを通過
+          }
+        }
  
         $this->view->assign('form', $form);
     }
