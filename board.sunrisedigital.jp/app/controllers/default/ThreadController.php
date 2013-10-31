@@ -15,6 +15,9 @@ class ThreadController extends Sdx_Controller_Action_Http
     }
     public function listAction()
     {
+        //とりあえず後述で使用したいので$_GETの値だけなので
+        //必要な分だけを$numに代入。
+        $num = $_GET['id'];
         //entryテーブルクラスの取得
         $t_entry = Bd_Orm_Main_Entry::createTable();
         //JOIN予定のAccountテーブルのテーブルクラスを取得
@@ -28,14 +31,18 @@ class ThreadController extends Sdx_Controller_Action_Http
         //ORDER BY thread_id ASC(thread_idを昇順でSELECT)
         $select->order('thread_id ASC');
         //URLから受け取ったID分だけをSelectするよう条件追記
-        $select->where("id = $_GET");
+        $select->where("thread.id = $num");
          //fetchAll()で全て取得して$entryへ入れておく
         $entry = $t_entry->fetchAll($select);
         //$entryの内容をテンプレに渡す。
         $this->view->assign("entry_list", $entry);
         
+        //$_GETに値を渡せているか中身を一応確認。
+        Sdx_Debug::dump($_GET, '$_GETの出力結果');
+        //echoでそのまま書き出した場合の動き
+        echo $_GET['id'];
         //確認用ダンプ出力。いらなくなったら消す
-        Sdx_Debug::dump($entry, "Sdx_Debug::dumpの出力結果");
+        Sdx_Debug::dump($entry, '$entryの出力結果');
     }
 }
 ?>
