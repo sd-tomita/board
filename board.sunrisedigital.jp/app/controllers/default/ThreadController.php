@@ -37,12 +37,28 @@ class ThreadController extends Sdx_Controller_Action_Http
         //$entryの内容をテンプレに渡す。
         $this->view->assign("entry_list", $entry);
         
-        //$_GETに値を渡せているか中身を一応確認。
-        Sdx_Debug::dump($_GET, '$_GETの出力結果');
-        //echoでそのまま書き出した場合の動き
-        echo $_GET['id'];
         //確認用ダンプ出力。いらなくなったら消す
-        Sdx_Debug::dump($entry, '$entryの出力結果');
+        //Sdx_Debug::dump($entry, '$entryの出力結果');
+        
+        //フォームを作るメソッドは
+        $this->formCreation();
+    }
+    private function formCreation()
+    {
+        $form = new Sdx_Form();//インスタンス作成
+        $form
+        ->setAction('comment') //アクション先をthread/commentに設定
+        ->setMethodToPost();     //メソッドをポストに変更
+ 
+        //各エレメントをフォームにセット
+        //コメント
+        $elem = new Sdx_Form_Element_Textarea();
+        $elem
+                ->setName('body')
+                ->addValidator(new Sdx_Validate_NotEmpty());
+        $form->setElement($elem);
+ 
+        $this->view->assign('form', $form);
     }
 }
 ?>

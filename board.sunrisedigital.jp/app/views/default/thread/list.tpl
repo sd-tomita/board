@@ -9,7 +9,7 @@
     <p>トップページからスレッドをクリックするとここにジャンプします。ここにはthreadテーブルのIDフィールドに対応したレコードを取得して表示</p>
     
 
-{*スレッド表示*}
+{*------------スレッド表示------------*}
     <table class="table">
         <tr class="success">
             <th>ID</th>
@@ -32,4 +32,23 @@
         </tr>
         {/foreach}
     </table>
+    
+{*------------コメントの投稿フォーム------------*}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">投稿フォーム</h3>
+  </div>
+  <div class="panel-body">
+    {$form->renderStartTag() nofilter}
+      <div class="form-group">
+        {$form.body->setLabel('コメント')->renderLabel() nofilter}
+        {$form.body->render([class=>"form-control", placeholder=>$form.body->getLabel()]) nofilter}
+        {$form.body->renderError() nofilter}
+      </div>
+      <div class="text-center">
+          <input type="submit" name="submit" value="投稿する！" class="btn btn-success" >
+      </div>
+    </form>
+  </div>
+</div>
 {/block}
