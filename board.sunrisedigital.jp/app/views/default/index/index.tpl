@@ -16,7 +16,7 @@
        {foreach $thread_list as $record}
         <tr>
              <td>{$record->getId()}</td>
-             <td><a href="#">{$record->getTitle()}</a></td>
+             <td><a href="thread/{$record->getId()}/add">{$record->getTitle()}</a></td>
              <td>{$record->getCreated_at()}</td>
         </tr>
         {/foreach}
