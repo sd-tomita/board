@@ -25,7 +25,7 @@
              <td>{$record->getId()}</td>
              <td>{$record->getThread_id()}</td>
              <td>{$record->getAccount_id()}</td>
-             <td>{$record->getAccount()->getLoginId()}</td>
+             <td>{$record->getAccount()->getName()}</td>
              <td>{$record->getBody()}</td>
              <td>{$record->getUpdated_at()}</td>
              <td>{$record->getThread()->getCreated_at()}</td>
@@ -40,6 +40,11 @@
   </div>
   <div class="panel-body">
     {$form->renderStartTag() nofilter}
+      <div class="form-group">
+        {$form.account_id->setLabel('アカウントID')->renderLabel() nofilter}
+        {$form.account_id->render([class=>"form-control", placeholder=>$form.account_id->getLabel()]) nofilter}
+        {$form.account_id->renderError() nofilter}
+      </div>
       <div class="form-group">
         {$form.body->setLabel('コメント')->renderLabel() nofilter}
         {$form.body->render([class=>"form-control", placeholder=>$form.body->getLabel()]) nofilter}

@@ -9,6 +9,7 @@ class ThreadController extends Sdx_Controller_Action_Http
     {
         
     }
+    
     public function deleteAction()
     {
         
@@ -38,7 +39,7 @@ class ThreadController extends Sdx_Controller_Action_Http
         $this->view->assign("entry_list", $entry);
         
         //確認用ダンプ出力。いらなくなったら消す
-        //Sdx_Debug::dump($entry, '$entryの出力結果');
+        Sdx_Debug::dump($entry, '$entryの出力結果');
         
         //コメント投稿関係はこっちのメソッドに任せる。
         $this->formCreation();
@@ -52,12 +53,19 @@ class ThreadController extends Sdx_Controller_Action_Http
         ->setMethodToPost();     //メソッドをポストに変更
  
         //各エレメントをフォームにセット
+        //アカウントID
+        $elem = new Sdx_Form_Element_Text();
+        $elem
+                ->setName('account_id')
+                ->addValidator(new Sdx_Validate_NotEmpty('なんか数字を入力してくれよ'))
+                ->addValidator(new Sdx_Validate_Regexp('/^[0-9]+$/u','つかえるのは数字だけね'));
+        $form->setElement($elem);
         //コメント
         $elem = new Sdx_Form_Element_Textarea();
         $elem
                 ->setName('body')
                 //とりあえずコメントだけなのでNULL値チェックだけでよいかと。
-                ->addValidator(new Sdx_Validate_NotEmpty('なんか言ってくれよ'));
+                ->addValidator(new Sdx_Validate_NotEmpty('なんか入力してくれよ'));
         $form->setElement($elem);
         
         //formがsubmitされていたら
@@ -65,16 +73,37 @@ class ThreadController extends Sdx_Controller_Action_Http
         {
           //Validateを実行するためにformに値をセット
           //エラーが有った時各エレメントに値を戻す処理も兼ねてます
-          $form->bind($this->_getAllParams());
-
-          //Validateを実行
-          if($form->execValidate())
+          $form->bind($this->_getAllParams());//bindメソッドは主に取得したパラメータを配列にしてセット
+          
+          $entry = new Bd_Orm_Main_Entry();//データベース入出力関係のクラスはこっちにある。
+          $db = $entry->updateConnection();
+          
+          $db->beginTransaction();
+          try
           {
-            //全てのエラーチェックを通過
+              if($form->execValidate())
+              {
+                  $entry
+                          ->setBody($this->_getParam('body'))
+                          ->setThreadId($this->_getParam('thread_id'))
+                          ->setAccountId($this->_getParam('account_id'));
+                  $entry->save();
+                  $db->commit();
+                  $th_id = $this->_getParam('thread_id');
+                  $this->redirectAfterSave("thread/$th_id/list");
+              }
+              else
+              {
+                  $db->rollback();
+              }
+          }
+          catch (Exception $e)
+          {
+              $db->rollBack();
+              throw $e;
           }
         }
- 
-        $this->view->assign('form', $form);
+         $this->view->assign('form', $form);
     }
 }
 ?>
