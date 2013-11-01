@@ -89,7 +89,7 @@ class ThreadController extends Sdx_Controller_Action_Http
                           ->setAccountId($this->_getParam('account_id'));
                   $entry->save();
                   $db->commit();
-                  $th_id = $this->_getParam('thread_id');
+                  $th_id = $this->_getParam('thread_id');//リダイレクト時のURLに使う
                   $this->redirectAfterSave("thread/$th_id/list");
               }
               else

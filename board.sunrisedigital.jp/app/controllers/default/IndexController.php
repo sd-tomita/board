@@ -18,10 +18,11 @@ class IndexController extends Sdx_Controller_Action_Http
             
             //threadテーブルクラスの取得
             $t_thread = Bd_Orm_Main_Thread::createTable();
-            //データを取得。今回はデータを見るだけなのでDBへの接続トランザクションは必要なし。
-            //fetchAllメソッドで全データを取得できる
-            //toArrayメソッドでレコードを配列で出力できる
-            $thread = $t_thread->fetchAll();
+            
+            //レコードの並び順を指定したいのでSelectを使う。
+            $select = $t_thread->getSelect();
+            $select->order('id DESC');//新しい投稿順
+            $thread = $t_thread->fetchAll($select);
             /*foreach ($thread as $record)
             {
                 Sdx_Debug::dump($record->getTitle(), '繰り返しスレッド一覧');
