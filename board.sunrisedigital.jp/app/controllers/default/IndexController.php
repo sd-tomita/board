@@ -12,15 +12,6 @@ class IndexController extends Sdx_Controller_Action_Http
 {
 	public function indexAction()
 	{
-          //$this->_disableViewRenderer();
-          //直接SQL文を発行。これだとレコードは取得できてもテーブルクラスが取得できないのでやっぱりなし。
-          //$db = Bd_Db::getConnection('board_master');
-          //$thread = $db->query
-          //('SELECT * FROM thread INNER JOIN 
-          //(SELECT thread_id, MAX(entry.created_at) AS newest_date 
-          //FROM entry GROUP BY thread_id) AS sub 
-          //ON thread.id = sub.thread_id ORDER BY sub.newest_date DESC')->fetchAll();
-         
             //テーブルクラスの取得
             $t_thread = Bd_Orm_Main_Thread::createTable();
             $t_entry = Bd_Orm_Main_Entry::createTable();
@@ -35,7 +26,7 @@ class IndexController extends Sdx_Controller_Action_Http
             $select->group('thread_id');
             
             //書き方がわからなかったのでSQLインジェクション対策は一旦置いてます。
-            $select->joinInner('entry as sub', 'thread.id = sub.thread_id', 'sub.thread_id,  max(sub.created_at) as newest_date');
+            $select->joinLeft('entry as sub', 'thread.id = sub.thread_id', 'thread.id,  max(sub.created_at) as newest_date');
             
             $select->order('newest_date DESC');
             $thread = $t_thread->fetchAll($select);
