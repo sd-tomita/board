@@ -12,7 +12,7 @@ class IndexController extends Sdx_Controller_Action_Http
 {
 	public function indexAction()
 	{
-          $this->_disableViewRenderer();
+          //$this->_disableViewRenderer();
           //直接SQL文を発行。これだとレコードは取得できてもテーブルクラスが取得できないのでやっぱりなし。
           //$db = Bd_Db::getConnection('board_master');
           //$thread = $db->query
@@ -26,20 +26,24 @@ class IndexController extends Sdx_Controller_Action_Http
             $t_entry = Bd_Orm_Main_Entry::createTable();
             
             //inner join
-            $t_thread->addJoinInner($t_entry);
+            //$t_thread->addJoinInner($t_entry);
 
             //selectの作成
             $select = $t_thread->getSelectWithJoin();
-            $select->joinInner();//まずはサブクエリではない、上と同じジョイン文をここに打つ。
-      
             
-            $select->order('id DESC');
-            //$thread = $t_thread->fetchAll($select);
+            //まずグループ化。
+            $select->group('thread_id');
+            
+            //書き方がわからなかったのでSQLインジェクション対策は一旦置いてます。
+            $select->joinInner('entry as sub', 'thread.id = sub.thread_id', 'sub.thread_id,  max(sub.created_at) as newest_date');
+            
+            $select->order('newest_date DESC');
+            $thread = $t_thread->fetchAll($select);
          
             Sdx_Debug::dump($select->assemble(), 'dump');//assembleでSelect結果を配列化
             
             //テンプレで使えるように$threadの内容をテンプレにアサインする。
-            //$this->view->assign("thread_list", $thread);
+            $this->view->assign("thread_list", $thread);
         }
         
 }

@@ -1,9 +1,4 @@
-<html>
-    <head>
-        <meta charset="UTF-8">
-    </head>
-    <body>
-{*extends file='default/base.tpl'*}
+{extends file='default/base.tpl'}
 {block title append} indexです{/block}
 {block main_contents}
 <div class="panel panel-default">
@@ -24,9 +19,7 @@
              <td>{$record->getId()}</td>
              <td><a href="thread/{$record->getId()}/list">{$record->getTitle()}</a></td>
              <td>{$record->getCreated_at()}</td>
-               {foreach $record->getEntryList() as $entry}
-                 <td>{$entry->getCreated_at()}</td>
-               {/foreach}
+             <td>{$record->get('newest_date')}</td> 
         </tr>
         {/foreach}
     </table>
@@ -34,5 +27,3 @@
 </div>
 
 {/block}
-</body>
-</html>
