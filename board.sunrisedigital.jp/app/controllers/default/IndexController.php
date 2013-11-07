@@ -30,7 +30,7 @@ class IndexController extends Sdx_Controller_Action_Http
 
             //selectの作成
             $select = $t_thread->getSelectWithJoin();
-            //$select->joinInner();
+            $select->joinInner();//まずはサブクエリではない、上と同じジョイン文をここに打つ。
       
             
             $select->order('id DESC');
