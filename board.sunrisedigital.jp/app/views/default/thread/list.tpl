@@ -15,7 +15,7 @@
          color:white;
          font-weight:bold;
          border-radius: 5px;">
-        <i class="icon-tags"></i>thread-{$entry_list->getFirstRecord()->getThread()->getId()}
+        <i class="icon-tags"></i>thread-{$entry_list->getFirstRecord()->getThread()->getId()}&nbsp;&nbsp;
         {$entry_list->getFirstRecord()->getThread()->getTitle()}&nbsp;&nbsp;
         <i class="icon-time"></i>スレッド作成日時：{$entry_list->getFirstRecord()->getThread()->getCreated_at()}
     </div>
@@ -61,10 +61,13 @@
     </table>
 *}    
 {*------------コメントの投稿フォーム------------*}
-<div class="panel panel-default" id="entry-form" style="margin:10px;padding:35px;border:solid thin;">
-  <div class="panel-heading">
-      <p><i class="icon-pencil"></i>投稿フォーム</p>
-  </div>
+<div class="panel panel-default" id="entry-form" 
+     style="margin:10px;
+     padding:35px;
+     border:solid thin;
+     border-radius: 15px;">
+
+  <p style="font-weight: bold;"><i class="icon-pencil"></i>コメント投稿フォーム</p>
   <div class="panel-body">
     {$form->renderStartTag() nofilter}
       {*<div class="form-group">
@@ -73,7 +76,6 @@
         {$form.account_id->renderError() nofilter}
       </div>*}
       <div class="form-group">
-        {$form.body->setLabel('コメント')->renderLabel() nofilter}
         {$form.body->render([class=>"form-control", placeholder=>$form.body->getLabel()]) nofilter}
         {$form.body->renderError() nofilter}
       </div>

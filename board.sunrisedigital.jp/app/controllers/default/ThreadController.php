@@ -107,8 +107,8 @@ class ThreadController extends Sdx_Controller_Action_Http
                 $entry
                   ->setBody($this->_getParam('body'))
                   ->setThreadId($this->_getParam('thread_id'))
-                  //->setAccountId($this->_getParam('account_id'));      
-                  ->setAccountId(sprintf('%d', $_SESSION["Sdx_Auth"]["storage"]["id"]));
+                  //->setAccountId(sprintf('%d', $_SESSION["Sdx_Auth"]["storage"]["id"]));
+                  ->setAccountId(Sdx_Context::getInstance()->getVar('signed_account')->getId());//$_SESSIONから直接とらないように。
                 $entry->save();
                 $db->commit();
                 $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/list");
