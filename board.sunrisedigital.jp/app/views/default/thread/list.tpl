@@ -6,13 +6,41 @@
     <h1 class="panel-title">リストページです</h1>
   </div>
 </div>
-    <p>トップページからスレッドをクリックするとここにジャンプします。ここにはthreadテーブルのIDフィールドに対応したレコードを取得して表示</p>
     
+{*------------スレッド表示第二案------------*}
+<div style="padding: 15px;">
+    <div style="line-height: 3.5;
+         text-indent: 10px;
+         background-color: #9370db;
+         color:white;
+         font-weight:bold;
+         border-radius: 5px;">
+        <i class="icon-tags"></i>thread-{$entry_list->getFirstRecord()->getThread()->getId()}
+        {$entry_list->getFirstRecord()->getThread()->getTitle()}&nbsp;&nbsp;
+        <i class="icon-time"></i>スレッド作成日時：{$entry_list->getFirstRecord()->getThread()->getCreated_at()}
+    </div>
+    <div style="margin: 5px;
+         padding: 5px;">
+    {foreach $entry_list as $record}
+        <dl>
+            <dt style="text-indent:5px;
+                background-color:#d8bfd8;
+                border-radius: 5px;">
+                <i class="icon-pencil"></i>
+                お名前:{$record->getAccount()->getName()}&nbsp;&nbsp;
+                記事投稿日時:{$record->getUpdated_at()}&nbsp;&nbsp;
+                ID:{$record->getAccount_id()}
+            </dt>
+            <dd style="padding-left:10px;">{$record->getBody()}</dd>
+        </dl>
+    {/foreach}
+    </div>
+</div>
+       
 
-{*------------スレッド表示------------*}
-    <table class="table">
-        <tr class="success">
-            <th>ID</th>
+{*------------スレッド表示(第二案と比較用。)------------*}
+{*    <table class="table">
+        <tr class="success">         
             <th>スレッドID</th>
             <th>アカウントID</th>
             <th>お名前</th>
@@ -22,7 +50,6 @@
         </tr>
        {foreach $entry_list as $record}
         <tr>
-             <td>{$record->getId()}</td>
              <td>{$record->getThread_id()}</td>
              <td>{$record->getAccount_id()}</td>
              <td>{$record->getAccount()->getName()}</td>
@@ -32,19 +59,19 @@
         </tr>
         {/foreach}
     </table>
-    
+*}    
 {*------------コメントの投稿フォーム------------*}
-<div class="panel panel-default">
+<div class="panel panel-default" id="entry-form" style="margin:10px;padding:35px;border:solid thin;">
   <div class="panel-heading">
-    <h3 class="panel-title">投稿フォーム</h3>
+      <p><i class="icon-pencil"></i>投稿フォーム</p>
   </div>
   <div class="panel-body">
     {$form->renderStartTag() nofilter}
-      <div class="form-group">
+      {*<div class="form-group">
         {$form.account_id->setLabel('アカウントID')->renderLabel() nofilter}
         {$form.account_id->render([class=>"form-control", placeholder=>$form.account_id->getLabel()]) nofilter}
         {$form.account_id->renderError() nofilter}
-      </div>
+      </div>*}
       <div class="form-group">
         {$form.body->setLabel('コメント')->renderLabel() nofilter}
         {$form.body->render([class=>"form-control", placeholder=>$form.body->getLabel()]) nofilter}

@@ -41,9 +41,10 @@ class ThreadController extends Sdx_Controller_Action_Http
         //確認用ダンプ出力。いらなくなったら消す
         //Sdx_Debug::dump($entry, '$entryの出力結果');
         Sdx_Debug::dump($_SESSION, '$_SESSIONの出力結果');
+        Sdx_Debug::dump($_SESSION["Sdx_Auth"]["storage"]["id"], '$_SESSION内値の出力結果');
         
         //コメント投稿関係はこっちのメソッドに任せる。
-        $form = $this->formCreation();
+        $form = $this->createForm();
         Sdx_Debug::dump($form, '$formの出力結果');
 
         if(isset($_SESSION['form']))
@@ -57,7 +58,7 @@ class ThreadController extends Sdx_Controller_Action_Http
         
 
     }
-    private function formCreation()
+    private function createForm()
     {
         $form = new Sdx_Form();//インスタンス作成
         $form
@@ -66,11 +67,11 @@ class ThreadController extends Sdx_Controller_Action_Http
  
         //各エレメントをフォームにセット
         //アカウントID
-        $elem = new Sdx_Form_Element_Text();
+        $elem = new Sdx_Form_Element_Hidden();
         $elem
-                ->setName('account_id')
-                ->addValidator(new Sdx_Validate_NotEmpty('何も入力ないのは寂しいです'))
-                ->addValidator(new Sdx_Validate_Regexp('/^[0-9]+$/u','つかえるのは数字だけね'));
+                ->setName('account_id');
+                //->addValidator(new Sdx_Validate_NotEmpty('何も入力ないのは寂しいです'))
+                //->addValidator(new Sdx_Validate_Regexp('/^[0-9]+$/u','つかえるのは数字だけね'));
         $form->setElement($elem);
         //コメント
         $elem = new Sdx_Form_Element_Textarea();
@@ -87,7 +88,7 @@ class ThreadController extends Sdx_Controller_Action_Http
         //submitが押されていれば
         if($this->_getParam('submit'))
         {
-          $form = $this->formCreation();
+          $form = $this->createForm();
           //Validateを実行するためにformに値をセット
           //エラーが有った時各エレメントに値を戻す処理も兼ねてます
           $form->bind($this->_getAllParams());//bindメソッドは主に取得したパラメータを配列にしてセット
@@ -100,13 +101,14 @@ class ThreadController extends Sdx_Controller_Action_Http
                   
             try
             {
-              session_start();
+              //session_start();
               if($form->execValidate())
               {
                 $entry
                   ->setBody($this->_getParam('body'))
                   ->setThreadId($this->_getParam('thread_id'))
-                  ->setAccountId($this->_getParam('account_id'));
+                  //->setAccountId($this->_getParam('account_id'));      
+                  ->setAccountId(sprintf('%d', $_SESSION["Sdx_Auth"]["storage"]["id"]));
                 $entry->save();
                 $db->commit();
                 $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/list");
