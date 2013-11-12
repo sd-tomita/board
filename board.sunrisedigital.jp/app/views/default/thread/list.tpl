@@ -61,10 +61,10 @@
     </table>
 *}    
 {*------------コメントの投稿フォーム------------*}
-<div class="panel panel-default" id="entry-form" 
+<div class="panel panel-default" 
      style="margin:10px;
      padding:35px;
-     border:solid thin;
+     border:solid thin #a9a9a9;
      border-radius: 15px;">
 
   <p style="font-weight: bold;"><i class="icon-pencil"></i>コメント投稿フォーム</p>

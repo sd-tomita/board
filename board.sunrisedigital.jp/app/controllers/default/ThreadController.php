@@ -40,13 +40,14 @@ class ThreadController extends Sdx_Controller_Action_Http
         
       //確認用ダンプ出力。いらなくなったら消す
       //Sdx_Debug::dump($entry, '$entryの出力結果');
-      Sdx_Debug::dump($_SESSION, '$_SESSIONの出力結果');
-      Sdx_Debug::dump($_SESSION["Sdx_Auth"]["storage"]["id"], '$_SESSION内値の出力結果');
+      //Sdx_Debug::dump($_SESSION, '$_SESSIONの出力結果');
+      //Sdx_Debug::dump($_SESSION["Sdx_Auth"]["storage"]["id"], '$_SESSION内値の出力結果');
         
       //コメント投稿関係はこっちのメソッドに任せる。
       $form = $this->createForm();
       Sdx_Debug::dump($form, '$formの出力結果');
-
+      
+      //Validateエラー時のメッセージを出力させるためのif文
       if(isset($_SESSION['form']))
       {
         $form->bind($_SESSION['form']);
@@ -63,14 +64,14 @@ class ThreadController extends Sdx_Controller_Action_Http
         ->setMethodToPost();     //メソッドをポストに変更
  
       //各エレメントをフォームにセット
-      //アカウントID
-      $elem = new Sdx_Form_Element_Hidden();
-      $elem
-        ->setName('account_id');
-        //->addValidator(new Sdx_Validate_NotEmpty('何も入力ないのは寂しいです'))
-        //->addValidator(new Sdx_Validate_Regexp('/^[0-9]+$/u','つかえるのは数字だけね'));
-      $form->setElement($elem);
-        //コメント
+                //アカウントIDのフォーム自体をなくす。
+                //$elem = new Sdx_Form_Element_Hidden();
+                //$elem
+                //  ->setName('account_id');
+                  //->addValidator(new Sdx_Validate_NotEmpty('何も入力ないのは寂しいです'))
+                  //->addValidator(new Sdx_Validate_Regexp('/^[0-9]+$/u','つかえるのは数字だけね'));
+                //$form->setElement($elem);
+      //コメント
       $elem = new Sdx_Form_Element_Textarea();
       $elem
         ->setName('body')
@@ -82,7 +83,12 @@ class ThreadController extends Sdx_Controller_Action_Http
     }
     public function saveEntryAction()
     {
-      //submitが押されていれば
+      //ログインチェック
+      //認証されたユーザーはhasId()にtrueが返る。
+      if(!(Sdx_User::getInstance()->hasId()))
+      {
+        $this->forward500();
+      }
       if($this->_getParam('submit'))
       {
         $form = $this->createForm();
@@ -90,7 +96,8 @@ class ThreadController extends Sdx_Controller_Action_Http
         //エラーが有った時各エレメントに値を戻す処理も兼ねてます
         //bindメソッドは主に取得したパラメータを配列にしてセット
         $form->bind($this->_getAllParams());
-        //Validateを実行。trueならトランザクション開始。
+                
+        //Validate実行。trueならトランザクション開始
         if($form->execValidate())
         {
           $entry = new Bd_Orm_Main_Entry();//データベース入出力関係のクラスはこっちにある。
@@ -125,5 +132,5 @@ class ThreadController extends Sdx_Controller_Action_Http
       $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/list#entry-form");
       }         
     }
- }
+} 
 ?>
