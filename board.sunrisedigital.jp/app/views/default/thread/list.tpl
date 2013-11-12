@@ -61,6 +61,7 @@
     </table>
 *}    
 {*------------コメントの投稿フォーム------------*}
+{if $sdx_user->hasId()}
 <div class="panel panel-default" 
      style="margin:10px;
      padding:35px;
@@ -85,4 +86,5 @@
     </form>
   </div>
 </div>
+{/if}
 {/block}
