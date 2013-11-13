@@ -32,7 +32,7 @@
     
 {*------------コメントの投稿フォーム------------*}
 {if $sdx_user->hasId()}
-<div class="panel panel-default" class="thread-entryform">
+<div class="panel panel-default thread-entryform">
   <p><i class="icon-pencil"></i>コメント投稿フォーム</p>
   <div class="panel-body">
     {$form->renderStartTag() nofilter}
