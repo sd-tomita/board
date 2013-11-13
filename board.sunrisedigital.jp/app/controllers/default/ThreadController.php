@@ -36,12 +36,14 @@ class ThreadController extends Sdx_Controller_Action_Http
       $form = $this->createForm();
       
       //Validateエラー時のメッセージを出力させるためのif文
-      if(isset($_SESSION['form']))
+      $error_params = new Sdx_Session();
+      if(isset($error_params->e_params))
       {
-        $form->bind($_SESSION['form']);
+        $form->bind($error_params->e_params);
         $form->execValidate();
-        unset($_SESSION['form']);
+        unset($error_params->e_params);
       }
+
       $this->view->assign('form', $form);
     }
     private function createForm()
@@ -101,7 +103,8 @@ class ThreadController extends Sdx_Controller_Action_Http
         }
         else
         {
-          $_SESSION['form'] = $this->_getAllParams();
+          $error_params = new Sdx_Session();
+          $error_params->e_params = $this->_getAllParams();
           $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/list#entry-form");
         }
       }
