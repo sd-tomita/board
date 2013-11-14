@@ -25,7 +25,7 @@
                 記事投稿日時:{$record->getUpdated_at()}&nbsp;&nbsp;
                 ID:{$record->getAccount_id()}
         </dt>
-        <dd>{$record->getBody()}</dd>
+        <dd>{$record->getBody()|escape|nl2br nofilter}</dd>
     </dl>
     {/foreach}   
 </div>
