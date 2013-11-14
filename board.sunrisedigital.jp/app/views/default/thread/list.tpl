@@ -25,7 +25,7 @@
                 記事投稿日時:{$record->getUpdated_at()}&nbsp;&nbsp;
                 ID:{$record->getAccount_id()}
         </dt>
-        <dd>{$record->getBody()|escape|nl2br nofilter}</dd>
+        <dd>{$record->getBody()|escape|nl2br|replace:'<br />':'<br>' nofilter}</dd>
     </dl>
     {/foreach}   
 </div>
@@ -41,7 +41,7 @@
         {$form.body->renderError() nofilter}
       </div>
       <div class="text-center">
-          <input type="submit" name="submit" value="投稿する！" class="btn btn-success" >
+          <input type="submit" name="submit" value="投稿する！" class="btn btn-success">
       </div>
     </form>
   </div>
