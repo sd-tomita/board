@@ -13,9 +13,9 @@
 {*------------スレッド表示第二案------------*}
 <div class="thread-entrylistbox">
     <div class="thread-titleinfo">
-        <i class="icon-tags"></i>thread-{$entry_list->getFirstRecord()->getThread()->getId()}&nbsp;&nbsp;
+        <i class="icon-tags" ></i>thread-{$entry_list->getFirstRecord()->getThread()->getId()}&nbsp;&nbsp;
         {$entry_list->getFirstRecord()->getThread()->getTitle()}&nbsp;&nbsp;
-        <i class="icon-time"></i>スレッド作成日時：{$entry_list->getFirstRecord()->getThread()->getCreated_at()}
+        <i class="icon-time" /></i>スレッド作成日時：{$entry_list->getFirstRecord()->getThread()->getCreated_at()}
     </div>
     {foreach $entry_list as $record}
     <dl class="thread-entryinfo">
