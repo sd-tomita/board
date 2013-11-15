@@ -37,7 +37,7 @@
   <div class="panel-body">
     {$form->renderStartTag() nofilter}
       <div class="form-group">
-        {$form.body->render([class=>"form-control", placeholder=>$form.body->getLabel()]) nofilter}
+        {$form.body->render([class=>"form-control", placeholder=>'コメントを入力してください']) nofilter}
         {$form.body->renderError() nofilter}
       </div>
       <div class="text-center">
