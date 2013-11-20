@@ -1,52 +1,42 @@
 {extends file='default/base.tpl'}
-{block title append} リストページです{/block}
+{block css}
+    <link rel="stylesheet" href="http://board.sunrisedigital.jp/css/custom_style.css" type="text/css">
+{/block}
+{block title append} エントリリスト{/block}
 {block main_contents}
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h1 class="panel-title">リストページです</h1>
+    <h1 class="panel-title">スレッド別エントリリスト</h1>
   </div>
 </div>
-    <p>トップページからスレッドをクリックするとここにジャンプします。ここにはthreadテーブルのIDフィールドに対応したレコードを取得して表示</p>
     
-
-{*------------スレッド表示------------*}
-    <table class="table">
-        <tr class="success">
-            <th>ID</th>
-            <th>スレッドID</th>
-            <th>アカウントID</th>
-            <th>お名前</th>
-            <th>記事内容</th>
-            <th>記事投稿日時</th>
-            <th>スレ立て日時</th>
-        </tr>
-       {foreach $entry_list as $record}
-        <tr>
-             <td>{$record->getId()}</td>
-             <td>{$record->getThread_id()}</td>
-             <td>{$record->getAccount_id()}</td>
-             <td>{$record->getAccount()->getName()}</td>
-             <td>{$record->getBody()}</td>
-             <td>{$record->getUpdated_at()}</td>
-             <td>{$record->getThread()->getCreated_at()}</td>
-        </tr>
-        {/foreach}
-    </table>
+{*------------スレッド表示第二案------------*}
+<div class="thread-entrylistbox">
+    <div class="thread-titleinfo">
+        <i class="icon-tags" ></i>thread-{$entry_list->getFirstRecord()->getThread()->getId()}&nbsp;&nbsp;
+        {$entry_list->getFirstRecord()->getThread()->getTitle()}&nbsp;&nbsp;
+        <i class="icon-time" /></i>スレッド作成日時：{$entry_list->getFirstRecord()->getThread()->getCreated_at()}
+    </div>
+    {foreach $entry_list as $record}
+    <dl class="thread-entryinfo">
+        <dt>
+                <i class="icon-pencil"></i>
+                お名前:{$record->getAccount()->getName()}&nbsp;&nbsp;
+                記事投稿日時:{$record->getUpdated_at()}&nbsp;&nbsp;
+                ID:{$record->getAccount_id()}
+        </dt>
+        <dd>{$record->getBody()}</dd>
+    </dl>
+    {/foreach}   
+</div>
     
 {*------------コメントの投稿フォーム------------*}
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title">投稿フォーム</h3>
-  </div>
+{if $sdx_user->hasId()}
+<div class="panel panel-default thread-entryform">
+  <p><i class="icon-pencil"></i>コメント投稿フォーム</p>
   <div class="panel-body">
     {$form->renderStartTag() nofilter}
       <div class="form-group">
-        {$form.account_id->setLabel('アカウントID')->renderLabel() nofilter}
-        {$form.account_id->render([class=>"form-control", placeholder=>$form.account_id->getLabel()]) nofilter}
-        {$form.account_id->renderError() nofilter}
-      </div>
-      <div class="form-group">
-        {$form.body->setLabel('コメント')->renderLabel() nofilter}
         {$form.body->render([class=>"form-control", placeholder=>$form.body->getLabel()]) nofilter}
         {$form.body->renderError() nofilter}
       </div>
@@ -56,4 +46,5 @@
     </form>
   </div>
 </div>
+{/if}
 {/block}
