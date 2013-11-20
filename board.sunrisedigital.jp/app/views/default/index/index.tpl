@@ -7,6 +7,10 @@
   </div>
 </div>
 <div>
+<p><a href="/narrow/genre">ジャンル一覧</a></p>
+<p><a href="#">タグ一覧</a></p>
+</div>
+<div>
     <table class="table">
         <tr class="success">
             <th>スレッドNo.</th>

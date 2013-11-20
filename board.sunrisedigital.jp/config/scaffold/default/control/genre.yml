@@ -1,0 +1,30 @@
+model:        Bd_Orm_Main_Genre
+page_name:    ジャンル
+ 
+form:
+  sequence:
+    #カラム名を指定。値は数字で保存されます。
+    column:      sequence
+    #ASCの場合昇順、DESCの場合は降順で並び替えます
+    direction:   DESC
+  fields:
+    id:
+      settings:
+        label: ID
+    name:
+      settings:
+        label: タイトル
+ 
+list:
+  display:
+    - label:     <i class="fa fa-edit"></i>編集
+      action:    edit
+ 
+    - label:     ID
+      column:    id
+ 
+    - label:     タイトル
+      column:    name
+ 
+    - label:     削除
+      action:    delete

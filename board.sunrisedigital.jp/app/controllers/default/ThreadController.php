@@ -36,7 +36,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       $form = $this->createForm();
       
       //Validateエラー時のメッセージを出力させるためのif文
-      $error_params = new Sdx_Session();
+      $error_params = $this->_createSession();
       if(isset($error_params->e_params))
       {
         $form->bind($error_params->e_params);
@@ -92,8 +92,7 @@ class ThreadController extends Sdx_Controller_Action_Http
               ->setThreadId($this->_getParam('thread_id'))
               ->setAccountId(Sdx_Context::getInstance()->getVar('signed_account')->getId());//$_SESSIONから直接とらないように。
             $entry->save();
-            $db->commit();
-            $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/list");
+            $db->commit();  
           }
           catch (Exception $e)
           {
@@ -103,15 +102,17 @@ class ThreadController extends Sdx_Controller_Action_Http
         }
         else
         {
-          $error_params = new Sdx_Session();
-          $error_params->e_params = $this->_getAllParams();
-          $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/list#entry-form");
+          $error_params = $this->_createSession();
+          $error_params->e_params = $this->_getAllParams();  
         }
       }
-      else
-      {
-      $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/list#entry-form");
-      }         
+      $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/list#entry-form");         
+    }
+    //Sdx_Session() は Zend_Session_Namespace の使い方とほぼ同じ。
+    private function _createSession()
+    {
+      //引数がキー名になる。省略するとdefaultキーになる。
+      return new Sdx_Session('THREAD_POST_FORM');    
     }
 } 
 ?>
