@@ -12,13 +12,13 @@
 <h2>メニュー</h2>
 <div class="sub_menu">
   <dl>
-    <dt>ジャンル</dt>
+    <dt><i class=icon-th-large></i> ジャンル</dt>
       {foreach $genre_list as $record}
-      <dd><a href="#">{$record->getName()}</a></dd>
+      <dd><a href="genre/{$record->getId()}/list">{$record->getName()}</a></dd>
       {/foreach}
   </dl>
   <dl>
-    <dt>おすすめタグ</dt>
+    <dt><i class=icon-tags></i> おすすめタグ</dt>
       {foreach $tag_list as $record}
       <dd><a href="#">{$record->getName()}</a></dd>
       {/foreach}
@@ -26,7 +26,7 @@
 
   {if $sdx_user->hasId()}
   <dl>
-    <dt>管理メニュー</dt>
+    <dt><i class=icon-lock></i> 管理メニュー</dt>
       <dd><a href="/control/thread">スレッド管理</a></dd>
       <dd><a href="/control/genre">ジャンル管理</a></dd>
       <dd><a href="/control/tag">タグ管理</a></dd>
