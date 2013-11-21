@@ -1,80 +1,54 @@
-#対処テーブルのレコードクラス名
 model:        Bd_Orm_Main_Thread
-
-#ページのタイトルとして表示されます。テンプレで{$page_name}で参照可能
 page_name:    Thread
-
-#登録用フォームの設定 
-form:
-  #並び替え機能をONにします。詳細については後述
-  sequence:
-    column:      sequence
-    direction:   DESC
  
-  #fields:キー配下にカラム名をキーに設定を記載します。
-  #各フォームエレメントの生成はORMが生成するFormクラスから生成されます。
-  #各Formクラスにcreateカラム名Element()のメソッドがORMにより生成されています。
-  #生成されるフォームを変更したい・バリデータを変更したい場合はそのメソッドをオーバーライドします。
+navi:
+  label: <i class="fa fa-chevron-left"></i> ジャンルに戻る
+  uri:   /control/genre
+ 
+form:
   fields:
-
-    #Autoincrementの主キーも指定するが必要あります。
-    #label:はフォームエレメントのタイトルとして表示されます。
-    #input[type=hidden]のエレメントのlabelは表示されません。
+ 
     id:
-      settings:   {label: ID}
-
-    #write_only:は値が入力されていても表示されなくなります。主に暗号化されたパスワードの入力欄で利用します。
-    #setterは値をセットする時に使用されます。下記の場合`$record->set('raw_password', $value)`が呼ばれます。
-    #comments:はフォームエレメントの下に注意書きとして表示されます。単一でも配列で指定して下さい。
-    #empty_valueはチェックボックス単体のエレメントで、チェックが入らなかった時保存する値を指定します。  
+      settings:
+        label: ID
+ 
     title:
       settings:
         label: タイトル
-        write_only: true
-        setter:     raw_password
-        empty_value: 0
-        comments:
-          - 何か注意書き等コメント記述可能。HTMLもレンダリングされます
-          - 複数指定可能
-          - 一つでも配列にして下さい
-
+ 
     genre_id:
-      settings:   {label: ジャンル}
-    
+      settings:
+        label: ジャンル
+ 
     Tag__id:
-      settings:   {label: タグ}
-
-#リスト用の設定
+      settings:
+        label: タグ
+ 
+grouping:
+  fixed:
+    target:    genre_id
+    model:
+      name:    Bd_Orm_Main_Genre
+      display: name
+ 
 list:
-  #１ページの数を指定します。省略すると全件表示されます。
-  #per_page:      10
-  method:        fetchAllNewerOrdered
-  #それぞれ、削除ボタン、編集ボタンのラベルを指定します。省略可能。HTMLレンダリングします。
-  #編集、削除ボタン、及び並び替えボタンは一番左にまとめて表示されます。
-  delete_label:  削除
-  edit_label:    Edit
-  #表示設定
+  filter:        Bd_Scaffold_Filter_Thread
+  per_page:      10
   display:
-    #column:は$record->get('XXX')が呼ばれます。
-    #get('some_column')を呼ぶとgetSomeColumn()を探し、存在した場合はそのメソッドを呼びます。
-    - label:     編集
+    - label:     <i class="fa fa-edit"></i>編集
       action:    edit
+ 
     - label:     ID
       column:    id
+ 
     - label:     タイトル
       column:    title
-    #$record->get()は.区切りの引数を分解して繰り返し呼びます。
-    #下記例では$record->get('genre')->get('code')が呼ばれます。
-    #style:はHTMLタグのstyle属性にそのまま渡されます。主に幅を指定する場合に使用します。
-    - label:     ジャンル
-      column:    genre.code
-      style:     width:30%;min-width:100px;
  
-    #html:はそのままHTMLとして表示されます。
-    #html:の中に%record:id%があると$record->get(id)が呼ばれ返り値に置換されます。
     - label:     ジャンル
-      html:      <a href="/control/genre?id=%record:genre_id%">ジャンル編集</a>
+      column:    genre.name
+ 
     - label:     登録日時
       column:    created_at
+ 
     - label:     削除
       action:    delete

@@ -2,6 +2,7 @@
 class NarrowController extends Sdx_Controller_Action_Http
 {
     //genreテーブルにジャンルを追加するためのメソッドです。
+    //Scaffoldでつくるまでのまにあわせ。
     public function genreCreateAction()
     {
         $form = new Sdx_Form();//インスタンスを作成
