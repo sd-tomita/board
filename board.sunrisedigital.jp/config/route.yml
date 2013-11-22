@@ -34,3 +34,12 @@ routes:
         action:     index
       reqs:
         genre_id:  '[0-9]+'
+
+  tag_default:
+      route:      /tag/:tag_id/:action
+      defaults:
+        module:   default
+        controller: tag
+        action:     index
+      reqs:
+        genre_id:  '[0-9]+'

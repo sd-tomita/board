@@ -28,7 +28,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       $select = $t_entry->getSelectWithJoin();
       $select->order('thread_id ASC');
       $select->add("thread.id", $this->_getParam('thread_id'));
-
+      Sdx_Debug::dump($select->assemble(), 'じっけん');
       $entry = $t_entry->fetchAll($select);
       $this->view->assign("entry_list", $entry);
       

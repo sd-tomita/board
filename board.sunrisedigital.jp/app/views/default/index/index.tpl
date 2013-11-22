@@ -20,7 +20,7 @@
   <dl>
     <dt><i class=icon-tags></i> おすすめタグ</dt>
       {foreach $tag_list as $record}
-      <dd><a href="#">{$record->getName()}</a></dd>
+      <dd><a href="tag/{$record->getId()}/list">{$record->getName()}</a></dd>
       {/foreach}
   </dl>
 
@@ -35,7 +35,7 @@
 </div>
   
 <div class="thread_list">
-  <h2>スレッド一覧</h2>
+  <h2>スレッド全件</h2>
   <table class="table">
     <tr class="success">
       <th>スレッドNo.</th>
