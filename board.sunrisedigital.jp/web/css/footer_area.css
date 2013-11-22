@@ -1,0 +1,53 @@
+/* 
+    Document   : footer_area
+    Created on : 2013/11/22, 16:42:04
+    Author     : SDP5008
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.origin_footer{
+  border-radius: 5px;
+  padding: 10px;
+  border-top: solid 1px #CCC;
+  background-image: -moz-linear-gradient(top, #cfcfcf, #000000);/*狐用*/
+  background-image: -webkit-linear-gradient(top, #595959, #101010);/*Chrome*/
+  background-image: linear-gradient(top, #cfcfcf, #000000);/*共通*/
+  color: #FFF;
+  font-size: 100%;
+  font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+}
+
+.origin_footer a:link{
+  color: #FFF;
+}
+
+.origin_footer a:visited{
+  color: #FFF;
+}
+
+.origin_footer a:hover{
+  color: #35AEFF;
+}
+
+.footer_menu {
+   display: block;
+   text-decoration: none;
+   margin: 0 auto;
+   color: #FFF;
+   overflow: hidden;
+   text-indent: 10px;
+ }
+
+.footer_menu dl {
+  margin-right: 30px;
+  float: left;
+}
+
+.footer_menu dd {
+  margin-left: 20px;/*text-indent代わり*/
+}
+
+.footer_end {
+  clear: both;
+  text-align: center;
+}

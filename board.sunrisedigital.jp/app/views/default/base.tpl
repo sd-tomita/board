@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css">
+  <link rel="stylesheet" href="/css/footer_area.css" type="text/css">
   <style>
       {*フォームのエラー表示(404等)を整えるためのCSS*}
     .sdx_error{
@@ -17,19 +18,6 @@
     .sdx_error > li:before{
       content: "\f14a";
       font-family: FontAwesome;
-    }
-    {*bootstrapがフッターに対応していないのでフッター用の
-    CSSは自作しています*}
-    .origin_footer{
-        border-radius: 5px;        /* CSS3草案 */  
-        -webkit-border-radius: 5px;    /* Safari,Google Chrome用 */  
-        -moz-border-radius: 5px;   /* Firefox用 */   
-        padding: 10px;
-	border-top: solid 1px #CCC;
-	background-color: #101010;
-	color: #FFF;
-	font-size: 100%;
-	text-align: center;
     }
   </style>
   {block css}{/block}
@@ -67,7 +55,30 @@
   </header>
   {block main_contents}{/block}
   <footer class="origin_footer">
-      &copy;Copyright Sunrise Digital Corporation. All rights reserved. 
+  <div class="footer_menu">
+    <dl>
+      <dt><i class=icon-lock></i> サンライズ関連</dt>
+        <dd><a href="#">会社公式</a></dd>
+        <dd><a href="#">チャットワーク</a></dd>
+        <dd><a href="#">GitHub</a></dd>
+    </dl>
+    <dl>
+      <dt><i class=icon-lock></i> 参考サイト</dt>
+        <dd><a href="#">Google</a></dd>
+        <dd><a href="#">Yahoo!JAPAN</a></dd>
+        <dd><a href="#">サルでもわかるGit入門</a></dd>
+    </dl>
+    <dl>
+      <dt><i class=icon-lock></i> 運営サイト</dt>
+        <dd><a href="#">風俗情報ヌキなび</a></dd>
+        <dd><a href="#">風俗情報スポニチAAA</a></dd>
+        <dd><a href="#">女性求人パピヨンジョブ</a></dd>
+        <dd><a href="#">男性求人ガンガン</a></dd>
+    </dl>
+  </div>
+  <div class="footer_end">
+    &copy;Copyright Sunrise Digital Corporation. All rights reserved.
+  </div>
   </footer>
 </body>
 </html>
