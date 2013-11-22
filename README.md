@@ -27,3 +27,7 @@ board
 
 ■その他  
 　11/22 この手の説明関係は 本README.md にまとめることにしました。  
+
+
+
+* Copyright 2013, Yuichiro Tomita  
