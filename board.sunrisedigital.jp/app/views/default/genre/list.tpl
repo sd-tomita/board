@@ -20,7 +20,7 @@
     {foreach $thread_list as $record}
     <tr>
       <td>{$record->getId()}</td>
-      <td><i class="icon-circle-arrow-right"></i><a href="/thread/{$record->getId()}/list">{$record->getTitle()}</a></td>
+      <td><i class="fa fa-arrow-circle-right"></i><a href="/thread/{$record->getId()}/list">{$record->getTitle()}</a></td>
     </tr>
     {/foreach}
   </table>    

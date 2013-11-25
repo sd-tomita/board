@@ -16,19 +16,31 @@ class ThreadController extends Sdx_Controller_Action_Http
     }
     public function listAction()
     {
+      /*
+       * ここでは以下SQL文を生成しようとしている。
+       * SELECT * FROM entry 
+       * LEFT JOIN account ON account_id = account.id
+       * LEFT JOIN thread ON thread_id = thread.id
+       * WHERE thread.id = "thread_idのパラメータ値"
+       * ORDER BY entry.created_at ASC;
+       */  
+        
       //entryテーブルクラスの取得
       $t_entry = Bd_Orm_Main_Entry::createTable();
+
       //JOIN予定のAccountテーブルのテーブルクラスを取得
       $t_account = Bd_Orm_Main_Account::createTable();
       $t_thread = Bd_Orm_Main_Thread::createTable();
+      
       //JOIN
       $t_entry->addJoinLeft($t_account);
       $t_entry->addJoinLeft($t_thread);
+      
       //selectを取得
       $select = $t_entry->getSelectWithJoin();
-      $select->order('thread_id ASC');
+      $select->order('entry.created_at ASC');
       $select->add("thread.id", $this->_getParam('thread_id'));
-      Sdx_Debug::dump($select->assemble(), 'じっけん');
+      Sdx_Debug::dump($select->assemble(), 'SQL文');
       $entry = $t_entry->fetchAll($select);
       $this->view->assign("entry_list", $entry);
       

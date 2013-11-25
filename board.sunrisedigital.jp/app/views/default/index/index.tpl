@@ -12,13 +12,13 @@
 <h2>メニュー</h2>
 <div class="sub_menu">
   <dl>
-    <dt><i class=icon-th-large></i> ジャンル</dt>
+    <dt><i class="fa fa-th-large"></i> ジャンル</dt>
       {foreach $genre_list as $record}
       <dd><a href="genre/{$record->getId()}/list">{$record->getName()}</a></dd>
       {/foreach}
   </dl>
   <dl>
-    <dt><i class=icon-tags></i> おすすめタグ</dt>
+    <dt><i class="fa fa-tags"></i> おすすめタグ</dt>
       {foreach $tag_list as $record}
       <dd><a href="tag/{$record->getId()}/list">{$record->getName()}</a></dd>
       {/foreach}
@@ -26,7 +26,7 @@
 
   {if $sdx_user->hasId()}
   <dl>
-    <dt><i class=icon-lock></i> 管理メニュー</dt>
+    <dt><i class="fa fa-lock"></i> 管理メニュー</dt>
       <dd><a href="/control/thread">スレッド管理</a></dd>
       <dd><a href="/control/genre">ジャンル管理</a></dd>
       <dd><a href="/control/tag">タグ管理</a></dd>
@@ -47,7 +47,7 @@
     {foreach $thread_list as $record}
     <tr>
       <td>{$record->getId()}</td>
-      <td><i class="icon-circle-arrow-right"></i><a href="thread/{$record->getId()}/list">{$record->getTitle()}</a></td>
+      <td><i class="fa fa-arrow-circle-right"></i><a href="thread/{$record->getId()}/list">{$record->getTitle()}</a></td>
       <td>{$record->getCreated_at()}</td>
       <td>{$record->get('newest_date')}</td> 
     </tr>

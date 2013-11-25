@@ -5,6 +5,11 @@
     Description:
         Purpose of the stylesheet follows.
 */
+
+/*-------------------------------------------
+　フッター用CSS
+-------------------------------------------*/
+ /*フッターエリア全体用*/
 .origin_footer{
   border-radius: 5px;
   padding: 10px;
@@ -17,18 +22,18 @@
   font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
 }
 
+/*擬似クラスでハイパーリンク部分の色が青くならないようにする*/
 .origin_footer a:link{
   color: #FFF;
 }
-
 .origin_footer a:visited{
   color: #FFF;
 }
-
 .origin_footer a:hover{
   color: #35AEFF;
 }
 
+/*横並び部分全体のCSS*/
 .footer_menu {
    display: block;
    text-decoration: none;
@@ -38,6 +43,7 @@
    text-indent: 10px;
  }
 
+ /*floatはdl単位でかける*/
 .footer_menu dl {
   margin-right: 30px;
   float: left;
@@ -47,6 +53,7 @@
   margin-left: 20px;/*text-indent代わり*/
 }
 
+/* Copyright～ の部分 */
 .footer_end {
   clear: both;
   text-align: center;

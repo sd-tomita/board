@@ -20,7 +20,7 @@ class GenreController extends Sdx_Controller_Action_Http
     //Select
     $select = $t_thread->getSelectWithJoin();
     $select->add("genre_id", $this->_getParam('genre_id'));
-    Sdx_Debug::dump($select, 'SQL文');
+    Sdx_Debug::dump($select->assemble(), 'SQL文');
     
     //fetchAllしてテンプレにアサイン。
     $thread_list = $t_thread->fetchAll($select);
