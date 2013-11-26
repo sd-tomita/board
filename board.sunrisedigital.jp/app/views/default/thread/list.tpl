@@ -1,6 +1,6 @@
 {extends file='default/base.tpl'}
 {block css}
-    <link rel="stylesheet" href="http://board.sunrisedigital.jp/css/custom_style.css" type="text/css">
+    <link rel="stylesheet" href="/css/list_page.css" type="text/css">
 {/block}
 {block title append} エントリリスト{/block}
 {block main_contents}
@@ -37,7 +37,7 @@
   <div class="panel-body">
     {$form->renderStartTag() nofilter}
       <div class="form-group">
-        {$form.body->render([class=>"form-control", placeholder=>$form.body->getLabel()]) nofilter}
+        {$form.body->render([class=>"form-control", placeholder=>'コメントを入力してください']) nofilter}
         {$form.body->renderError() nofilter}
       </div>
       <div class="text-center">

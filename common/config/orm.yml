@@ -18,7 +18,7 @@ board_master:
           table:      entry # 対象の相手
           references: id # 自テーブル(ここではaccount)での関連カラム名
           foreign:    account_id # 相手(entry)の対象カラム名
-          
+
         - type:       one_many
           table:      auto_login 
           references: id
@@ -26,10 +26,30 @@ board_master:
 
     thread:
       relations:
+        - type:       many_one
+          table:      genre
+          references: genre_id
+          foreign:    id
+
         - type:       one_many
           table:      entry
           references: id
           foreign:    thread_id
+
+        - type:       many_many
+          table:      tag
+          mid_table:  thread_tag
+          references: id
+          foreign:    thread_id
+
+    tag:
+      relations:
+        - type:       many_many
+          table:      thread
+          mid_table:  thread_tag
+          references: id
+          foreign:    tag_id
+
 #  tables:
 #    table_name:
 #      const:

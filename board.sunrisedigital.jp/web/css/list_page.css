@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+/*---------------------------------------------
+	エントリ一覧ページに使ったCSS
+---------------------------------------------*/
+.thread-entrylistbox {
+  padding: 20px;
+}
+
+.thread-titleinfo {
+	
+  line-height: 3.5;
+  border-left: solid 15px #9370db;
+  border-bottom: solid 1px;
+  text-indent: 5px;
+  font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+  font-weight:bold;
+}
+
+.thread-entryinfo {
+  border: solid 1px #b3b3b3;
+  margin-bottom: 5px;
+}
+
+.thread-entryinfo dt {
+  text-indent:5px;
+  background-color:#d8bfd8;
+  font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+}
+
+.thread-entryinfo dd {
+  padding:10px;
+}
+
+/*以下は投稿フォーム関係*/
+.thread-entryform {
+  margin:10px;
+  background-color: #CCC;
+  padding:35px;
+  border:solid thin #a9a9a9;
+}
+
+.thread-entryform p {
+  font-weight: bold;
+  font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+}

@@ -46,5 +46,31 @@ class IndexController extends Sdx_Controller_Action_Http
     Sdx_Debug::dump($select->assemble(), '$selectのSQL');//assembleでSelect結果を配列化
             
     $this->view->assign("thread_list", $thread);
+    
+    //ジャンル一覧とタグ一覧に使うレコードはこっちで取得する。
+    $this->_subMenu();
   }
+  //ジャンル名とタグ名をTOPに出すためのレコードを取得するメソッド
+  private function _subMenu()
+  {
+     //ジャンルとタグのテーブルクラス
+    $t_genre = Bd_Orm_Main_Genre::createTable();
+    $t_tag = Bd_Orm_Main_Tag::createTable();
+    
+    //ジャンルのレコード
+    $genre_select = $t_genre->getSelect()->order('id DESC');
+    $genre_list = $t_genre->fetchAll($genre_select);
+    $this->view->assign('genre_list', $genre_list);
+    
+    //タグのレコード
+    $tag_select = $t_tag->getSelect()->order('id DESC');
+    $tag_list = $t_tag->fetchAll($tag_select);
+    $this->view->assign('tag_list', $tag_list);
+  }
+  //作ってはみたものの、あまり効率化にならなかったので下記メソッドは使用しないことにします。
+//  private function _simpleSelect($sometable_class)
+//  {
+//    $sometable_class->getSelect()->order('id DESC');
+//    return $this;
+//  }
 }

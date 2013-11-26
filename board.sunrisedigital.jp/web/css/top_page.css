@@ -1,0 +1,36 @@
+@charset "UTF-8";
+/*---------------------------------------
+　トップページ用
+---------------------------------------*/
+h2 {
+  margin:1px;
+  background-color:white;
+  border-left: solid 10px #CCC;
+  border-bottom: solid 1px #CCC; 
+  text-indent: 5px; 
+  font-size: 1.6em;
+  font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+}
+ 
+.sub_menu {
+   overflow: hidden;
+   margin-bottom: 30px;
+   text-indent: 10px;
+   background-image: -webkit-linear-gradient(top, #e6e6fa, #d3d3e6);
+   border: solid 1px #e6e6fa;
+   border-radius: 5px;
+   background-color: #e6e6fa;
+ }
+
+.sub_menu dl {
+  margin-right: 30px;
+  float: left;
+}
+
+.sub_menu dd {
+  margin-left: 20px;/*text-indent代わり*/
+}
+
+.thread_list {
+  clear: both;
+}
