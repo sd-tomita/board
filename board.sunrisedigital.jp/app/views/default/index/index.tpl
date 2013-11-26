@@ -11,16 +11,17 @@
 </div>
 <h2>メニュー</h2>
 <div class="sub_menu">
+  <p><a href="/thread/entrance/thread-list">スレッド全件表示</a></p>
   <dl>
     <dt><i class="fa fa-th-large"></i> ジャンル</dt>
       {foreach $genre_list as $record}
-      <dd><a href="genre/{$record->getId()}/list">{$record->getName()}</a></dd>
+      <dd><a href="/thread/entrance/thread-list?genre_id={$record->getId()}">{$record->getName()}</a></dd>
       {/foreach}
   </dl>
   <dl>
     <dt><i class="fa fa-tags"></i> おすすめタグ</dt>
       {foreach $tag_list as $record}
-      <dd><a href="tag/{$record->getId()}/list">{$record->getName()}</a></dd>
+      <dd><a href="/thread/entrance/thread-list?tag_id={$record->getId()}">{$record->getName()}</a></dd>
       {/foreach}
   </dl>
 
@@ -33,26 +34,4 @@
   </dl>
   {/if}
 </div>
-  
-<div class="thread_list">
-  <h2>スレッド全件</h2>
-  <table class="table">
-    <tr class="success">
-      <th>スレッドNo.</th>
-      <th>スレッド名</th>
-      <th>スレッド作成日時</th>
-      <th>最終エントリ日時</th>
-    </tr>
-    
-    {foreach $thread_list as $record}
-    <tr>
-      <td>{$record->getId()}</td>
-      <td><i class="fa fa-arrow-circle-right"></i><a href="thread/{$record->getId()}/list">{$record->getTitle()}</a></td>
-      <td>{$record->getCreated_at()}</td>
-      <td>{$record->get('newest_date')}</td> 
-    </tr>
-    {/foreach}
-  </table>    
-</div>
-<span class="only_clear"></span>
 {/block}

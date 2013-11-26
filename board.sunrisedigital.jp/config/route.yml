@@ -26,6 +26,15 @@ routes:
       reqs:
         thread_id:  '[0-9]+'
 
+  thread_itiran:
+      route:      /thread/:thread_id/:action
+      defaults:
+        module:   default
+        controller: thread
+        action:     index
+      reqs:
+        thread_id:  'entrance'
+
   genre_default:
       route:      /genre/:genre_id/:action
       defaults:
