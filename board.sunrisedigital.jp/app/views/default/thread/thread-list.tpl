@@ -38,8 +38,8 @@
     <tr>
       <td>{$record->getId()}</td>
       <td><i class="fa fa-arrow-circle-right"></i><a href="/thread/{$record->getId()}/list">{$record->getTitle()}</a></td>
-      <td>{$record->getCreated_at()}</td>
-      <td>{$record->get('newest_date')}</td> 
+      <td>{$record->getCreated_at()|date_format:"%Y年%m月%d日(%a) %H:%M:%S"|replace:"Sun":"日"|replace:"Mon":"月"|replace:"Tue":"火"|replace:"Wed":"水"|replace:"Thu":"木"|replace:"Fri":"金"|replace:"Sat":"土"}</td>
+      <td>{$record->get('newest_date')|date_format:"%Y年%m月%d日(%a) %H:%M:%S"|replace:"Sun":"日"|replace:"Mon":"月"|replace:"Tue":"火"|replace:"Wed":"水"|replace:"Thu":"木"|replace:"Fri":"金"|replace:"Sat":"土"}</td> 
     </tr>
     {/foreach}
   </table>    
