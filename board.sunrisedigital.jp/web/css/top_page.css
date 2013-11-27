@@ -14,7 +14,8 @@ h2 {
  
 .sub_menu {
    overflow: hidden;
-   margin-bottom: 30px;
+   margin: 15px;
+   padding: 15px;
    text-indent: 10px;
    background-image: -webkit-linear-gradient(top, #e6e6fa, #d3d3e6);
    border: solid 1px #e6e6fa;
@@ -22,15 +23,41 @@ h2 {
    background-color: #e6e6fa;
  }
 
+.sub_menu p a {
+  font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+  padding: 5px;
+  border-radius: 5px;
+  border: solid 1px #77AEFF;
+  color: white;
+  background-color: #77AEFF;
+  text-decoration: none;
+  text-align: center;
+  font-size: 14px;
+}
+
+.sub_menu p a:link {
+  color: white;    
+}
+
+.sub_menu p a:visited {
+  color: white;
+}
+
+.sub_menu p a:hover {
+  border: solid 1px #7777FF;
+  background-color: #7777FF;
+  color: white;
+}
+
 .sub_menu dl {
-  margin-right: 30px;
-  float: left;
+  margin-bottom: 40px;
 }
 
 .sub_menu dd {
+  /*float: left;*/
   margin-left: 20px;/*text-indent代わり*/
 }
 
-.thread_list {
-  clear: both;
+.clear_both {
+  clear:both;
 }

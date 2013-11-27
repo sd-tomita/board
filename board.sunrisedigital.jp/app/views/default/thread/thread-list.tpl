@@ -1,6 +1,7 @@
 {extends file='default/base.tpl'}
 {block css}
     <link rel="stylesheet" href="/css/top_page.css" type="text/css">
+    <link rel="stylesheet" href="/css/threadlist_page.css" type="text/css">
 {/block}
 {block title append} スレッドリスト{/block}
 {block main_contents}
@@ -11,21 +12,21 @@
 </div>
 
 <div class="thread_list">
-  <h2>スレッドリスト</h2>
-  <dl>
-  <dt>表示モード</dt>
-  {if $smarty.get.genre_id}
-  <dd>ジャンル別表示</dd>
-  <dt>ジャンル名</dt>
-  <dd>{$thread_list->getFirstRecord()->getGenre()->getName()}</dd>
-  {elseif $smarty.get.tag_id}
-  <dd>タグ別表示</dd>
-  <dt>タグ名</dt>
-  <dd>{$tag_name->getFirstRecord()->getName()}</dd>
-  {else}
-  <p>全件表示</p>
-  {/if}
+  <dl class="status_disp">
+    <dt>表示モード</dt>
+    {if $smarty.get.genre_id}
+    <dd>ジャンル別表示</dd>
+    <dt>ジャンル名</dt>
+    <dd>{$thread_list->getFirstRecord()->getGenre()->getName()}</dd>
+    {elseif $smarty.get.tag_id}
+    <dd>タグ別表示</dd>
+    <dt>タグ名</dt>
+    <dd>{$tag_name->getFirstRecord()->getName()}</dd>
+    {else}
+    <dd>全件表示</dd>
+    {/if}
   </dl>
+  <h2>スレッドリスト</h2>
   <table class="table">
     <tr class="success">
       <th>スレッドNo.</th>

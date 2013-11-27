@@ -11,7 +11,7 @@
 </div>
 <h2>メニュー</h2>
 <div class="sub_menu">
-  <p><a href="/thread/entrance/thread-list">スレッド全件表示</a></p>
+    <p><a href="/thread/entrance/thread-list">スレッド全件表示</a></p>
   <dl>
     <dt><i class="fa fa-th-large"></i> ジャンル</dt>
       {foreach $genre_list as $record}
@@ -33,5 +33,7 @@
       <dd><a href="/control/tag">タグ管理</a></dd>
   </dl>
   {/if}
+  
+  <span class="clear_both"></span>
 </div>
 {/block}
