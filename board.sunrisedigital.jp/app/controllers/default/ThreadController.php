@@ -93,8 +93,11 @@ class ThreadController extends Sdx_Controller_Action_Http
         $this->view->assign('tag_name',$tag_name);
       }
          
-      //joinがひととおり終わったら最後に順番を指定してfetchAll()
-      $main_sel->order('newest_date DESC');
+      //まずNULL値順にする
+      $main_sel->order(new Zend_Db_Expr('sub.newest_date IS NULL DESC'));
+      //元のnewest_date降順
+      $main_sel->order('sub.newest_date DESC');
+      
       $thread = $t_thread->fetchAll($main_sel);
             
       $this->view->assign("thread_list", $thread);
