@@ -33,16 +33,14 @@
       <th>スレッド作成日時</th>
       <th>最終エントリ日時</th>
     </tr>
-    {assign var=day_list value=['Sun'=>'日','Mon'=>'月','Tue'=>'火','Wed'=>'水','Thu'=>'木','Fri'=>'金','Sat'=>'土']}
     {foreach $thread_list as $record}
     <tr>
       <td>{$record->getId()}</td>
       <td><i class="fa fa-arrow-circle-right"></i><a href="/thread/{$record->getId()}/list">{$record->getTitle()}</a></td>
-      <td>{$record->getCreated_at()}</td>
-      <td>{$record->get('newest_date')}</td> 
+      <td>{$record->getFormatedDateByZend('created_at', 'yyyy年MM月dd日(E) HH時mm分ss秒')}</td>
+      <td>{if $record->get('newest_date')}{$record->getFormatedDateByZend('newest_date', 'yyyy年MM月dd日(E) HH時mm分ss秒')}{/if}</td> 
     </tr>
     {/foreach}
   </table>    
 </div>
-<span class="only_clear"></span>
 {/block}
