@@ -21,7 +21,7 @@
   {elseif $smarty.get.tag_id}
   <dd>タグ別表示</dd>
   <dt>タグ名</dt>
-  <dd>{$thread_list->getFirstRecord()->getThreadTagList()->getFirstRecord()->getTag()->getName()}</dd>
+  <dd>{$tag_name->getFirstRecord()->getName()}</dd>
   {else}
   <p>全件表示</p>
   {/if}
@@ -33,13 +33,13 @@
       <th>スレッド作成日時</th>
       <th>最終エントリ日時</th>
     </tr>
-    
+    {assign var=day_list value=['Sun'=>'日','Mon'=>'月','Tue'=>'火','Wed'=>'水','Thu'=>'木','Fri'=>'金','Sat'=>'土']}
     {foreach $thread_list as $record}
     <tr>
       <td>{$record->getId()}</td>
       <td><i class="fa fa-arrow-circle-right"></i><a href="/thread/{$record->getId()}/list">{$record->getTitle()}</a></td>
-      <td>{$record->getCreated_at()|date_format:"%Y年%m月%d日(%a) %H:%M:%S"|replace:"Sun":"日"|replace:"Mon":"月"|replace:"Tue":"火"|replace:"Wed":"水"|replace:"Thu":"木"|replace:"Fri":"金"|replace:"Sat":"土"}</td>
-      <td>{$record->get('newest_date')|date_format:"%Y年%m月%d日(%a) %H:%M:%S"|replace:"Sun":"日"|replace:"Mon":"月"|replace:"Tue":"火"|replace:"Wed":"水"|replace:"Thu":"木"|replace:"Fri":"金"|replace:"Sat":"土"}</td> 
+      <td>{$record->getCreated_at()}</td>
+      <td>{$record->get('newest_date')}</td> 
     </tr>
     {/foreach}
   </table>    
