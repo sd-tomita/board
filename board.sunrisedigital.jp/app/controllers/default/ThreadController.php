@@ -33,7 +33,6 @@ class ThreadController extends Sdx_Controller_Action_Http
         0 => 'thread_id', 
         'newest_date' => 'MAX(entry.created_at)'
       ));
-      Sdx_Debug::dump($sub_sel->assemble(), '$sub_selのSQL');
   
       //こっちがメインのSelect。これに必要なテーブルをjoinしていく
       $t_thread = Bd_Orm_Main_Thread::createTable();
@@ -97,8 +96,6 @@ class ThreadController extends Sdx_Controller_Action_Http
       //joinがひととおり終わったら最後に順番を指定してfetchAll()
       $main_sel->order('newest_date DESC');
       $thread = $t_thread->fetchAll($main_sel);
-                    
-      Sdx_Debug::dump($main_sel->assemble(), '$main_selのSQL');//assembleでSelect結果を配列化
             
       $this->view->assign("thread_list", $thread);
     
@@ -129,7 +126,6 @@ class ThreadController extends Sdx_Controller_Action_Http
       $select = $t_entry->getSelectWithJoin();
       $select->order('entry.created_at ASC');
       $select->add("thread.id", $this->_getParam('thread_id'));
-      Sdx_Debug::dump($select->assemble(), 'SQL文');
       $entry = $t_entry->fetchAll($select);
       $this->view->assign("entry_list", $entry);
       
