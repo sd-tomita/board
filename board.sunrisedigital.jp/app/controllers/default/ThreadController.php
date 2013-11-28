@@ -86,7 +86,10 @@ class ThreadController extends Sdx_Controller_Action_Http
           ));
         $main_sel->add('thread_tag.tag_id', $this->_getParam('tag_id'));
         
-        //タグ名だけを取得
+        /*
+         * 1つのスレッドの中に複数タグを持っている場合に
+         * 表示に使うタグ名だけをピンポイントでSelectする用
+         */
         $tag_name_sel = $t_tag->getSelect();
         $tag_name_sel->resetColumns()->columns('name')->add('id', $this->_getParam('tag_id'));
         $tag_name = $t_tag->fetchAll($tag_name_sel);
