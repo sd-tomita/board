@@ -34,6 +34,5 @@
   </dl>
   {/if}
   
-  <span class="clear_both"></span>
 </div>
 {/block}
