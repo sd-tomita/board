@@ -1,6 +1,6 @@
 <?php
 class ThreadController extends Sdx_Controller_Action_Http
-{
+{   
     public function indexAction()
     {
       Sdx_Debug::dump($this->_getParam('thread_id'), 'title');
@@ -13,6 +13,98 @@ class ThreadController extends Sdx_Controller_Action_Http
     public function deleteAction()
     {
         
+    }
+    public function threadListAction()
+    {
+      /*
+       * ここにIndexControllerのindexAction()で行っていた
+       * スレッド全件を出す処理を書く。
+       * そのときにスレッドID、タグIDはGET形式で送信し、
+       * GETの値があれば絞り込んでリストを出すようにする。
+       */
+               
+      //サブクエリ用
+      $t_entry = Bd_Orm_Main_Entry::createTable();
+      $sub_sel = $t_entry->getSelect();
+      $sub_sel->group('thread_id');
+
+      $sub_sel->resetColumns();
+      $sub_sel->columns(array(
+        0 => 'thread_id', 
+        'newest_date' => 'MAX(entry.created_at)'
+      ));
+  
+      //こっちがメインのSelect。これに必要なテーブルをjoinしていく
+      $t_thread = Bd_Orm_Main_Thread::createTable();
+      $main_sel = $t_thread->getSelectWithJoin();
+                       
+      //ネストされるSQL文の外側を()で囲うためだけのものです。
+      $sub = sprintf('(%s)', $sub_sel->assemble());
+      //本Selectにjoinする。
+      $main_sel->joinLeft(
+        array('sub' => new Zend_Db_Expr($sub)) ,
+        'thread.id = sub.thread_id'
+      );
+      
+      //$_GET['genre_id']があればjoinする
+      if($this->_getParam('genre_id'))
+      {
+        $t_genre = Bd_Orm_Main_Genre::createTable();
+        $main_sel->joinInner('genre', 'thread.genre_id = genre.id');
+        
+        //同じ名前のカラムが複数存在してしまうのを防ぐための処理
+        $main_sel
+          ->resetColumns()
+          ->columns(array(
+              'thread.id', 
+              'thread.title', 
+              'thread.created_at', 
+              'thread.genre_id', 
+              'sub.*', 
+              'genre.name'
+          ));
+        
+        $main_sel->add('thread.genre_id', $this->_getParam('genre_id'));      
+      }
+      
+      //$_GET['tag_id']があればjoinする
+      if($this->_getParam('tag_id'))
+      {
+        $t_threadtag = Bd_Orm_Main_ThreadTag::createTable();
+        $t_tag = Bd_Orm_Main_Tag::createTable();
+        $main_sel
+          ->joinInner('thread_tag', 'thread.id = thread_tag.thread_id')
+          ->joinInner('tag', 'thread_tag.tag_id = tag.id');
+        $main_sel
+          ->resetColumns()
+          ->columns(array(
+            'thread.id', 
+            'thread.title', 
+            'thread.created_at', 
+            'sub.*', 
+            'tag.name'
+          ));
+        $main_sel->add('thread_tag.tag_id', $this->_getParam('tag_id'));
+        
+        /*
+         * 1つのスレッドの中に複数タグを持っている場合に
+         * 表示に使うタグ名だけをピンポイントでSelectする用
+         */
+        $tag_name_sel = $t_tag->getSelect();
+        $tag_name_sel->resetColumns()->columns('name')->add('id', $this->_getParam('tag_id'));
+        $tag_name = $t_tag->fetchAll($tag_name_sel);
+        $this->view->assign('tag_name',$tag_name);
+      }
+         
+      //まずNULL値順にする
+      $main_sel->order(new Zend_Db_Expr('sub.newest_date IS NULL DESC'));
+      //元のnewest_date降順
+      $main_sel->order('sub.newest_date DESC');
+      
+      $thread = $t_thread->fetchAll($main_sel);
+            
+      $this->view->assign("thread_list", $thread);
+    
     }
     public function listAction()
     {
@@ -35,12 +127,11 @@ class ThreadController extends Sdx_Controller_Action_Http
       //JOIN
       $t_entry->addJoinLeft($t_account);
       $t_entry->addJoinLeft($t_thread);
-      
+                
       //selectを取得
       $select = $t_entry->getSelectWithJoin();
       $select->order('entry.created_at ASC');
       $select->add("thread.id", $this->_getParam('thread_id'));
-      Sdx_Debug::dump($select->assemble(), 'SQL文');
       $entry = $t_entry->fetchAll($select);
       $this->view->assign("entry_list", $entry);
       
@@ -48,12 +139,12 @@ class ThreadController extends Sdx_Controller_Action_Http
       $form = $this->createForm();
       
       //Validateエラー時のメッセージを出力させるためのif文
-      $error_params = $this->_createSession();
-      if(isset($error_params->e_params))
+      $error_session = $this->_createSession();
+      if(isset($error_session->params))
       {
-        $form->bind($error_params->e_params);
+        $form->bind($error_session->params);
         $form->execValidate();
-        unset($error_params->e_params);
+        unset($error_session->params);
       }
 
       $this->view->assign('form', $form);
@@ -114,8 +205,8 @@ class ThreadController extends Sdx_Controller_Action_Http
         }
         else
         {
-          $error_params = $this->_createSession();
-          $error_params->e_params = $this->_getAllParams();  
+          $error_session = $this->_createSession();
+          $error_session->params = $this->_getAllParams();  
         }
       }
       $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/list#entry-form");         

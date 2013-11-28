@@ -10,19 +10,19 @@
   </div>
 </div>
     
-{*------------スレッド表示第二案------------*}
+{*------------スレッド表示------------*}
 <div class="thread-entrylistbox">
     <div class="thread-titleinfo">
         <i class="icon-tags" ></i>thread-{$entry_list->getFirstRecord()->getThread()->getId()}&nbsp;&nbsp;
         {$entry_list->getFirstRecord()->getThread()->getTitle()}&nbsp;&nbsp;
-        <i class="icon-time" /></i>スレッド作成日時：{$entry_list->getFirstRecord()->getThread()->getCreated_at()}
+        <i class="icon-time" /></i>スレッド作成日時：{$entry_list->getFirstRecord()->getThread()->getFormatedDateByZend('created_at', 'yyyy年MM月dd日(E) HH時mm分ss秒')}
     </div>
     {foreach $entry_list as $record}
     <dl class="thread-entryinfo">
         <dt>
                 <i class="icon-pencil"></i>
                 お名前:{$record->getAccount()->getName()}&nbsp;&nbsp;
-                記事投稿日時:{$record->getUpdated_at()}&nbsp;&nbsp;
+                記事投稿日時:{$record->getFormatedDateByZend('updated_at', 'yyyy年MM月dd日(E) HH時mm分ss秒')}&nbsp;&nbsp;
                 ID:{$record->getAccount_id()}
         </dt>
         <dd>{$record->getBody()|escape|nl2br|replace:'<br />':'<br>' nofilter}</dd>
