@@ -1,6 +1,6 @@
 {extends file='default/base.tpl'}
 {block css}
-    <link rel="stylesheet" href="/css/top_page.css" type="text/css">
+    <link rel="stylesheet" href="/css/top.css" type="text/css">
 {/block}
 {block title append} indexです{/block}
 {block main_contents}

@@ -1,7 +1,7 @@
 {extends file='default/base.tpl'}
 {block css}
-    <link rel="stylesheet" href="/css/top_page.css" type="text/css">
-    <link rel="stylesheet" href="/css/threadlist_page.css" type="text/css">
+    <link rel="stylesheet" href="/css/top.css" type="text/css">
+    <link rel="stylesheet" href="/css/threadlist.css" type="text/css">
 {/block}
 {block title append} スレッドリスト{/block}
 {block main_contents}
