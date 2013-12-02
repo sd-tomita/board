@@ -61,7 +61,7 @@ class ThreadController extends Sdx_Controller_Action_Http
               'thread.created_at', 
               'thread.genre_id', 
               'sub.*', 
-              'genre.name'
+              'genre.name AS genre_name'
           ));
         
         $main_sel->add('thread.genre_id', $this->_getParam('genre_id'));      
@@ -73,8 +73,8 @@ class ThreadController extends Sdx_Controller_Action_Http
         $t_threadtag = Bd_Orm_Main_ThreadTag::createTable();
         $t_tag = Bd_Orm_Main_Tag::createTable();
         $main_sel
-          ->joinInner('thread_tag', 'thread.id = thread_tag.thread_id')
-          ->joinInner('tag', 'thread_tag.tag_id = tag.id');
+          ->joinLeft('thread_tag', 'thread.id = thread_tag.thread_id')
+          ->joinLeft('tag', 'thread_tag.tag_id = tag.id');
         $main_sel
           ->resetColumns()
           ->columns(array(
@@ -84,16 +84,32 @@ class ThreadController extends Sdx_Controller_Action_Http
             'sub.*', 
             'tag.name'
           ));
-        $main_sel->add('thread_tag.tag_id', $this->_getParam('tag_id'));
+        
+        //万が一、事前にジャンルテーブルとのjoinもしていた場合、
+        //上記のresetColumnsでカラムが消えているので、もう1回追加しておく。
+        //なお、tag.nameと名前がかぶるのを防ぐため、こっちはASで別名を付ける。
+        if($this->_getParam('genre_id'))
+        {
+          $main_sel->columns('genre.name AS genre_name');
+        }
+        
+        //$_GET['tag_id']の中身をひとつづつ絞込み条件に追加していく
+        $main_sel
+          ->add('thread_tag.tag_id', $this->_getParam('tag_id'))
+          ->group('id')
+          ->having('COUNT(tag_id) ='.count($this->_getParam('tag_id')));
         
         /*
          * 1つのスレッドの中に複数タグを持っている場合に
-         * 表示に使うタグ名だけをピンポイントでSelectする用
+         * 表示に使うタグ名をSelectする用
          */
         $tag_name_sel = $t_tag->getSelect();
-        $tag_name_sel->resetColumns()->columns('name')->add('id', $this->_getParam('tag_id'));
-        $tag_name = $t_tag->fetchAll($tag_name_sel);
-        $this->view->assign('tag_name',$tag_name);
+        $tag_name_sel
+          ->resetColumns()->columns('name')
+          ->add('id', $this->_getParam('tag_id')
+        );
+        $tag_name_list = $t_tag->fetchAll($tag_name_sel);
+        $this->view->assign('tag_name_list',$tag_name_list);
       }
          
       //まずNULL値順にする
@@ -102,7 +118,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       $main_sel->order('sub.newest_date DESC');
       
       $thread = $t_thread->fetchAll($main_sel);
-            
+      Sdx_Debug::dump($main_sel->assemble(), '$main_selのSQL');        
       $this->view->assign("thread_list", $thread);
     
     }
@@ -217,5 +233,13 @@ class ThreadController extends Sdx_Controller_Action_Http
       //引数がキー名になる。省略するとdefaultキーになる。
       return new Sdx_Session('THREAD_POST_FORM');    
     }
+    /*
+     * jquery.ajaxを使ったリストの取得を行うメソッド
+     * とりあえずは置いてみるだけ。
+     */
+    public function useAjaxAction() 
+    {
+      Sdx_Debug::dump('test', $GLOBALS);
+    } 
 } 
 ?>

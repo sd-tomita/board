@@ -13,16 +13,17 @@
 
 <div class="thread_list">
   <dl class="status_disp">
-    <dt>表示モード</dt>
     {if $smarty.get.genre_id}
-    <dd>ジャンル別表示</dd>
-    <dt>ジャンル名</dt>
-    <dd>{$thread_list->getFirstRecord()->getGenre()->getName()}</dd>
-    {elseif $smarty.get.tag_id}
-    <dd>タグ別表示</dd>
-    <dt>タグ名</dt>
-    <dd>{$tag_name->getFirstRecord()->getName()}</dd>
-    {else}
+    <dt>検索中のジャンル名</dt>
+    <dd>{$thread_list->getFirstRecord()->get('genre_name')}</dd>
+    {/if}
+    {if $smarty.get.tag_id}
+    <dt>検索中のタグ名</dt>
+    {foreach $tag_name_list as $tag_name}
+    <dd>｢{$tag_name->getName()}｣</dd>
+    {/foreach}
+    {/if}
+    {if !$smarty.get.genre_id && !$smarty.get.tag_id}
     <dd>全件表示</dd>
     {/if}
   </dl>
