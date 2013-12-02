@@ -93,7 +93,8 @@ class ThreadController extends Sdx_Controller_Action_Http
           $main_sel->columns('genre.name AS genre_name');
         }
         
-        //$_GET['tag_id']の中身をひとつづつ絞込み条件に追加していく
+        //$_GET['tag_id']を絞込み条件に追加する。Where～inで追加し、
+        //複数($_GET['tag_id']の配列数)分持っているスレッドだけを抽出する
         $main_sel
           ->add('thread_tag.tag_id', $this->_getParam('tag_id'))
           ->group('id')
