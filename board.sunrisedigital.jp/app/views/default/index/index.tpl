@@ -10,8 +10,15 @@
   </div>
 </div>
 <h2>メニュー</h2>
+<ul>
+{foreach $thread_list as $record}
+    <li>{$record->get()}</li>
+
+{/foreach}
+</ul>
+{*
 <div class="sub_menu">
-  {*<p><a href="/thread/entrance/thread-list">スレッド全件表示</a></p>*}
+  <p><a href="/thread/entrance/thread-list">スレッド全件表示</a></p>
 
 <form action="/thread/entrance/thread-list" method="GET">
 <dl>
@@ -39,4 +46,6 @@
   {/if}
   
 </div>
+*}
+
 {/block}

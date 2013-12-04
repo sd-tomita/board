@@ -14,114 +14,77 @@ class ThreadController extends Sdx_Controller_Action_Http
     {
         
     }
+    /*
+     * スレッド一覧はthreadListActionに集約する。
+     * どういう条件で検索されても、全てこのアクションで
+     * 処理を行い、レコードリストを返すようにする。
+     */
     public function threadListAction()
-    {
-      /*
-       * ここにIndexControllerのindexAction()で行っていた
-       * スレッド全件を出す処理を書く。
-       * そのときにスレッドID、タグIDはGET形式で送信し、
-       * GETの値があれば絞り込んでリストを出すようにする。
+    {   
+      /* *
+       * ①全スレッド取得
+       * エントリがあった順
        */
-               
-      //サブクエリ用
+      
+      //サブクエリ  
       $t_entry = Bd_Orm_Main_Entry::createTable();
       $sub_sel = $t_entry->getSelect();
       $sub_sel->group('thread_id');
-
-      $sub_sel->resetColumns();
-      $sub_sel->columns(array(
+      $sub_sel->setColumns(array(
         0 => 'thread_id', 
         'newest_date' => 'MAX(entry.created_at)'
       ));
-  
-      //こっちがメインのSelect。これに必要なテーブルをjoinしていく
+      $sub = sprintf('(%s)', $sub_sel->assemble());
+
+      //こっちがメインセレクト
       $t_thread = Bd_Orm_Main_Thread::createTable();
       $main_sel = $t_thread->getSelectWithJoin();
-                       
-      //ネストされるSQL文の外側を()で囲うためだけのものです。
-      $sub = sprintf('(%s)', $sub_sel->assemble());
-      //本Selectにjoinする。
       $main_sel->joinLeft(
         array('sub' => new Zend_Db_Expr($sub)) ,
         'thread.id = sub.thread_id'
       );
-      
-      //$_GET['genre_id']があればjoinする
+
+      /* *
+       * ②ジャンルで絞りこみをかけたい場合
+       * テーブル内に既にgenre_idがあるのでそれを使う
+       */
       if($this->_getParam('genre_id'))
       {
-        $t_genre = Bd_Orm_Main_Genre::createTable();
-        $main_sel->joinInner('genre', 'thread.genre_id = genre.id');
-        
-        //同じ名前のカラムが複数存在してしまうのを防ぐための処理
-        $main_sel
-          ->resetColumns()
-          ->columns(array(
-              'thread.id', 
-              'thread.title', 
-              'thread.created_at', 
-              'thread.genre_id', 
-              'sub.*', 
-              'genre.name AS genre_name'
-          ));
-        
-        $main_sel->add('thread.genre_id', $this->_getParam('genre_id'));      
+        $main_sel->add('genre_id', $this->_getParam('genre_id')); 
       }
-      
-      //$_GET['tag_id']があればjoinする
+    
+      /* *
+       * ③タグも絞込みに使いたい場合。
+       * 絞込みに必要なスレッドID番号群を取得する。
+       */
       if($this->_getParam('tag_id'))
       {
         $t_threadtag = Bd_Orm_Main_ThreadTag::createTable();
-        $t_tag = Bd_Orm_Main_Tag::createTable();
-        $main_sel
-          ->joinLeft('thread_tag', 'thread.id = thread_tag.thread_id')
-          ->joinLeft('tag', 'thread_tag.tag_id = tag.id');
-        $main_sel
-          ->resetColumns()
-          ->columns(array(
-            'thread.id', 
-            'thread.title', 
-            'thread.created_at', 
-            'sub.*', 
-            'tag.name'
-          ));
+        $tag_sel = $t_threadtag->addJoinInner($t_thread)->getSelectWithJoin();
         
-        //万が一、事前にジャンルテーブルとのjoinもしていた場合、
-        //上記のresetColumnsでカラムが消えているので、もう1回追加しておく。
-        //なお、tag.nameと名前がかぶるのを防ぐため、こっちはASで別名を付ける。
-        if($this->_getParam('genre_id'))
-        {
-          $main_sel->columns('genre.name AS genre_name');
-        }
-        
-        //$_GET['tag_id']を絞込み条件に追加する。Where～inで追加し、
-        //複数($_GET['tag_id']の配列数)分持っているスレッドだけを抽出する
-        $main_sel
-          ->add('thread_tag.tag_id', $this->_getParam('tag_id'))
-          ->group('id')
+        $tag_sel
+          ->setColumns('thread_id')
+          ->add('tag_id', $this->_getParam('tag_id'))
+          ->group('thread_id')
           ->having('COUNT(tag_id) ='.count($this->_getParam('tag_id')));
-        
-        /*
-         * 1つのスレッドの中に複数タグを持っている場合に
-         * 表示に使うタグ名をSelectする用
-         */
-        $tag_name_sel = $t_tag->getSelect();
-        $tag_name_sel
-          ->resetColumns()->columns('name')
-          ->add('id', $this->_getParam('tag_id')
-        );
-        $tag_name_list = $t_tag->fetchAll($tag_name_sel);
-        $this->view->assign('tag_name_list',$tag_name_list);
-      }
-         
-      //まずNULL値順にする
-      $main_sel->order(new Zend_Db_Expr('sub.newest_date IS NULL DESC'));
-      //元のnewest_date降順
-      $main_sel->order('sub.newest_date DESC');
       
-      $thread = $t_thread->fetchAll($main_sel);
-      Sdx_Debug::dump($main_sel->assemble(), '$main_selのSQL');        
-      $this->view->assign("thread_list", $thread);
-    
+        //タグ未指定時にエラーになるのを防ぐためif文の中で$main_selにadd
+        $main_sel
+        ->add('id', $tag_sel->fetchCol());     
+      }
+      
+      /* *
+       * ④最後にレコードの取得件数と並び順を指定して
+       * レコードリストを取得する
+       */
+      $main_sel
+        ->limit(10)
+        ->order(array(
+            new Zend_Db_Expr('CASE when newest_date IS NULL then 1 else 2 END ASC'), 
+            'newest_date DESC')
+        );
+      $thread_list = $t_thread->fetchAll($main_sel);
+      $this->view->assign('thread_list', $thread_list);
     }
     public function listAction()
     {
@@ -129,7 +92,7 @@ class ThreadController extends Sdx_Controller_Action_Http
        * ここでは以下SQL文を生成しようとしている。
        * SELECT * FROM entry 
        * LEFT JOIN account ON account_id = account.id
-       * LEFT JOIN thread ON thread_id = thread.id
+       * LEFT JOIN thread ON ｔthread_id = thread.id
        * WHERE thread.id = "thread_idのパラメータ値"
        * ORDER BY entry.created_at ASC;
        */  
