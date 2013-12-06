@@ -10,9 +10,14 @@
   </div>
 </div>
 <h2>メニュー</h2>
-<div class="sub_menu">
-  {*<p><a href="/thread/entrance/thread-list">スレッド全件表示</a></p>*}
+<ul>
+{foreach $thread_list as $record}
+    <li>{$record->get()}</li>
 
+{/foreach}
+</ul>
+
+<div class="sub_menu">
 <form action="/thread/entrance/thread-list" method="GET">
 <dl>
   <dt>ジャンル</dt>
@@ -26,7 +31,7 @@
     <dd><label><input type="checkbox" name="tag_id[{$record->getId()}]" value="{$record->getId()}">{$record->getName()}</label></dd>
   {/foreach}  
 </dl>
-  <input type="submit" value="検索開始">
+<input type="submit" value="検索開始" onclick="window.alert('よろしいですか？')">
 </form>
 
   {if $sdx_user->hasId()}
@@ -39,4 +44,5 @@
   {/if}
   
 </div>
+
 {/block}
