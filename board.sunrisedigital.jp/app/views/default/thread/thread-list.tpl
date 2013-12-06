@@ -29,7 +29,7 @@
     {/if}
   </dl>
   *}
-  <h2>スレッドリスト(最新10件)</h2>
+  <h2>スレッドリスト</h2>
   <table class="table">
     <tr class="success">
       <th>スレッドNo.</th>
@@ -45,6 +45,7 @@
       <td>{if $record->get('newest_date')}{$record->getFormatedDateByZend('newest_date', 'yyyy年MM月dd日(E) HH時mm分ss秒')}{else}まだコメントがありません{/if}</td> 
     </tr>
     {/foreach}
-  </table>    
+  </table>
+  {$pager->getPrevLink('前へ') nofilter}{$pager->getNextLink('次へ') nofilter}
 </div>
 {/block}

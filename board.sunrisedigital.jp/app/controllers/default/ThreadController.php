@@ -30,10 +30,10 @@ class ThreadController extends Sdx_Controller_Action_Http
       $t_entry = Bd_Orm_Main_Entry::createTable();
       $sub_sel = $t_entry->getSelect();
       $sub_sel->group('thread_id');
-      $sub_sel->setColumns(array(
-        0 => 'thread_id', 
-        'newest_date' => 'MAX(entry.created_at)'
-      ));
+      $sub_sel
+        ->setColumns('thread_id')
+        ->columns(array('newest_date' => 'MAX(entry.created_at)')
+      );
       $sub = sprintf('(%s)', $sub_sel->assemble());
 
       //こっちがメインセレクト
@@ -77,12 +77,16 @@ class ThreadController extends Sdx_Controller_Action_Http
        * ④最後にレコードの取得件数と並び順を指定して
        * レコードリストを取得する
        */
+      //１ページには10行まで。$main_selが総数
+      $pager = new Sdx_Pager(10, $t_thread->count($main_sel));      
+      $this->view->assign('pager', $pager);//これはページオブジェクトのアサイン
       $main_sel
-        ->limit(10)
+        ->limitPager($pager)
         ->order(array(
             new Zend_Db_Expr('CASE when newest_date IS NULL then 1 else 2 END ASC'), 
             'newest_date DESC')
         );
+
       $thread_list = $t_thread->fetchAll($main_sel);
       $this->view->assign('thread_list', $thread_list);
     }
