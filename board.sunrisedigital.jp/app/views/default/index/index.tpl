@@ -1,6 +1,6 @@
 {extends file='default/base.tpl'}
 {block css}
-    <link rel="stylesheet" href="/css/top_page.css" type="text/css">
+    <link rel="stylesheet" href="/css/top.css" type="text/css">
 {/block}
 {block title append} indexです{/block}
 {block main_contents}
@@ -11,19 +11,23 @@
 </div>
 <h2>メニュー</h2>
 <div class="sub_menu">
-    <p><a href="/thread/entrance/thread-list">スレッド全件表示</a></p>
-  <dl>
-    <dt><i class="fa fa-th-large"></i> ジャンル</dt>
-      {foreach $genre_list as $record}
-      <dd><a href="/thread/entrance/thread-list?genre_id={$record->getId()}">{$record->getName()}</a></dd>
-      {/foreach}
-  </dl>
-  <dl>
-    <dt><i class="fa fa-tags"></i> おすすめタグ</dt>
-      {foreach $tag_list as $record}
-      <dd><a href="/thread/entrance/thread-list?tag_id={$record->getId()}">{$record->getName()}</a></dd>
-      {/foreach}
-  </dl>
+  {*<p><a href="/thread/entrance/thread-list">スレッド全件表示</a></p>*}
+
+<form action="/thread/entrance/thread-list" method="GET">
+<dl>
+  <dt>ジャンル</dt>
+    <dd><label><input type="radio" name="genre_id" value="">指定なし</label></dd>
+  {foreach $genre_list as $record}
+    <dd><label><input type="radio" name="genre_id" value="{$record->getId()}">{$record->getName()}</label></dd>
+  {/foreach}
+  
+  <dt>タグ</dt>
+  {foreach $tag_list as $record}
+    <dd><label><input type="checkbox" name="tag_id[{$record->getId()}]" value="{$record->getId()}">{$record->getName()}</label></dd>
+  {/foreach}  
+</dl>
+  <input type="submit" value="検索開始">
+</form>
 
   {if $sdx_user->hasId()}
   <dl>
@@ -34,6 +38,5 @@
   </dl>
   {/if}
   
-  <span class="clear_both"></span>
 </div>
 {/block}

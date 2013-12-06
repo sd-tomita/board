@@ -1,6 +1,6 @@
 {extends file='default/base.tpl'}
 {block css}
-    <link rel="stylesheet" href="/css/list_page.css" type="text/css">
+    <link rel="stylesheet" href="/css/list.css" type="text/css">
 {/block}
 {block title append} エントリリスト{/block}
 {block main_contents}

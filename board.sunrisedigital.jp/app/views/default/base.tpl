@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/footer_area.css" type="text/css">
+  <link rel="stylesheet" href="/css/footer.css" type="text/css">
   <style>
       {*フォームのエラー表示(404等)を整えるためのCSS*}
     .sdx_error{

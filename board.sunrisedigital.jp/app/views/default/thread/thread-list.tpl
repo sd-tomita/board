@@ -1,7 +1,7 @@
 {extends file='default/base.tpl'}
 {block css}
-    <link rel="stylesheet" href="/css/top_page.css" type="text/css">
-    <link rel="stylesheet" href="/css/threadlist_page.css" type="text/css">
+    <link rel="stylesheet" href="/css/top.css" type="text/css">
+    <link rel="stylesheet" href="/css/threadlist.css" type="text/css">
 {/block}
 {block title append} スレッドリスト{/block}
 {block main_contents}
@@ -13,16 +13,17 @@
 
 <div class="thread_list">
   <dl class="status_disp">
-    <dt>表示モード</dt>
     {if $smarty.get.genre_id}
-    <dd>ジャンル別表示</dd>
-    <dt>ジャンル名</dt>
-    <dd>{$thread_list->getFirstRecord()->getGenre()->getName()}</dd>
-    {elseif $smarty.get.tag_id}
-    <dd>タグ別表示</dd>
-    <dt>タグ名</dt>
-    <dd>{$tag_name->getFirstRecord()->getName()}</dd>
-    {else}
+    <dt>検索中のジャンル名</dt>
+    <dd>{$thread_list->getFirstRecord()->get('genre_name')}</dd>
+    {/if}
+    {if $smarty.get.tag_id}
+    <dt>検索中のタグ名</dt>
+    {foreach $tag_name_list as $tag_name}
+    <dd>｢{$tag_name->getName()}｣</dd>
+    {/foreach}
+    {/if}
+    {if !$smarty.get.genre_id && !$smarty.get.tag_id}
     <dd>全件表示</dd>
     {/if}
   </dl>
@@ -39,7 +40,7 @@
       <td>{$record->getId()}</td>
       <td><i class="fa fa-arrow-circle-right"></i><a href="/thread/{$record->getId()}/list">{$record->getTitle()}</a></td>
       <td>{$record->getFormatedDateByZend('created_at', 'yyyy年MM月dd日(E) HH時mm分ss秒')}</td>
-      <td>{if $record->get('newest_date')}{$record->getFormatedDateByZend('newest_date', 'yyyy年MM月dd日(E) HH時mm分ss秒')}{/if}</td> 
+      <td>{if $record->get('newest_date')}{$record->getFormatedDateByZend('newest_date', 'yyyy年MM月dd日(E) HH時mm分ss秒')}{else}まだコメントがありません{/if}</td> 
     </tr>
     {/foreach}
   </table>    
