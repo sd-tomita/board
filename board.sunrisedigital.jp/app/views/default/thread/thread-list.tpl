@@ -44,6 +44,9 @@
     </tr>
     {/foreach}
   </table>
-  {$pager->getPrevLink('前へ') nofilter}{$pager->getNextLink('次へ') nofilter}
+  <ul class="pager">
+    <li>{$pager->getPrevLink('前へ') nofilter}</li>
+    <li>{$pager->getNextLink('次へ') nofilter}</li>
+  </ul>
 </div>
 {/block}
