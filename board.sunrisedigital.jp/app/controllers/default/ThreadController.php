@@ -51,6 +51,12 @@ class ThreadController extends Sdx_Controller_Action_Http
       if($this->_getParam('genre_id'))
       {
         $main_sel->add('genre_id', $this->_getParam('genre_id')); 
+      
+        //検索されているジャンルが何かを表示する用
+        $t_genre = Bd_Orm_Main_Genre::createTable();
+        $genre_sel = $t_genre->getSelect();
+        $genre_sel->setColumns('name')->add('id',  $this->_getParam('genre_id'));
+        $this->view->assign('genre_name',$genre_name = $t_genre->find($genre_sel));
       }
     
       /* *
@@ -70,7 +76,13 @@ class ThreadController extends Sdx_Controller_Action_Http
       
         //タグ未指定時にエラーになるのを防ぐためif文の中で$main_selにadd
         $main_sel
-        ->add('id', $tag_sel->fetchCol());     
+        ->add('id', $tag_sel->fetchCol());
+        
+        //検索されているタグが何かを表示する用
+        $t_tag = Bd_Orm_Main_Tag::createTable();
+        $tag_name_sel = $t_tag->getSelect(); 
+        $tag_name_sel->setColumns()->columns('name')->add('id', $this->_getParam('tag_id'));
+        $this->view->assign('tag_names',$tag_names = $t_tag->fetchAll($tag_name_sel));
       }
       
       /* *
@@ -80,6 +92,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       //１ページには10行まで。$main_selが総数
       $pager = new Sdx_Pager(10, $t_thread->count($main_sel));      
       $this->view->assign('pager', $pager);//これはページオブジェクトのアサイン
+
       $main_sel
         ->limitPager($pager)
         ->order(array(
@@ -200,6 +213,23 @@ class ThreadController extends Sdx_Controller_Action_Http
     {
       //引数がキー名になる。省略するとdefaultキーになる。
       return new Sdx_Session('THREAD_POST_FORM');    
+    }
+    private function _createStatusDisp()
+    {
+      /* * *
+       * 検索された条件だけを表示するStatusDispに必要なレコードを取得。
+       * threadListAction()に含めるのも微妙だったので、これはこっちに
+       * まとめることにします。
+       */
+      $this->view->assign(
+        'genre_name', 
+        Bd_Orm_Main_Genre::createTable()->findByColumn('id', $this->_getParam('genre_id'))
+      );
+      
+      $t_tag = Bd_Orm_Main_Tag::createTable();
+      $tag_sel = $t_tag->getSelect(); 
+      $tag_sel->setColumns()->columns('name')->add('id', $this->_getParam('tag_id'));
+      $this->view->assign('tag_names',$tag_names = $t_tag->fetchAll($tag_sel));
     }
     /*
      * jquery.ajaxを使ったリストの取得を行うメソッド
