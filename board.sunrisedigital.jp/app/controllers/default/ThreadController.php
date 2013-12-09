@@ -80,9 +80,9 @@ class ThreadController extends Sdx_Controller_Action_Http
         
         //検索されているタグが何かを表示する用
         $t_tag = Bd_Orm_Main_Tag::createTable();
-        $tag_name_sel = $t_tag->getSelect(); 
-        $tag_name_sel->setColumns()->columns('name')->add('id', $this->_getParam('tag_id'));
-        $this->view->assign('tag_names',$tag_names = $t_tag->fetchAll($tag_name_sel));
+        $tag_sel = $t_tag->getSelect(); 
+        $tag_sel->setColumns()->columns('name')->add('id', $this->_getParam('tag_id'));
+        $this->view->assign('tag_names',$tag_names = $t_tag->fetchAll($tag_sel));
       }
       
       /* *
@@ -213,23 +213,6 @@ class ThreadController extends Sdx_Controller_Action_Http
     {
       //引数がキー名になる。省略するとdefaultキーになる。
       return new Sdx_Session('THREAD_POST_FORM');    
-    }
-    private function _createStatusDisp()
-    {
-      /* * *
-       * 検索された条件だけを表示するStatusDispに必要なレコードを取得。
-       * threadListAction()に含めるのも微妙だったので、これはこっちに
-       * まとめることにします。
-       */
-      $this->view->assign(
-        'genre_name', 
-        Bd_Orm_Main_Genre::createTable()->findByColumn('id', $this->_getParam('genre_id'))
-      );
-      
-      $t_tag = Bd_Orm_Main_Tag::createTable();
-      $tag_sel = $t_tag->getSelect(); 
-      $tag_sel->setColumns()->columns('name')->add('id', $this->_getParam('tag_id'));
-      $this->view->assign('tag_names',$tag_names = $t_tag->fetchAll($tag_sel));
     }
     /*
      * jquery.ajaxを使ったリストの取得を行うメソッド
