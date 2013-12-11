@@ -81,7 +81,7 @@ class ThreadController extends Sdx_Controller_Action_Http
         //検索されているタグが何かを表示する用
         $t_tag = Bd_Orm_Main_Tag::createTable();
         $tag_sel = $t_tag->getSelect(); 
-        $tag_sel->setColumns()->columns('name')->add('id', $this->_getParam('tag_id'));
+        $tag_sel->setColumns('name')->add('id', $this->_getParam('tag_id'));
         $this->view->assign('tag_names',$tag_names = $t_tag->fetchAll($tag_sel));
       }
       
@@ -214,13 +214,24 @@ class ThreadController extends Sdx_Controller_Action_Http
       //引数がキー名になる。省略するとdefaultキーになる。
       return new Sdx_Session('THREAD_POST_FORM');    
     }
-    /*
-     * jquery.ajaxを使ったリストの取得を行うメソッド
-     * とりあえずは置いてみるだけ。
-     */
-    public function useAjaxAction() 
+    public function searchThreadAction() 
     {
-      Sdx_Debug::dump('test', $GLOBALS);
-    } 
+      /* *
+       * ジャンル名、タグ名の一覧を表示させるため。
+       * Ajax通信のアクション先もここにしているので、
+       * 基本的にこれ以外はここに余計なことは書かない。
+       */
+      $this->view->assign('genre_list', Bd_Orm_Main_Genre::createTable()->fetchAllOrdered('id','DESC'));
+      $this->view->assign('tag_list', Bd_Orm_Main_Tag::createTable()->fetchAllOrdered('id','DESC'));
+    }
+    public function examAjaxAction()
+    {
+      /* *
+       * Ajax通信確認用だけのメソッド
+       */
+      $this->_disableViewRenderer();//テンプレ用意していないのでとりあえずこれで。
+      echo 'サーバーとの通信に成功しました'."<br>";
+      echo 'getParamの値は'.$this->_getParam('genre_id').'です<br>';
+    }
 } 
 ?>

@@ -1,15 +1,3 @@
-{extends file='default/base.tpl'}
-{block css}
-    <link rel="stylesheet" href="/css/top.css" type="text/css">
-    <link rel="stylesheet" href="/css/threadlist.css" type="text/css">
-{/block}
-{block title append} スレッドリスト{/block}
-{block main_contents}
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h1 class="panel-title">スレッド一覧ページ</h1>
-  </div>
-</div>
 
 <div class="thread_list">
   <dl class="status_disp">
@@ -49,4 +37,4 @@
     <li>{$pager->getNextLink('次へ') nofilter}</li>
   </ul>
 </div>
-{/block}
+
