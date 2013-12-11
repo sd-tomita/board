@@ -1,20 +1,5 @@
 
 <div class="thread_list">
-  <dl class="status_disp">
-    {if $smarty.get.genre_id}
-    <dt>検索中のジャンル名</dt>
-    <dd>{$genre_name->getName()}</dd>
-    {/if}
-    {if $smarty.get.tag_id}
-    <dt>検索中のタグ名</dt>
-    {foreach $tag_names as $tag_name}
-    <dd>｢{$tag_name->getName()}｣</dd>
-    {/foreach}
-    {/if}
-    {if !$smarty.get.genre_id && !$smarty.get.tag_id}
-    <dd>全件表示</dd>
-    {/if}
-  </dl>
   <h2>スレッドリスト</h2>
   <table class="table">
     <tr class="success">
