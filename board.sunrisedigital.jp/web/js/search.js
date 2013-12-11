@@ -25,14 +25,12 @@ $(function(){
       type: "GET",
       url: "/thread/entrance/thread-list", 
       data: query,
-      success: function(data){
-        $('.thread_list').remove();
+    }).done(function(data){
+        $('.thread_list').remove();//古いdataの削除
         $('.data-disp').append(data);
-      },
-      error: function(data){
+    }).fail(function(data){
           alert("ng");
-      }      
-    });
+    });          
   });
 });
 
