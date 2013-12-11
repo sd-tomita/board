@@ -26,6 +26,7 @@ $(function(){
       url: "/thread/entrance/thread-list", 
       data: query,
       success: function(data){
+        $('.thread_list').remove();
         $('.data-disp').append(data);
       },
       error: function(data){
