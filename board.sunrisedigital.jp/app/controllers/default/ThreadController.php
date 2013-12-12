@@ -50,13 +50,7 @@ class ThreadController extends Sdx_Controller_Action_Http
        */
       if($this->_getParam('genre_id'))
       {
-        $main_sel->add('genre_id', $this->_getParam('genre_id')); 
-      
-        //検索されているジャンルが何かを表示する用
-        $t_genre = Bd_Orm_Main_Genre::createTable();
-        $genre_sel = $t_genre->getSelect();
-        $genre_sel->setColumns('name')->add('id',  $this->_getParam('genre_id'));
-        $this->view->assign('genre_name',$genre_name = $t_genre->find($genre_sel));
+        $main_sel->add('genre_id', $this->_getParam('genre_id'));       
       }
     
       /* *
@@ -76,13 +70,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       
         //タグ未指定時にエラーになるのを防ぐためif文の中で$main_selにadd
         $main_sel
-        ->add('id', $tag_sel->fetchCol());
-        
-        //検索されているタグが何かを表示する用
-        $t_tag = Bd_Orm_Main_Tag::createTable();
-        $tag_sel = $t_tag->getSelect(); 
-        $tag_sel->setColumns('name')->add('id', $this->_getParam('tag_id'));
-        $this->view->assign('tag_names',$tag_names = $t_tag->fetchAll($tag_sel));
+        ->add('id', $tag_sel->fetchCol());        
       }
       
       /* *
@@ -217,9 +205,9 @@ class ThreadController extends Sdx_Controller_Action_Http
     public function searchThreadAction() 
     {
       /* *
-       * ジャンル名、タグ名の一覧を表示させるため。
-       * Ajax通信のアクション先もここにしているので、
-       * 基本的にこれ以外はここに余計なことは書かない。
+       * スレッド検索用アクション
+       * もともとIndexController.php でやっていたことを
+       * こっちに移しただけです。
        */
       $this->view->assign('genre_list', Bd_Orm_Main_Genre::createTable()->fetchAllOrdered('id','DESC'));
       $this->view->assign('tag_list', Bd_Orm_Main_Tag::createTable()->fetchAllOrdered('id','DESC'));
