@@ -26,9 +26,7 @@ $(function(){
       url: "/thread/entrance/thread-list", 
       data: query,
     }).done(function(data){
-        $('.thread_list').remove();//古いdataの削除
-        $('input[name="more"]').remove();
-        $('.data-disp').append(data);
+        $('.data-disp').html(data);
         $('.data-disp').append('<input type=button name="more" value="more">');
     }).fail(function(data){
           alert("ng");
