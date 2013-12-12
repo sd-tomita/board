@@ -13,14 +13,14 @@
 {*------------スレッド表示------------*}
 <div class="thread-entrylistbox">
     <div class="thread-titleinfo">
-        <i class="icon-tags" ></i>thread-{$entry_list->getFirstRecord()->getThread()->getId()}&nbsp;&nbsp;
+        <i class="fa fa-tags" ></i>thread-{$entry_list->getFirstRecord()->getThread()->getId()}&nbsp;&nbsp;
         {$entry_list->getFirstRecord()->getThread()->getTitle()}&nbsp;&nbsp;
-        <i class="icon-time" /></i>スレッド作成日時：{$entry_list->getFirstRecord()->getThread()->getFormatedDateByZend('created_at', 'yyyy年MM月dd日(E) HH時mm分ss秒')}
+        <i class="fa fa-time" /></i>スレッド作成日時：{$entry_list->getFirstRecord()->getThread()->getFormatedDateByZend('created_at', 'yyyy年MM月dd日(E) HH時mm分ss秒')}
     </div>
     {foreach $entry_list as $record}
     <dl class="thread-entryinfo">
         <dt>
-                <i class="icon-pencil"></i>
+                <i class="fa fa-pencil"></i>
                 お名前:{$record->getAccount()->getName()}&nbsp;&nbsp;
                 記事投稿日時:{$record->getFormatedDateByZend('updated_at', 'yyyy年MM月dd日(E) HH時mm分ss秒')}&nbsp;&nbsp;
                 ID:{$record->getAccount_id()}
@@ -33,7 +33,7 @@
 {*------------コメントの投稿フォーム------------*}
 {if $sdx_user->hasId()}
 <div class="panel panel-default thread-entryform">
-  <p><i class="icon-pencil"></i>コメント投稿フォーム</p>
+  <p><i class="fa fa-pencil"></i>コメント投稿フォーム</p>
   <div class="panel-body">
     {$form->renderStartTag() nofilter}
       <div class="form-group">

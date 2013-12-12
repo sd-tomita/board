@@ -33,7 +33,7 @@ $(function(){
     }).fail(function(data){
           alert("ng");
     }).always(function(data){
-        //.complete()の代わり。ここでボタンを元に戻す
+        //通信完了時の処理。ここで送信ボタンを元に戻す
         $("#search-form input[type='submit']").attr('value', '検索開始').attr('disabled', false);        
     });
   });
