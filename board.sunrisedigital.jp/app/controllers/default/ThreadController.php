@@ -30,10 +30,10 @@ class ThreadController extends Sdx_Controller_Action_Http
       $t_entry = Bd_Orm_Main_Entry::createTable();
       $sub_sel = $t_entry->getSelect();
       $sub_sel->group('thread_id');
-      $sub_sel->setColumns(array(
-        0 => 'thread_id', 
-        'newest_date' => 'MAX(entry.created_at)'
-      ));
+      $sub_sel
+        ->setColumns('thread_id')
+        ->columns(array('newest_date' => 'MAX(entry.created_at)')
+      );
       $sub = sprintf('(%s)', $sub_sel->assemble());
 
       //こっちがメインセレクト
@@ -50,7 +50,7 @@ class ThreadController extends Sdx_Controller_Action_Http
        */
       if($this->_getParam('genre_id'))
       {
-        $main_sel->add('genre_id', $this->_getParam('genre_id')); 
+        $main_sel->add('genre_id', $this->_getParam('genre_id'));       
       }
     
       /* *
@@ -70,19 +70,24 @@ class ThreadController extends Sdx_Controller_Action_Http
       
         //タグ未指定時にエラーになるのを防ぐためif文の中で$main_selにadd
         $main_sel
-        ->add('id', $tag_sel->fetchCol());     
+        ->add('id', $tag_sel->fetchCol());        
       }
       
       /* *
        * ④最後にレコードの取得件数と並び順を指定して
        * レコードリストを取得する
        */
+      //１ページには10行まで。$main_selが総数
+      $pager = new Sdx_Pager(10, $t_thread->count($main_sel));      
+      $this->view->assign('pager', $pager);//これはページオブジェクトのアサイン
+
       $main_sel
-        ->limit(10)
+        ->limitPager($pager)
         ->order(array(
             new Zend_Db_Expr('CASE when newest_date IS NULL then 1 else 2 END ASC'), 
             'newest_date DESC')
         );
+
       $thread_list = $t_thread->fetchAll($main_sel);
       $this->view->assign('thread_list', $thread_list);
     }
@@ -197,13 +202,24 @@ class ThreadController extends Sdx_Controller_Action_Http
       //引数がキー名になる。省略するとdefaultキーになる。
       return new Sdx_Session('THREAD_POST_FORM');    
     }
-    /*
-     * jquery.ajaxを使ったリストの取得を行うメソッド
-     * とりあえずは置いてみるだけ。
-     */
-    public function useAjaxAction() 
+    public function searchThreadAction() 
     {
-      Sdx_Debug::dump('test', $GLOBALS);
-    } 
+      /* *
+       * スレッド検索用アクション
+       * もともとIndexController.php でやっていたことを
+       * こっちに移しただけです。
+       */
+      $this->view->assign('genre_list', Bd_Orm_Main_Genre::createTable()->fetchAllOrdered('id','DESC'));
+      $this->view->assign('tag_list', Bd_Orm_Main_Tag::createTable()->fetchAllOrdered('id','DESC'));
+    }
+    public function examAjaxAction()
+    {
+      /* *
+       * Ajax通信確認用だけのメソッド
+       */
+      $this->_disableViewRenderer();//テンプレ用意していないのでとりあえずこれで。
+      echo 'サーバーとの通信に成功しました'."<br>";
+      echo 'getParamの値は'.$this->_getParam('genre_id').'です<br>';
+    }
 } 
 ?>
