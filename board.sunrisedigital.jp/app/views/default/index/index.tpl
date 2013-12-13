@@ -1,48 +1,23 @@
 {extends file='default/base.tpl'}
 {block css}
     <link rel="stylesheet" href="/css/top.css" type="text/css">
+{*タイトル用のCSS。とりあえず間に合わせでここに書いてます*}
+    <link href='http://fonts.googleapis.com/css?family=Oleo+Script+Swash+Caps' rel='stylesheet' type='text/css'>
+    <style>
+     .entrance p {
+       margin-bottom: 0px;
+       background-color: #e6e6fa;
+       font-size: 75px;
+       font-family: 'Oleo Script Swash Caps', cursive; 
+       text-align: center;
+     }
+    </style>
 {/block}
 {block title append} indexです{/block}
 {block main_contents}
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h1 class="panel-title">TOPページ</h1>
-  </div>
+<div class="entrance">
+<p>♦♫⁺♦･*:..｡♦♫⁺♦*ﾟ¨</p>    
+<p><a href="/thread/entrance/search-thread">EnTrAnCe</a></p>
+<p>♦♫⁺♦･*:..｡♦♫⁺♦*ﾟ¨</p>
 </div>
-<h2>メニュー</h2>
-<ul>
-{foreach $thread_list as $record}
-    <li>{$record->get()}</li>
-
-{/foreach}
-</ul>
-
-<div class="sub_menu">
-<form action="/thread/entrance/thread-list" method="GET">
-<dl>
-  <dt>ジャンル</dt>
-    <dd><label><input type="radio" name="genre_id" value="">指定なし</label></dd>
-  {foreach $genre_list as $record}
-    <dd><label><input type="radio" name="genre_id" value="{$record->getId()}">{$record->getName()}</label></dd>
-  {/foreach}
-  
-  <dt>タグ</dt>
-  {foreach $tag_list as $record}
-    <dd><label><input type="checkbox" name="tag_id[{$record->getId()}]" value="{$record->getId()}">{$record->getName()}</label></dd>
-  {/foreach}  
-</dl>
-<input type="submit" value="検索開始" onclick="window.alert('よろしいですか？')">
-</form>
-
-  {if $sdx_user->hasId()}
-  <dl>
-    <dt><i class="fa fa-lock"></i> 管理メニュー</dt>
-      <dd><a href="/control/thread">スレッド管理</a></dd>
-      <dd><a href="/control/genre">ジャンル管理</a></dd>
-      <dd><a href="/control/tag">タグ管理</a></dd>
-  </dl>
-  {/if}
-  
-</div>
-
 {/block}
