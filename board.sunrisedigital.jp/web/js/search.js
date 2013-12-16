@@ -3,13 +3,20 @@
  * and open the template in the editor.
  */
 
-//js読み込み確認用。読み込みができていたら消す。
-//$(document).ready(function()
-//  {
-//    alert("jqueryの読み込みが完了しました");
-//  });
+/* *
+ * ページ読み込み時の処理。いきなりスレッド一覧を出す。
+ * ここでは特に条件は何も指定せずシンプルにthread-listの
+ * HTMLを呼ぶだけ。
+ */
+$(function(){
+  $.get("/thread/entrance/thread-list").done(function(data){
+    $('.data-disp').append(data);
+  });      
+});
 
-//サーバー通信
+/* *
+ * 検索開始ボタンを押した時の処理
+ */
 $(function(){
   $("#search-form input[type='submit']").on('click', function(){
     //通信終わるまで送信ボタン無効化
@@ -27,7 +34,6 @@ $(function(){
       data: query,
     }).done(function(data){
         $('.data-disp').html(data);
-        $('.data-disp').append('<input type=button name="more" value="more">');
     }).fail(function(data){
           alert("ng");
     }).always(function(data){

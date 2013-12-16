@@ -1,6 +1,5 @@
 {extends file='default/base.tpl'}
 {block css}
-    <link rel="stylesheet" href="/css/top.css" type="text/css">
     {*---------一時使用CSSなので直書きしています--------*}
     <style>
       .sub_menu dd {
