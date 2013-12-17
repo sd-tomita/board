@@ -1,15 +1,18 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* *
+ * ページ読み込み時の処理。いきなりスレッド一覧を出す。
+ * ここでは特に条件は何も指定せずシンプルにthread-listの
+ * HTMLを呼ぶだけ。
  */
+$(function(){
+  $.get("/thread/entrance/thread-list").done(function(data){
+    $('.data-disp').append(data);
+    $('input[name=more]').remove();//この時点ではまだこのボタンは出ないように
+  });      
+});
 
-//js読み込み確認用。読み込みができていたら消す。
-//$(document).ready(function()
-//  {
-//    alert("jqueryの読み込みが完了しました");
-//  });
-
-//サーバー通信
+/* *
+ * 検索開始ボタンを押した時の処理
+ */
 $(function(){
   $("#search-form input[type='submit']").on('click', function(){
     //通信終わるまで送信ボタン無効化
@@ -27,12 +30,27 @@ $(function(){
       data: query,
     }).done(function(data){
         $('.data-disp').html(data);
-        $('.data-disp').append('<input type=button name="more" value="more">');
     }).fail(function(data){
           alert("ng");
     }).always(function(data){
         //通信完了時の処理。ここで送信ボタンを元に戻す
         $("#search-form input[type='submit']").attr('value', '検索開始').attr('disabled', false);        
     });
+    /* *
+     * "さらに表示"ボタンを押した時の処理
+     */
+    var pid = 1;//ページIDの初期値。queryのすぐあとに宣言してもいいかも？
+    $('.data-disp').on('click','input[name=more]', function(){
+      $('input[name=more]').remove();
+      pid += 1;//ページID値を追加。これで実行の度にpidが増える。
+      $.ajax({
+        type:"get",
+        url:"/thread/entrance/thread-list",
+        data: query+"&pid="+pid,//クエリ文字列にページIDを追加。
+      }).done(function(data){
+        $('.data-disp').append(data);
+      });
+    });
   });
 });
+

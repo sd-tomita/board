@@ -202,24 +202,17 @@ class ThreadController extends Sdx_Controller_Action_Http
       //引数がキー名になる。省略するとdefaultキーになる。
       return new Sdx_Session('THREAD_POST_FORM');    
     }
-    public function searchThreadAction() 
+    public function searchAction() 
     {
       /* *
        * スレッド検索用アクション
        * もともとIndexController.php でやっていたことを
        * こっちに移しただけです。
+       * ※元々searchThreadActionでしたが、今のところThread以外に
+       *   searchしているものもないのでSearchActionに名前を変えます。
        */
       $this->view->assign('genre_list', Bd_Orm_Main_Genre::createTable()->fetchAllOrdered('id','DESC'));
       $this->view->assign('tag_list', Bd_Orm_Main_Tag::createTable()->fetchAllOrdered('id','DESC'));
-    }
-    public function examAjaxAction()
-    {
-      /* *
-       * Ajax通信確認用だけのメソッド
-       */
-      $this->_disableViewRenderer();//テンプレ用意していないのでとりあえずこれで。
-      echo 'サーバーとの通信に成功しました'."<br>";
-      echo 'getParamの値は'.$this->_getParam('genre_id').'です<br>';
     }
 } 
 ?>

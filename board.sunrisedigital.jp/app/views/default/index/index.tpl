@@ -17,7 +17,7 @@
 {block main_contents}
 <div class="entrance">
 <p>♦♫⁺♦･*:..｡♦♫⁺♦*ﾟ¨</p>    
-<p><a href="/thread/entrance/search-thread">EnTrAnCe</a></p>
+<p><a href="/thread/entrance/search">ENTRANCE</a></p>
 <p>♦♫⁺♦･*:..｡♦♫⁺♦*ﾟ¨</p>
 </div>
 {/block}
