@@ -6,7 +6,7 @@
         float: left;    
       }
       
-      .data-disp, .sub_menu dt {
+      .data-disp, .sub_menu dt, input[type="submit"] {
         clear:both;
       }
     
@@ -60,8 +60,8 @@
 </div>
   
 {*--------------表示テスト用---------------*}
+<h2>スレッドリスト</h2>
 <div class="data-disp">
 
 </div>
-
 {/block}

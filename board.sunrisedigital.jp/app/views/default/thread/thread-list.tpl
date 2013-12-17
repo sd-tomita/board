@@ -1,12 +1,6 @@
 {block css}
-<style>
-  .thread_list th {
-    font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
-  }
-</style>
 {/block}
 <div class="thread_list">
-  <h2>スレッドリスト</h2>
   {foreach $thread_list as $record}
   <table class="table table-bordered">
     <thead>
@@ -22,6 +16,5 @@
     </tbody>
   </table>
   {/foreach}
+  <input type="button" name="more" value="さらに表示">
 </div>
-
-<input type="button" name="more" value="さらに表示">
