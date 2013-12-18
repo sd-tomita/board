@@ -31,7 +31,7 @@ $(function(){
     }).done(function(data){
         $('.data-disp').html(data);
     }).fail(function(data){
-          alert("ng");
+        alert("ng");
     }).always(function(data){
         //通信完了時の処理。ここで送信ボタンを元に戻す
         $("#search-form input[type='submit']").attr('value', '検索開始').attr('disabled', false);        

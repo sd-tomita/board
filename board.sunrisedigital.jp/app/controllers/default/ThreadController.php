@@ -32,7 +32,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       $sub_sel->group('thread_id');
       $sub_sel
         ->setColumns('thread_id')
-        ->columns(array('newest_date' => 'MAX(entry.created_at)')
+        ->addColumns(array('newest_date' => 'MAX(entry.created_at)')
       );
       $sub = sprintf('(%s)', $sub_sel->assemble());
 
