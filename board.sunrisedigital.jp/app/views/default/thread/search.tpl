@@ -1,13 +1,12 @@
 {extends file='default/base.tpl'}
 {block css}
-    <link rel="stylesheet" href="/css/top.css" type="text/css">
     {*---------一時使用CSSなので直書きしています--------*}
     <style>
       .sub_menu dd {
         float: left;    
       }
       
-      .data-disp, .sub_menu dt {
+      .data-disp, .sub_menu dt, input[type="submit"] {
         clear:both;
       }
     
@@ -61,8 +60,8 @@
 </div>
   
 {*--------------表示テスト用---------------*}
+<h2>スレッドリスト</h2>
 <div class="data-disp">
 
 </div>
-
 {/block}
