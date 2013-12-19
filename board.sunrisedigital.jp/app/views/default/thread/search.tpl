@@ -73,4 +73,5 @@
 </div>
 
 <input type="button" name="more" value="さらに表示" >
+<span class="loading"><img src="/img/loading.gif" alt="Now loading...">Now loading... </span>
 {/block}

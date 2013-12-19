@@ -4,7 +4,7 @@ $(function(){
    */
   var searchSubmit = $("#search-form input[type='submit']");
   var searchMore = $('input[name=more]');
-  var loading = $('#search-form .loading');
+  var loading = $('.loading');
   var currentPid = 1;
   
   /* *
@@ -14,6 +14,7 @@ $(function(){
     searchSubmit.hide();//通信が開始したらすぐ隠す
     var $form = $("#search-form");
     var query = $form.serialize();
+    
     $.ajax({
       type: "GET",
       url: "/thread/entrance/thread-list", 
@@ -23,31 +24,36 @@ $(function(){
     }).fail(function(data){
         alert("NG");
     }).always(function(data){
-        //通信完了時の処理。ここでsubmitボタンを元に戻す
-        searchSubmit.show();
+        searchSubmit.show();//通信が終わったのでsubmitボタンの非表示を解除
         loading.hide();
+        
+        //｢さらに表示｣ボタンの表示・非表示はここで決める
         if($(".thread_list").is("[data-lastpageflag]")){
           searchMore.hide();
         }
-        else{
+        else
+        {
           searchMore.show();
         }
     });
+    
     return this;
   }
   
   //検索ボタンを押したときの動作
   searchSubmit.on('click', function(){
-    currentPid = 1;//ページIDを最初に戻す
+    currentPid = 1;//ページIDを先頭に戻す
     searchSubmit.hide();
     loading.show();
-    $('.thread_list').remove();//これまでappendされたものを消す。
+    $('.data-disp').html("");//これまでappendされたものを消す。
     loadThread(currentPid);
   });
   
   //｢さらに表示｣ボタンを押したときの動作
   searchMore.on('click', function(){
     ++currentPid;//実行の度にpidが増える。
+    searchMore.hide();
+    loading.show();
     loadThread(currentPid);
   });
   
