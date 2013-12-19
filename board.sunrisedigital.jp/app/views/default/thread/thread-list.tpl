@@ -1,6 +1,6 @@
 {block css}
 {/block}
-<div class="thread_list">
+<div class="thread_list" {if not $pager->getNextPageId()}data-lastpageflag="on"{/if}>
   {foreach $thread_list as $record}
   <table class="table table-bordered">
     <thead>
@@ -16,5 +16,4 @@
     </tbody>
   </table>
   {/foreach}
-  <input type="button" name="more" value="さらに表示">
 </div>
