@@ -29,6 +29,9 @@ $(function(){
         if($(".thread_list").is("[data-lastpageflag]")){
           searchMore.hide();
         }
+        else{
+          searchMore.show();
+        }
     });
     return this;
   }
