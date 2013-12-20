@@ -1,6 +1,6 @@
 $(function(){
   /* *
-   * 必要なものの準備
+   * 変数の用意
    */
   var searchSubmit = $("#search-form input[type='submit']");
   var searchMore = $('input[name=more]');
@@ -8,7 +8,7 @@ $(function(){
   var currentPid = 1;
   
   /* *
-   * Ajax通信用のfunction
+   * 通信用の使いまわしfunction
    */
   function loadThread(currentPid){
     searchSubmit.hide();//通信が開始したらすぐ隠す
@@ -30,9 +30,8 @@ $(function(){
         //｢さらに表示｣ボタンの表示・非表示はここで決める
         if($(".thread_list").is("[data-lastpageflag]")){
           searchMore.hide();
-        }
-        else
-        {
+        } else {
+          //このelseが無いとtrue時に.hide()されたsearchMoreがずっと戻らない
           searchMore.show();
         }
     });
@@ -40,7 +39,11 @@ $(function(){
     return this;
   }
   
-  //検索ボタンを押したときの動作
+  /* *
+   * 各種イベント別動作
+   */
+  
+  //submitボタンを押したときの動作
   searchSubmit.on('click', function(){
     currentPid = 1;//ページIDを先頭に戻す
     searchSubmit.hide();
@@ -57,6 +60,6 @@ $(function(){
     loadThread(currentPid);
   });
   
-  //ページ読み込み時に動作
+  //ページのロード時に実行
   loadThread(currentPid);
 });
