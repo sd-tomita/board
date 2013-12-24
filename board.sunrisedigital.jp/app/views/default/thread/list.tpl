@@ -10,7 +10,7 @@
   </div>
 </div>
     
-{*------------スレッド表示------------*}
+{*------------エントリ表示------------*}
 <div class="thread-entrylistbox">
     <div class="thread-titleinfo">
         <i class="fa fa-tags" ></i>thread-{$entry_list->getFirstRecord()->getThread()->getId()}&nbsp;&nbsp;
@@ -32,7 +32,7 @@
     
 {*------------コメントの投稿フォーム------------*}
 {if $sdx_user->hasId()}
-<div class="panel panel-default thread-entryform">
+<div id="entry-form" class="panel panel-default thread-entryform">
   <p><i class="fa fa-pencil"></i>コメント投稿フォーム</p>
   <div class="panel-body">
     {$form->renderStartTag() nofilter}
