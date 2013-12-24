@@ -25,7 +25,7 @@
                 記事投稿日時:{$record->getFormatedDateByZend('updated_at', 'yyyy年MM月dd日(E) HH時mm分ss秒')}&nbsp;&nbsp;
                 ID:{$record->getAccount_id()}
         </dt>
-        <dd>{$record->getBody()|escape|nl2br|replace:'<br />':'<br>' nofilter}</dd>
+        <dd>{$record->getBody()|escape|sdx_autolink_ex|nl2br|replace:'<br />':'<br>' nofilter}</dd>
     </dl>
     {/foreach}   
 </div>
