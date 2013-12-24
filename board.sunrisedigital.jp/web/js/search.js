@@ -1,56 +1,65 @@
-/* *
- * ページ読み込み時の処理。いきなりスレッド一覧を出す。
- * ここでは特に条件は何も指定せずシンプルにthread-listの
- * HTMLを呼ぶだけ。
- */
 $(function(){
-  $.get("/thread/entrance/thread-list").done(function(data){
-    $('.data-disp').append(data);
-    $('input[name=more]').remove();//この時点ではまだこのボタンは出ないように
-  });      
-});
-
-/* *
- * 検索開始ボタンを押した時の処理
- */
-$(function(){
-  $("#search-form input[type='submit']").on('click', function(){
-    //通信終わるまで送信ボタン無効化
-    $("#search-form input[type='submit']").attr('value', 'please wait...').attr('disabled', true);
-    /* *
-     * フォームの値を取得、Ajax送信まで。
-     */
-    //各種データを取得。serialize()でまとめてとる。
-    //→こうなるはず　genre_id=○○&tag_id[△△]=△△
+  /* *
+   * 変数の用意
+   */
+  var searchSubmit = $("#search-form input[type='submit']");
+  var searchMore = $('input[name=more]');
+  var loading = $('.loading');
+  var currentPid = 1;
+  
+  /* *
+   * 通信用の使いまわしfunction
+   */
+  function loadThread(currentPid){
+    searchSubmit.hide();//通信が開始したらすぐ隠す
     var $form = $("#search-form");
     var query = $form.serialize();
+    
     $.ajax({
       type: "GET",
       url: "/thread/entrance/thread-list", 
-      data: query,
+      data: query+"&pid="+currentPid,
     }).done(function(data){
-        $('.data-disp').html(data);
-    }).fail(function(data){
-          alert("ng");
-    }).always(function(data){
-        //通信完了時の処理。ここで送信ボタンを元に戻す
-        $("#search-form input[type='submit']").attr('value', '検索開始').attr('disabled', false);        
-    });
-    /* *
-     * "さらに表示"ボタンを押した時の処理
-     */
-    var pid = 1;//ページIDの初期値。queryのすぐあとに宣言してもいいかも？
-    $('.data-disp').on('click','input[name=more]', function(){
-      $('input[name=more]').remove();
-      pid += 1;//ページID値を追加。これで実行の度にpidが増える。
-      $.ajax({
-        type:"get",
-        url:"/thread/entrance/thread-list",
-        data: query+"&pid="+pid,//クエリ文字列にページIDを追加。
-      }).done(function(data){
         $('.data-disp').append(data);
-      });
+    }).fail(function(data){
+        alert("NG");
+    }).always(function(data){
+        searchSubmit.show();//通信が終わったのでsubmitボタンの非表示を解除
+        loading.hide();
+        
+        //｢さらに表示｣ボタンの表示・非表示はここで決める
+        if($(".thread_list").is("[data-lastpageflag='on']")){
+          searchMore.hide();
+        } else {
+          //このelseが無いとtrue時に.hide()されたsearchMoreがずっと戻らない
+          searchMore.show();
+        }
     });
+    
+    return this;
+  }
+  
+  /* *
+   * 各種イベント別動作
+   */
+  
+  //submitボタンを押したときの動作
+  searchSubmit.on('click', function(){
+    currentPid = 1;//ページIDを先頭に戻す
+    searchSubmit.hide();
+    loading.show();
+    $('.data-disp').html("");//これまでappendされたものを消す。
+    loadThread(currentPid);
   });
+  
+  //｢さらに表示｣ボタンを押したときの動作
+  searchMore.on('click', function(){
+    ++currentPid;//実行の度にpidが増える。
+    searchMore.hide();
+    loading.show();
+    loadThread(currentPid);
+  });
+  
+  //ページのロード時に実行
+  loadThread(currentPid);
 });
-

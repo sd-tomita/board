@@ -5,6 +5,12 @@
       .sub_menu dd {
         float: left;    
       }
+
+      .loading {
+        background-color: #FFF;
+        font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+        padding: 5px;
+      }
       
       .data-disp, .sub_menu dt, input[type="submit"] {
         clear:both;
@@ -47,6 +53,7 @@
   {/foreach}  
 </dl>
 <input type="submit" name="submit" value="検索開始">
+<span class="loading"><img src="/img/loading.gif" alt="Now loading...">Now loading... </span>
 </form>
 
   {if $sdx_user->hasId()}
@@ -59,9 +66,12 @@
   {/if}
 </div>
   
-{*--------------表示テスト用---------------*}
+{*-------------ajaxで取得したdataの表示スペース--------------*}
 <h2>スレッドリスト</h2>
 <div class="data-disp">
 
 </div>
+
+<input type="button" name="more" value="さらに表示" >
+<span class="loading"><img src="/img/loading.gif" alt="Now loading...">Now loading... </span>
 {/block}

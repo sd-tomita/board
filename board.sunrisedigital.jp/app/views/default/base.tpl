@@ -69,11 +69,11 @@
         <dd><a href="#">サルでもわかるGit入門</a></dd>
     </dl>
     <dl>
-      <dt><i class="fa fa-lock"></i> 運営サイト</dt>
-        <dd><a href="#">風俗情報ヌキなび</a></dd>
-        <dd><a href="#">風俗情報スポニチAAA</a></dd>
-        <dd><a href="#">女性求人パピヨンジョブ</a></dd>
-        <dd><a href="#">男性求人ガンガン</a></dd>
+      <dt><i class="fa fa-lock"></i> その他</dt>
+        <dd><a href="#">Vagrant</a></dd>
+        <dd><a href="#">php.net</a></dd>
+        <dd><a href="#">jquery.com</a></dd>
+        <dd><a href="#">Oracle VM VirtualBox</a></dd>
     </dl>
   </div>
   <div class="footer_end">
