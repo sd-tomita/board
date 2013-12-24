@@ -1,24 +1,8 @@
 {extends file='default/base.tpl'}
 {block css}
-    {*---------一時使用CSSなので直書きしています--------*}
-    <style>
-      .sub_menu dd {
-        float: left;    
-      }
-
-      .loading {
-        background-color: #FFF;
-        font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
-        padding: 5px;
-      }
-      
-      .data-disp, .sub_menu dt, input[type="submit"] {
-        clear:both;
-      }
-    
-    </style>
     <link rel="stylesheet" href="/css/top.css" type="text/css">
     <link rel="stylesheet" href="/css/threadlist.css" type="text/css">
+    <link rel="stylesheet" href="/css/search.css" type="text/css">
 {/block}
 {block js}
     <script src="/js/search.js"></script>
@@ -52,7 +36,10 @@
     <dd><label><input type="checkbox" name="tag_id[{$record->getId()}]" value="{$record->getId()}">{$record->getName()}</label></dd>
   {/foreach}  
 </dl>
-<input type="submit" name="submit" value="検索開始">
+<div class="navbar-search">
+  <div class="icon-search"></div>
+  <input type="submit" name="submit" value="検索開始">
+</div>
 <span class="loading"><img src="/img/loading.gif" alt="Now loading...">Now loading... </span>
 </form>
 
