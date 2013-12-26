@@ -5,7 +5,6 @@ $(function(){
   var searchSubmit = $("#search-form input[type='submit']");
   var searchMore = $('input[name=more]');
   var loading = $('.loading');
-  var currentPid = 1;
   
   /* *
    * 通信用の使いまわしfunction
@@ -29,7 +28,7 @@ $(function(){
         loading.hide();
         
         //｢さらに表示｣ボタンは次ページがある場合は表示
-        if(!$(".thread_list").is("[data-hasnextpage='on']")){
+        if(!$(".thread_list").is("[data-lastpage='on']")){
           searchMore.show();
         }
     });
@@ -43,21 +42,30 @@ $(function(){
   
   //submitボタンを押したときの動作
   searchSubmit.on('click', function(){
-    currentPid = 1;//ページIDを先頭に戻す
     searchSubmit.hide();
     loading.show();
     $('.data-disp').html("");//これまでappendされたものを消す。
-    loadThread(currentPid);
+    loadThread(1);
   });
   
   //｢さらに表示｣ボタンを押したときの動作
   searchMore.on('click', function(){
-    ++currentPid;//実行の度にpidが増える。
     searchMore.hide();
     loading.show();
-    loadThread(currentPid);
+    /* * *
+     * loadThread()の引数は一番末尾のclass="thread_list"内 data-nextpageidの値を指定。
+     * さらに表示を押す度に.thread_list が増えていくために行っている処理
+     */
+    loadThread($(".thread_list:last").data('nextpageid'));
   });
   
-  //ページのロード時に実行
-  loadThread(currentPid);
+  //ページのロード時に実行。
+  loadThread(1);
 });
+
+/* * *
+ * メモ
+ * loadThread()に引数を指定しないと、どういうわけか
+ * pageオブジェクトからの情報がgetできないので、ひとまず
+ * 引数を空にしないことで対応。(決まっているものは実数指定)
+ */

@@ -1,6 +1,6 @@
 {block css}
 {/block}
-<div class="thread_list" {if !$pager->hasNextPage()}data-hasnextpage="on"{/if}>
+<div class="thread_list" {if !$pager->hasNextPage()}data-lastpage="on"{/if} data-nextpageid="{$pager->getNextPageId()}">
   {foreach $thread_list as $record}
   <table class="table table-bordered">
     <thead>
