@@ -10,7 +10,7 @@ $(function(){
   /* *
    * 通信用の使いまわしfunction
    */
-  function loadThread(currentPid){
+  function loadThread(somePid){
     searchSubmit.hide();//通信が開始したらすぐ隠す
     var $form = $("#search-form");
     var query = $form.serialize();
@@ -18,7 +18,7 @@ $(function(){
     $.ajax({
       type: "GET",
       url: "/thread/entrance/thread-list", 
-      data: query+"&pid="+currentPid,
+      data: query+"&pid="+somePid,
     }).done(function(data){
         $('.data-disp').append(data);
     }).fail(function(data){
