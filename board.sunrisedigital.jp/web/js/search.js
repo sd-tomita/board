@@ -28,7 +28,7 @@ $(function(){
         loading.hide();
         
         //｢さらに表示｣ボタンの表示・非表示はここで決める
-        if($(".thread_list").is("[data-lastpageflag='on']")){
+        if($(".thread_list").is("[data-hasnextpage='on']")){
           searchMore.hide();
         } else {
           //このelseが無いとtrue時に.hide()されたsearchMoreがずっと戻らない
