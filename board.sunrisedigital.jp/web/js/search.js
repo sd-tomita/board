@@ -12,6 +12,7 @@ $(function(){
    */
   function loadThread(somePid){
     searchSubmit.hide();//通信が開始したらすぐ隠す
+    searchMore.hide();//これも隠しておかないと通信開始直後｢さらに表示｣がいきなり見える。
     var $form = $("#search-form");
     var query = $form.serialize();
     
@@ -27,11 +28,8 @@ $(function(){
         searchSubmit.show();//通信が終わったのでsubmitボタンの非表示を解除
         loading.hide();
         
-        //｢さらに表示｣ボタンの表示・非表示はここで決める
-        if($(".thread_list").is("[data-hasnextpage='on']")){
-          searchMore.hide();
-        } else {
-          //このelseが無いとtrue時に.hide()されたsearchMoreがずっと戻らない
+        //｢さらに表示｣ボタンは次ページがある場合は表示
+        if(!$(".thread_list").is("[data-hasnextpage='on']")){
           searchMore.show();
         }
     });
