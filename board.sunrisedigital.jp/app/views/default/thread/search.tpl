@@ -38,7 +38,7 @@
 </dl>
 <div class="navbar-search">
   <div class="icon-search"></div>
-  <input type="submit" name="submit" value="検索開始">
+  <input type="submit" name="submit" value="検索開始" class="btn btn-default">
 </div>
 <span class="loading"><img src="/img/loading.gif" alt="Now loading...">Now loading... </span>
 </form>
