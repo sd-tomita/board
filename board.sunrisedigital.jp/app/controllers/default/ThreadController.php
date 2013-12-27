@@ -78,7 +78,7 @@ class ThreadController extends Sdx_Controller_Action_Http
        * レコードリストを取得する
        */
       //１ページには10行まで。$main_selが総数
-      $pager = new Sdx_Pager(10, $t_thread->count($main_sel));      
+      $pager = new Sdx_Pager(5, $t_thread->count($main_sel));      
       $this->view->assign('pager', $pager);//これはページオブジェクトのアサイン
 
       $main_sel
