@@ -29,7 +29,7 @@ input[name="more"] {
   margin-bottom: 10px;
 }
   
-input[type="more"]:hover {
+input[name="more"]:hover {
   background-color: #595959;
   color: #FFF;
 }
