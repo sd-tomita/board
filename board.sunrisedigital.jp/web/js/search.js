@@ -27,7 +27,7 @@ $(function(){
         searchSubmit.show();//通信が終わったのでsubmitボタンの非表示を解除
         loading.hide();
         
-        //｢さらに表示｣ボタンは次ページがある場合は表示
+        //｢さらに表示｣ボタンは最後のページじゃない場合に限り表示させる
         if(!$(".thread_list").is("[data-lastpage='on']")){
           searchMore.show();
         }
