@@ -1,6 +1,11 @@
 {block css}
 {/block}
-<div class="thread_list" {if not $pager->hasNextPage()}data-lastpageflag="on"{/if}>
+
+{if get_class($thread_list->getFirstRecord()) == Sdx_Null}
+<div class="alert alert-warning">検索条件に合致するスレッドはありません。</div>
+{/if}
+
+<div class="thread_list" {if !$pager->hasNextPage()}data-lastpage="on"{/if} data-nextpageid="{$pager->getNextPageId()}">
   {foreach $thread_list as $record}
   <table class="table table-bordered">
     <thead>

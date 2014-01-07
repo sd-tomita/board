@@ -13,7 +13,7 @@
   border-left: solid 15px #9370db;
   border-bottom: solid 1px;
   text-indent: 5px;
-  font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+  font-family: "Lucida Grande", "segoe UI", "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Meiryo, Verdana, Arial, sans-serif;
   font-weight:bold;
 }
 
@@ -25,7 +25,7 @@
 .thread-entryinfo dt {
   text-indent:5px;
   background-color:#d8bfd8;
-  font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+  font-family: "Lucida Grande", "segoe UI", "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Meiryo, Verdana, Arial, sans-serif;
 }
 
 .thread-entryinfo dd {
@@ -42,5 +42,5 @@
 
 .thread-entryform p {
   font-weight: bold;
-  font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+  font-family: "Lucida Grande", "segoe UI", "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Meiryo, Verdana, Arial, sans-serif;
 }

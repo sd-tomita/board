@@ -10,7 +10,7 @@
   </div>
 </div>
     
-{*------------スレッド表示------------*}
+{*------------エントリ表示------------*}
 <div class="thread-entrylistbox">
     <div class="thread-titleinfo">
         <i class="fa fa-tags" ></i>thread-{$entry_list->getFirstRecord()->getThread()->getId()}&nbsp;&nbsp;
@@ -25,14 +25,14 @@
                 記事投稿日時:{$record->getFormatedDateByZend('updated_at', 'yyyy年MM月dd日(E) HH時mm分ss秒')}&nbsp;&nbsp;
                 ID:{$record->getAccount_id()}
         </dt>
-        <dd>{$record->getBody()|escape|nl2br|replace:'<br />':'<br>' nofilter}</dd>
+        <dd>{$record->getBody()|sdx_autolink_ex|nl2br|replace:'<br />':'<br>' nofilter}</dd>
     </dl>
     {/foreach}   
 </div>
     
 {*------------コメントの投稿フォーム------------*}
 {if $sdx_user->hasId()}
-<div class="panel panel-default thread-entryform">
+<div id="entry-form" class="panel panel-default thread-entryform">
   <p><i class="fa fa-pencil"></i>コメント投稿フォーム</p>
   <div class="panel-body">
     {$form->renderStartTag() nofilter}
