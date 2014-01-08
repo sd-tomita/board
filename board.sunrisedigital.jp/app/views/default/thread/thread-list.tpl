@@ -1,7 +1,7 @@
 {block css}
 {/block}
 
-{if get_class($thread_list->getFirstRecord()) == Sdx_Null}
+{if $thread_list->getFirstRecord()->isNull()}
 <div class="alert alert-warning">検索条件に合致するスレッドはありません。</div>
 {/if}
 
