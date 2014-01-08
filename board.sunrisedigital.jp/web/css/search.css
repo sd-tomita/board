@@ -22,14 +22,10 @@
  }
 
 .sub_menu dl {
-  margin-bottom: 40px;
+  margin-bottom: 15px;
 }
 
 .sub_menu dd {
   float: left;
   margin-left: 20px;/*text-indent代わり*/
-}
-      
-.data-disp, .sub_menu dt, input[type="submit"] {
-  clear:both;
 }
