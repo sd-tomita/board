@@ -31,8 +31,7 @@ class SecureController extends Sdx_Controller_Action_Http {
 
     //控えておいたURLをリダイレクト先に指定する
     $ref_info = $this->_createSession();
-    $fixed_url = $ref_info->url;
-    $this->_helper->secure->login($fixed_url);
+    $this->_helper->secure->login($ref_info->url);
   }
   
   private function _createSession()
