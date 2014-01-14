@@ -20,7 +20,14 @@ class ThreadController extends Sdx_Controller_Action_Http
      * 処理を行い、レコードリストを返すようにする。
      */
     public function threadListAction()
-    {   
+    {
+      /* *
+       * JSON で値の配列だけを送信するようにするため
+       * テンプレによるレンダリングは止めておく。
+       * (HTMLタグが付与されるのを防ぐ)
+       */
+      $this->_disableViewRenderer();
+      
       /* *
        * ①全スレッド取得
        * エントリがあった順
@@ -89,7 +96,14 @@ class ThreadController extends Sdx_Controller_Action_Http
         );
 
       $thread_list = $t_thread->fetchAll($main_sel);
-      $this->view->assign('thread_list', $thread_list);
+      $jsons = json_encode($thread_list->toArray());
+      echo '<pre>';
+      echo $jsons;
+      echo '</pre>';
+      
+      //echo json_encode($thread_list->toArray());
+      //$thread_list = $t_thread->fetchAll($main_sel);
+      //$this->view->assign('thread_list', $thread_list);
     }
     public function listAction()
     {

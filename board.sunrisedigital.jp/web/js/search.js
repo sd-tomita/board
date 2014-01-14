@@ -24,11 +24,11 @@ $(function(){
       type: "GET",
       url: "/thread/entrance/thread-list", 
       data: query+"&pid="+somePid,
-    }).done(function(data){
-        $('.data-disp').append(data);
-    }).fail(function(data){
+    }).done(function(jsondata){
+        $('.data-disp').append(jsondata);
+    }).fail(function(jsondata){
         alert("NG");
-    }).always(function(data){
+    }).always(function(jsondata){
         searchSubmit.show();//通信が終わったのでsubmitボタンの非表示を解除
         loading.hide();
         
