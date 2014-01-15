@@ -96,15 +96,24 @@ class ThreadController extends Sdx_Controller_Action_Http
         );
 
       $thread_list = $t_thread->fetchAll($main_sel);
-      $jsons = json_encode($thread_list->toArray());
-      echo '<pre>';
-      echo $jsons;
-      echo '</pre>';
       
-      //echo json_encode($thread_list->toArray());
+      /* *
+       * json関係。必要なのはselectしたレコードの内容だけでいいはず？
+       * なので、toArray()を使っています。これをjson_encode()すれば
+       * ajaxで渡すためのデータはできあがり。。。のはず。
+       */
+      $jsons = json_encode($thread_list->toArray());//json形式の配列にテキストを書き換える
+      header('Content-type: application/json');//jsonオブジェクトであることをヘッダに追記
+      echo $jsons;
+      
+      /* *
+       * これまでに使っていたもの。比較のたびにブランチ切るのは
+       * 手間がかかるので一応削除はせずコメントアウトに留める。
+       */
       //$thread_list = $t_thread->fetchAll($main_sel);
       //$this->view->assign('thread_list', $thread_list);
     }
+    
     public function listAction()
     {
       /*

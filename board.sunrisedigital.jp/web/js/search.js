@@ -25,7 +25,10 @@ $(function(){
       url: "/thread/entrance/thread-list", 
       data: query+"&pid="+somePid,
     }).done(function(jsondata){
-        $('.data-disp').append(jsondata);
+        var data = jsondata;
+        for(var i in data){
+          $(".data-disp").append("<ul>"+"<li>"+ data[i].title +"</li>"+"</ul>");
+        }
     }).fail(function(jsondata){
         alert("NG");
     }).always(function(jsondata){
