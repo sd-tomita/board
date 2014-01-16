@@ -1,11 +1,5 @@
 $(function(){
   /* *
-   * テスト
-   */
-  $(".sub_menu").append("<a href='https://www.google.co.jp/'>"+"Google先生"+"</a>");
-  $(".sub_menu").append("<a href='https://www.google.co.jp/'>"+"Google先生"+"</a>");
- 
-  /* *
    * 変数の用意
    */
   var searchSubmit = $("#search-form input[type='submit']");
@@ -13,7 +7,7 @@ $(function(){
   var loading = $('.loading');
   
   /* *
-   * 通信用の使いまわしfunction
+   * 通信用function
    */
   function loadThread(somePid){
     /* *
@@ -37,6 +31,9 @@ $(function(){
           $(".data-disp").append("<tr>"+"<td>"+ "最終更新日時："+data[0][i].newest_date +"</td>"+"</tr>");
         }
         $(".data-disp").append("</table>");
+        
+        //ここでdata-next_pid属性を追加しておく。
+        //これが｢さらに表示｣ボタンの表示有無判定に使われる
         $(".data-disp").attr("data-next_pid",data.next_pid);
     }).fail(function(jsondata){
         alert("NG");
@@ -55,7 +52,6 @@ $(function(){
   
   /* *
    * 各種イベント別動作
-   * (ロード時以外の動作は一旦凍結)
    */
   
   //submitボタンを押したときの動作
