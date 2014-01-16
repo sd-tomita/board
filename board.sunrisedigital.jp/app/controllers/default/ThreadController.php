@@ -103,8 +103,12 @@ class ThreadController extends Sdx_Controller_Action_Http
        * ajaxで渡すためのデータはできあがり。。。のはず。
        */
       //ページ情報もjsonで渡すため、予め用意しておく
-      $next_pid = $pager->getNextPageId();
-      $json_obj = json_encode(array($thread_list->toArray(), 'next_pid' => $next_pid));//json形式の配列にテキストを書き換える
+      $json_obj = json_encode(
+        array(
+          'records' => $thread_list->toArray(), 
+          'next_pid' => $pager->getNextPageId()
+        )
+      );//json形式の配列にテキストを書き換える
       header('Content-type: application/json');//jsonオブジェクトであることをヘッダに追記
       echo $json_obj;
 

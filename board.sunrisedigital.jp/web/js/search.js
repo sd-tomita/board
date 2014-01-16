@@ -26,9 +26,9 @@ $(function(){
     }).done(function(jsondata){
         var data = jsondata;
         $(".data-disp").append('<table>');
-        for(var i in data[0]){
-          $(".data-disp").append("<tr>"+"<th>"+"<a href='/thread/"+data[0][i].id+"/list'>"+ data[0][i].title +"</a>" +"</th>"+"</tr>");
-          $(".data-disp").append("<tr>"+"<td>"+ "最終更新日時："+data[0][i].newest_date +"</td>"+"</tr>");
+        for(var i in data.records){
+          $(".data-disp").append("<tr>"+"<th>"+"<a href='/thread/"+data.records[i].id+"/list'>"+ data.records[i].title +"</a>" +"</th>"+"</tr>");
+          $(".data-disp").append("<tr>"+"<td>"+ "最終更新日時："+data.records[i].newest_date +"</td>"+"</tr>");
         }
         $(".data-disp").append("</table>");
         
