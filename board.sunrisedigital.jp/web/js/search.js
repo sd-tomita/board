@@ -1,5 +1,11 @@
 $(function(){
   /* *
+   * テスト
+   */
+  $(".sub_menu").append("<a href='https://www.google.co.jp/'>"+"Google先生"+"</a>");
+  $(".sub_menu").append("<a href='https://www.google.co.jp/'>"+"Google先生"+"</a>");
+ 
+  /* *
    * 変数の用意
    */
   var searchSubmit = $("#search-form input[type='submit']");
@@ -19,16 +25,18 @@ $(function(){
     searchMore.hide();//これも隠しておかないと通信開始直後｢さらに表示｣がいきなり見える。
     var $form = $("#search-form");
     var query = $form.serialize();
-    
     $.ajax({
       type: "GET",
       url: "/thread/entrance/thread-list", 
-      data: query+"&pid="+somePid,
+      data: query+"&pid="+somePid
     }).done(function(jsondata){
         var data = jsondata;
+        $(".data-disp").append('<table>');
         for(var i in data){
-          $(".data-disp").append("<ul>"+"<li>"+ data[i].title +"</li>"+"</ul>");
+          $(".data-disp").append("<tr>"+"<th>"+"<a href='/thread/"+data[i].id+"/list'>"+ data[i].title +"</a>" +"</th>"+"</tr>");
+          $(".data-disp").append("<tr>"+"<td>"+ "最終更新日時："+data[i].newest_date +"</td>"+"</tr>");
         }
+        $(".data-disp").append("</table>");
     }).fail(function(jsondata){
         alert("NG");
     }).always(function(jsondata){
@@ -37,7 +45,7 @@ $(function(){
         
         //｢さらに表示｣ボタンは最後のページじゃない場合に限り表示させる
         if(!$(".thread_list").is("[data-lastpage='on']")){
-          searchMore.show();
+          //JSON対応まで一時凍結　searchMore.show();
         }
     });
     
@@ -46,6 +54,7 @@ $(function(){
   
   /* *
    * 各種イベント別動作
+   * (ロード時以外の動作は一旦凍結)
    */
   
   //submitボタンを押したときの動作
@@ -57,15 +66,15 @@ $(function(){
   });
   
   //｢さらに表示｣ボタンを押したときの動作
-  searchMore.on('click', function(){
-    searchMore.hide();
-    loading.show();
-    /* * *
-     * loadThread()の引数は一番末尾のclass="thread_list"内 data-nextpageidの値を指定。
-     * さらに表示を押す度に.thread_list が増えていくために行っている処理
-     */
-    loadThread($(".thread_list:last").data('nextpageid'));
-  });
+//  searchMore.on('click', function(){
+//    searchMore.hide();
+//    loading.show();
+//    /* * *
+//     * loadThread()の引数は一番末尾のclass="thread_list"内 data-nextpageidの値を指定。
+//     * さらに表示を押す度に.thread_list が増えていくために行っている処理
+//     */
+//    loadThread($(".thread_list:last").data('nextpageid'));
+//  });
   
   //ページのロード時に実行。
   loadThread();
