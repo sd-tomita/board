@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/top.css" type="text/css">
   <link rel="stylesheet" href="/css/footer.css" type="text/css">
   <style>
       {*フォームのエラー表示(404等)を整えるためのCSS*}
@@ -55,7 +56,7 @@
   </header>
   {block main_contents}{/block}
   <footer class="origin_footer">
-  <div class="footer_menu">
+  <div class="footer_menu clearfix">
     <dl>
       <dt><i class="fa fa-lock"></i> サンライズ関連</dt>
         <dd><a href="#">会社公式</a></dd>

@@ -10,6 +10,11 @@ $(function(){
    * 通信用の使いまわしfunction
    */
   function loadThread(somePid){
+    /* *
+     * somePid にデフォルト値として1を設定。
+     * somePid がnull、0、空文字、undefined だったら"1"になるようにする。
+     */
+    somePid = somePid || 1;
     searchSubmit.hide();//通信が開始したらすぐ隠す
     searchMore.hide();//これも隠しておかないと通信開始直後｢さらに表示｣がいきなり見える。
     var $form = $("#search-form");
@@ -45,7 +50,7 @@ $(function(){
     searchSubmit.hide();
     loading.show();
     $('.data-disp').html("");//これまでappendされたものを消す。
-    loadThread(1);
+    loadThread();
   });
   
   //｢さらに表示｣ボタンを押したときの動作
@@ -60,12 +65,5 @@ $(function(){
   });
   
   //ページのロード時に実行。
-  loadThread(1);
+  loadThread();
 });
-
-/* * *
- * メモ
- * loadThread()に引数を指定しないと、どういうわけか
- * pageオブジェクトからの情報がgetできないので、ひとまず
- * 引数を空にしないことで対応。(決まっているものは実数指定)
- */

@@ -33,3 +33,17 @@ input[name="more"]:hover {
   background-color: #595959;
   color: #FFF;
 }
+
+/*---------- float解除に使う ----------*/
+  .clearfix:before,
+  .clearfix:after {
+    content:"";
+    display:table;
+  }
+  .clearfix:after {
+    clear: both;
+  }
+   /* For IE 6/7 */
+  .clearfix { 
+    zoom: 1; 
+  }

@@ -24,13 +24,14 @@
 
 <div class="sub_menu">
 <form id="search-form" action="javascript:void(0);">
-<dl>
+<dl class="clearfix">
   <dt>ジャンル</dt>
     <dd><label><input type="radio" name="genre_id" value="">指定なし</label></dd>
   {foreach $genre_list as $record}
     <dd><label><input type="radio" name="genre_id" value="{$record->getId()}">{$record->getName()}</label></dd>
   {/foreach}
-  
+</dl>
+<dl class="clearfix">
   <dt>タグ</dt>
   {foreach $tag_list as $record}
     <dd><label><input type="checkbox" name="tag_id[{$record->getId()}]" value="{$record->getId()}">{$record->getName()}</label></dd>
@@ -44,7 +45,7 @@
 </form>
 
   {if $sdx_user->hasId()}
-  <dl>
+  <dl class="clearfix">
     <dt><i class="fa fa-lock"></i> 管理メニュー</dt>
       <dd><a href="/control/thread">スレッド管理</a></dd>
       <dd><a href="/control/genre">ジャンル管理</a></dd>
