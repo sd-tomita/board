@@ -85,7 +85,7 @@ class ThreadController extends Sdx_Controller_Action_Http
        * レコードリストを取得する
        */
       //１ページには10行まで。$main_selが総数
-      $pager = new Sdx_Pager(5, $t_thread->count($main_sel));      
+      $pager = new Sdx_Pager(5, $t_thread->count($main_sel)); 
       $this->view->assign('pager', $pager);//これはページオブジェクトのアサイン     
       
       $main_sel
@@ -102,9 +102,12 @@ class ThreadController extends Sdx_Controller_Action_Http
        * なので、toArray()を使っています。これをjson_encode()すれば
        * ajaxで渡すためのデータはできあがり。。。のはず。
        */
-      $json_obj = json_encode($thread_list->toArray());//json形式の配列にテキストを書き換える
+      //ページ情報もjsonで渡すため、予め用意しておく
+      $next_pid = $pager->getNextPageId();
+      $json_obj = json_encode(array($thread_list->toArray(), 'next_pid' => $next_pid));//json形式の配列にテキストを書き換える
       header('Content-type: application/json');//jsonオブジェクトであることをヘッダに追記
       echo $json_obj;
+
       /* *
        * これまでに使っていたもの。比較のたびにブランチ切るのは
        * 手間がかかるので一応削除はせずコメントアウトに留める。

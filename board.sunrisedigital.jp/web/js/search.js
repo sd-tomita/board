@@ -32,20 +32,21 @@ $(function(){
     }).done(function(jsondata){
         var data = jsondata;
         $(".data-disp").append('<table>');
-        for(var i in data){
-          $(".data-disp").append("<tr>"+"<th>"+"<a href='/thread/"+data[i].id+"/list'>"+ data[i].title +"</a>" +"</th>"+"</tr>");
-          $(".data-disp").append("<tr>"+"<td>"+ "最終更新日時："+data[i].newest_date +"</td>"+"</tr>");
+        for(var i in data[0]){
+          $(".data-disp").append("<tr>"+"<th>"+"<a href='/thread/"+data[0][i].id+"/list'>"+ data[0][i].title +"</a>" +"</th>"+"</tr>");
+          $(".data-disp").append("<tr>"+"<td>"+ "最終更新日時："+data[0][i].newest_date +"</td>"+"</tr>");
         }
         $(".data-disp").append("</table>");
+        $(".data-disp").attr("data-next_pid",data.next_pid);
     }).fail(function(jsondata){
         alert("NG");
     }).always(function(jsondata){
         searchSubmit.show();//通信が終わったのでsubmitボタンの非表示を解除
         loading.hide();
         
-        //｢さらに表示｣ボタンは最後のページじゃない場合に限り表示させる
-        if(!$(".thread_list").is("[data-lastpage='on']")){
-          //JSON対応まで一時凍結　searchMore.show();
+        //｢さらに表示｣ボタンはnext_pidがある限り表示させる
+        if($(".data-disp").attr("data-next_pid")){
+          searchMore.show();
         }
     });
     
@@ -66,15 +67,13 @@ $(function(){
   });
   
   //｢さらに表示｣ボタンを押したときの動作
-//  searchMore.on('click', function(){
-//    searchMore.hide();
-//    loading.show();
-//    /* * *
-//     * loadThread()の引数は一番末尾のclass="thread_list"内 data-nextpageidの値を指定。
-//     * さらに表示を押す度に.thread_list が増えていくために行っている処理
-//     */
-//    loadThread($(".thread_list:last").data('nextpageid'));
-//  });
+  searchMore.on('click', function(){
+    searchMore.hide();
+    loading.show();
+    
+    //loadThread()の引数は data-nextpageid の値を指定。    
+    loadThread($(".data-disp").attr("data-next_pid"));
+  });
   
   //ページのロード時に実行。
   loadThread();
