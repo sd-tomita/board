@@ -19,19 +19,35 @@ $(function(){
     searchMore.hide();//これも隠しておかないと通信開始直後｢さらに表示｣がいきなり見える。
     var $form = $("#search-form");
     var query = $form.serialize();
+    $(".data-disp").addClass("thread_list");
     $.ajax({
       type: "GET",
       url: "/thread/entrance/thread-list", 
       data: query+"&pid="+somePid
-    }).done(function(jsondata){
-        var data = jsondata;
-        $(".data-disp").append('<table>');
-        for(var i in data.records){
-          $(".data-disp").append("<tr>"+"<th>"+"<a href='/thread/"+data.records[i].id+"/list'>"+ data.records[i].title +"</a>" +"</th>"+"</tr>");
-          $(".data-disp").append("<tr>"+"<td>"+ "最終更新日時："+data.records[i].newest_date +"</td>"+"</tr>");
+    }).done(function(data){
+      
+        //レコードがあったかどうかの判定
+        //data['records']の中身があるかどうか
+        if(data['records'].length === 0){
+          $(".data-disp").append("<div class='alert alert-warning'>スレッドが見つかりません。</div>");
         }
-        $(".data-disp").append("</table>");
-        
+        for(var i in data.records){
+          /* *
+           * とりあえず今回は他に方法が思いつかなかったのでHTMLタグをjsで書きます。
+           */
+          $(".data-disp").append('<table class="table table-bordered">');
+          $(".data-disp").append('<thead>');
+          
+          //なぜかclass="success"だけだとうまく当たらないので"alert-success"にしてます。
+          $(".data-disp").append("<tr class='alert-success'> "+"<th>"+"<a href='/thread/"+data.records[i].id+"/list'>"+ data.records[i].title +"</a>" +"</th>"+"</tr>");
+          $(".data-disp").append('</thead>');
+          
+          $(".data-disp").append('<tbody>');
+          $(".data-disp").append("<tr>"+"<td>"+ "最終更新日時："+data.records[i].newest_date +"</td>"+"</tr>");
+          $(".data-disp").append('</tbody>');
+          $(".data-disp").append("</table>");
+        }
+    
         //ここでdata-next_pid属性を追加しておく。
         //これが｢さらに表示｣ボタンの表示有無判定に使われる
         $(".data-disp").attr("data-next_pid",data.next_pid);
