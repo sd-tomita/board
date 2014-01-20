@@ -43,7 +43,7 @@ $(function(){
           $(".data-disp").append('</thead>');
           
           $(".data-disp").append('<tbody>');
-          $(".data-disp").append("<tr>"+"<td>"+ "最終更新日時："+data.records[i].newest_date +"</td>"+"</tr>");
+          $(".data-disp").append("<tr>"+"<td>"+ "最終更新日時："+formatDate(data.records[i].newest_date) +"</td>"+"</tr>");
           $(".data-disp").append('</tbody>');
           $(".data-disp").append("</table>");
         }
@@ -64,6 +64,28 @@ $(function(){
     });
     
     return this;
+  }
+  
+  /* * 
+   * 日付フォーマット変換用
+   * PHPから受け取った日付をそのまま出力すると
+   * " 2014-01-10 15:25:43 "みたいな形式になるので
+   * これを" 2014年1月10日(金) 15時25分43秒 "になおす。
+   */
+  function formatDate(str) {
+    var date = new Date(str);
+    var week = ["日","月","火","水","木","金","土"];//日本語曜日表示用
+    var month = date.getMonth()+1;//そのまま出力すると1ヶ月以前になるので足しておく
+    var formatted = 
+          date.getFullYear()+"年"+
+          month +"月"+
+          date.getDate()+"日"+
+          "("+week[date.getDay()]+")"+"　"+
+          date.getHours()+"時"+
+          date.getMinutes()+"分"+
+          date.getSeconds()+"秒";
+    
+    return formatted;   
   }
   
   /* *
