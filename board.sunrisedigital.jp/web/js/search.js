@@ -26,11 +26,13 @@ $(function(){
       data: query+"&pid="+somePid
     }).done(function(data){
       
-        //レコードがあったかどうかの判定
-        //data['records']の中身があるかどうか
+        //レコードがあったかどうかの判定。
+        //data['records']の中身が無ければメッセージを出す。
         if(data['records'].length === 0){
           $(".data-disp").append("<div class='alert alert-warning'>スレッドが見つかりません。</div>");
         }
+        
+        //レコードがあればそれを出力する。
         for(var i in data.records){
           /* *
            * とりあえず今回は他に方法が思いつかなかったのでHTMLタグをjsで書きます。
