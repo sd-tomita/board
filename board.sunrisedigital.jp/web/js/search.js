@@ -29,29 +29,28 @@ $(function(){
         //レコードがあったかどうかの判定。
         //data['records']の中身が無ければメッセージを出す。
         if(data['records'].length === 0){
-          $(".data-disp").append("<div class='alert alert-warning'>スレッドが見つかりません。</div>");
+          $(".data-disp").append(
+            "<div class='alert alert-warning'>検索条件に一致するスレッドが見つかりません。</div>"
+          );
         }
         
         //レコードがあればそれを出力する。
         for(var i in data.records){
-          /* *
-           * とりあえず今回は他に方法が思いつかなかったのでHTMLタグをjsで書きます。
-           */
-          $(".data-disp").append('<table class="table table-bordered">');
-          $(".data-disp").append('<thead>');
-          
-          //なぜかclass="success"だけだとうまく当たらないので"alert-success"にしてます。
-          $(".data-disp").append("<tr class='alert-success'> "+"<th>"+"<a href='/thread/"+data.records[i].id+"/list'>"+ data.records[i].title +"</a>" +"</th>"+"</tr>");
-          $(".data-disp").append('</thead>');
-          
-          $(".data-disp").append('<tbody>');
-          $(".data-disp").append("<tr>"+"<td>"+ "最終更新日時："+formatDate(data.records[i].newest_date) +"</td>"+"</tr>");
-          $(".data-disp").append('</tbody>');
-          $(".data-disp").append("</table>");
+          $(".data-disp").append('<table class="table table-bordered"></table>');
+          $(".data-disp > table:last").append('<thead></thead><tbody></tbody>');
+          $(".data-disp > table:last > thead" ).append(
+            "<tr class='success'>"+"<th>"+
+            "<a href='/thread/"+data.records[i].id+"/list'>"+"<i class ='fa fa-play'></i>"+
+            " "+data.records[i].title +
+            "</a>" +"</th>"+"</tr>"
+          );
+          $(".data-disp > table:last > tbody").append(
+            "<tr>"+"<td>"+ "最終更新日時："+formatDate(data.records[i].newest_date)+
+            "</td>"+"</tr>"
+          );
         }
     
-        //ここでdata-next_pid属性を追加しておく。
-        //これが｢さらに表示｣ボタンの表示有無判定に使われる
+        //｢さらに表示｣ボタンの表示判定に使うdata-next_pid属性を追加
         $(".data-disp").attr("data-next_pid",data.next_pid);
     }).fail(function(jsondata){
         alert("NG");
