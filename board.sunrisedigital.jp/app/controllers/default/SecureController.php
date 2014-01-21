@@ -12,26 +12,36 @@ class SecureController extends Sdx_Controller_Action_Http {
   public function loginAction() {
     $this->_initHelper();
 
-    //そもそも遷移元が存在しない(URL直打ち等)場合はTOPに飛ばす
-    if (!isset($_SERVER['HTTP_REFERER'])) {
-      $ref_info = $this->_createSession();
-      $ref_info->url = '/'; 
-    }
+    //デフォルトのリダイレクト先
+    $fixed_url = '/';
 
-    //ServerName が変わっても対応できるようにパス形式に変えておく
-    $parsed_url = parse_url($_SERVER['HTTP_REFERER']);
-    $path = $parsed_url['path'];
-
-    //遷移元ページが存在し、かつ/secure/login以外であれば、そのURLを控えておく
-    if (isset($_SERVER['HTTP_REFERER']) && $path != '/secure/login') 
+    //既にサブミットされていれば
+    if($this->_getParam('submit'))
     {
       $ref_info = $this->_createSession();
-      $ref_info->url = $_SERVER['HTTP_REFERER'];
+      //セッションがあったらしまう
+      if(isset($ref_info->url))
+      {
+        $fixed_url = $ref_info->url;
+        unset($ref_info->url);
+      }
+    }
+    //サブミットされる前だったら
+    else if(isset($_SERVER['HTTP_REFERER'])) 
+    {
+      //リファラのURLを解析
+      $parsed_url = parse_url($_SERVER['HTTP_REFERER']);
+      
+      //リファラのパスが/secure/login以外ならセッションにしまう
+      if ($parsed_url['path']!= '/secure/login') 
+      {
+        $ref_info = $this->_createSession();
+        $ref_info->url = $_SERVER['HTTP_REFERER'];
+      }
     }
 
-    //控えておいたURLをリダイレクト先に指定する
-    $ref_info = $this->_createSession();
-    $this->_helper->secure->login($ref_info->url);
+    $this->_helper->secure->login($fixed_url);
+    
   }
   
   private function _createSession()
