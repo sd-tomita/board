@@ -74,12 +74,9 @@ $(function(){
    * これを" 2014年1月10日(金) 15時25分43秒 "になおす。
    */
   function formatDate(str) {
-    /* *
-     * Chrome以外のブラウザへの対策のため、
-     * yyyy-mm-dd ⇒ yyyy/mm/dd にしてからDateオブジェクトに渡す。
-     */
-    var replaced = str.replace(/-/g,'/');
-    var date = new Date(replaced);
+    //Chromeではないブラウザ対策
+    // yyyy-mm-dd ⇒ yyyy/mm/dd にしてからDate()に渡す
+    var date = new Date(str.replace(/-/g,'/'));
     
     var week = ["日","月","火","水","木","金","土"];//日本語曜日表示用
     var month = date.getMonth()+1;//そのまま出力すると0月～11月表記になるので。
@@ -94,7 +91,7 @@ $(function(){
       +date.getMinutes()+"分"
       +date.getSeconds()+"秒";
     
-    return formatted;   
+    return formatted;
   }
   
   /* *
@@ -114,7 +111,7 @@ $(function(){
     searchMore.hide();
     loading.show();
     
-    //loadThread()の引数は data-nextpageid の値を指定。    
+    //loadThread()の引数は data-next_pid の値を指定。    
     loadThread($(".data-disp").attr("data-next_pid"));
   });
   

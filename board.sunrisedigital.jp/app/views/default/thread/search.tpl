@@ -1,6 +1,5 @@
 {extends file='default/base.tpl'}
 {block css}
-    <link rel="stylesheet" href="/css/top.css" type="text/css">
     <link rel="stylesheet" href="/css/threadlist.css" type="text/css">
     <link rel="stylesheet" href="/css/search.css" type="text/css">
 {/block}
