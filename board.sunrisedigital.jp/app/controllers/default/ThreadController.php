@@ -20,7 +20,14 @@ class ThreadController extends Sdx_Controller_Action_Http
      * 処理を行い、レコードリストを返すようにする。
      */
     public function threadListAction()
-    {   
+    {
+      /* *
+       * JSON で値の配列だけを送信するようにするため
+       * テンプレによるレンダリングは止めておく。
+       * (HTMLタグが付与されるのを防ぐ)
+       */
+      $this->_disableViewRenderer();
+      
       /* *
        * ①全スレッド取得
        * エントリがあった順
@@ -78,9 +85,9 @@ class ThreadController extends Sdx_Controller_Action_Http
        * レコードリストを取得する
        */
       //１ページには10行まで。$main_selが総数
-      $pager = new Sdx_Pager(5, $t_thread->count($main_sel));      
-      $this->view->assign('pager', $pager);//これはページオブジェクトのアサイン
-
+      $pager = new Sdx_Pager(5, $t_thread->count($main_sel)); 
+      $this->view->assign('pager', $pager);//これはページオブジェクトのアサイン     
+      
       $main_sel
         ->limitPager($pager)
         ->order(array(
@@ -89,8 +96,30 @@ class ThreadController extends Sdx_Controller_Action_Http
         );
 
       $thread_list = $t_thread->fetchAll($main_sel);
-      $this->view->assign('thread_list', $thread_list);
+      
+      /* *
+       * json関係。必要なのはselectしたレコードの内容だけでいいはず？
+       * なので、toArray()を使っています。これをjson_encode()すれば
+       * ajaxで渡すためのデータはできあがり。。。のはず。
+       */
+      //ページ情報もjsonで渡すため、予め用意しておく
+      $json_obj = json_encode(
+        array(
+          'records' => $thread_list->toArray(), 
+          'next_pid' => $pager->getNextPageId()
+        )
+      );//json形式の配列にテキストを書き換える
+      header('Content-type: application/json');//jsonオブジェクトであることをヘッダに追記
+      echo $json_obj;
+
+      /* *
+       * これまでに使っていたもの。比較のたびにブランチ切るのは
+       * 手間がかかるので一応削除はせずコメントアウトに留める。
+       */
+      //$thread_list = $t_thread->fetchAll($main_sel);
+      //$this->view->assign('thread_list', $thread_list);
     }
+    
     public function listAction()
     {
       /*
