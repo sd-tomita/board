@@ -5,6 +5,7 @@
 {/block}
 {block js}
     <script src="/js/search.js"></script>
+    <script src="/js/format.js"></script>
 {/block}
 {block title append} 検索用ページ{/block}
 {block main_contents}
