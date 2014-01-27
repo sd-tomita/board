@@ -5,6 +5,21 @@
 {/block}
 {block js}
     <script src="/js/search.js"></script>
+    <script src="/js/format.js"></script>
+
+    {*---------thread-list.tpl代わり----------*}
+    <script type="text/html" id="tpl_article_row">
+      <table class="table table-bordered">
+        <thead>
+          <tr class="success">
+            <th><a href="/thread/%id%/list"><i class="fa fa-play"></i> %title%</a></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>最終更新日時：%newest_date%</td></tr>
+        </tbody>
+      </table>
+    </script>
 {/block}
 {block title append} 検索用ページ{/block}
 {block main_contents}
@@ -58,7 +73,11 @@
 <div class="data-disp">
 
 </div>
-
+{*-------------必要に応じて表示させる要素群。基本隠す--------------*}
+{* 検索に一致するスレがないときに表示 *}
+<div class="no-data alert alert-warning">スレッドが見つかりません。</div>
+{* レコードが追加取得可能なときに表示 *}
 <input type="button" name="more" value="さらに表示" >
+{* 通信をしているときに表示 *}
 <div class="loading"><img src="/img/loading.gif" alt="Now loading...">Now loading... </div>
 {/block}

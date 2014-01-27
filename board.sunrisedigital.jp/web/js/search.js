@@ -5,20 +5,24 @@ $(function(){
   var searchSubmit = $("#search-form input[type='submit']");
   var searchMore = $('input[name=more]');
   var loading = $('.loading');
+  var nodata = $(".no-data");
   
   /* *
    * 通信用function
    */
   function loadThread(somePid){
-    /* *
-     * somePid にデフォルト値として1を設定。
-     * somePid がnull、0、空文字、undefined だったら"1"になるようにする。
-     */
+    //somePid がnull、0、空文字、undefined だったら"1"になるようにする。
     somePid = somePid || 1;
-    searchSubmit.hide();//通信が開始したらすぐ隠す
-    searchMore.hide();//これも隠しておかないと通信開始直後｢さらに表示｣がいきなり見える。
+    
+    //いきなり見えちゃよくないものを隠す
+    searchSubmit.hide();
+    searchMore.hide();
+    nodata.hide();
+    
     var $form = $("#search-form");
     var query = $form.serialize();
+    var tpl_html = $("#tpl_article_row").text();
+    
     $(".data-disp").addClass("thread_list");
     $.ajax({
       type: "GET",
@@ -26,29 +30,44 @@ $(function(){
       data: query+"&pid="+somePid
     }).done(function(data){
       
-        //レコードがあったかどうかの判定。
-        //data['records']の中身が無ければメッセージを出す。
+        //検索条件に一致するものが1つも無ければメッセージを表示させる。
         if(data['records'].length === 0){
-          $(".data-disp").append(
-            "<div class='alert alert-warning'>検索条件に一致するスレッドが見つかりません。</div>"
-          );
+          nodata.show();
         }
         
         //レコードがあればそれを出力する。
-        for(var i in data.records){
-          $(".data-disp").append('<table class="table table-bordered"></table>');
-          $(".data-disp > table:last").append('<thead></thead><tbody></tbody>');
-          $(".data-disp > table:last > thead" ).append(
-            "<tr class='success'>"+"<th>"+
-            "<a href='/thread/"+data.records[i].id+"/list'>"+"<i class ='fa fa-play'></i>"+
-            " "+data.records[i].title +
-            "</a>" +"</th>"+"</tr>"
-          );
-          $(".data-disp > table:last > tbody").append(
-            "<tr>"+"<td>"+ "最終更新日時："+formatDate(data.records[i].newest_date)+
-            "</td>"+"</tr>"
-          );
-        }
+        $.each(data.records, function(){
+          //data.records[i]ごとに毎回テンプレを新しく取得
+          var html = tpl_html;
+          $.each(this, function(key,value){
+            //newest_dateだけは表示形式に手を加えたいので処理を分岐
+            if(key==="newest_date"){
+              //%key% で区切って、value で結合する。
+              /*---------------------------------
+               * .split().join()の一連の動作が
+               * 理解しにくかったのでイメージをメモ
+               * 
+               *   HTML文%KEY%HTML文 
+               * 　  ↓.split (%KEY%を区切り文字とする。配列になる)
+               *   HTML文, HTML文
+               *     ↓.join (valueで結合して文字列に戻す)
+               *   HTML文valueHTML文 
+               *   
+               * おそらくこういう動きをしていると思われる。
+               * いらなくなったらこのメモは消す。
+               ---------------------------------*/
+              
+              // formatDate() は別ファイル(format.js)から呼んだ関数です。
+              // yyyy-mm-dd　hh:mm:ss ⇒ yyyy年mm月dd日 hh時mm分ss秒 にします。
+              html = html.split("%"+key+"%").join(formatDate(value));
+            }
+            else
+            {
+              html = html.split("%"+key+"%").join(value);
+            }
+          });
+          $(".data-disp").append(html);
+        });
     
         //｢さらに表示｣ボタンの表示判定に使うdata-next_pid属性を追加
         $(".data-disp").attr("data-next_pid",data.next_pid);
@@ -67,38 +86,11 @@ $(function(){
     return this;
   }
   
-  /* * 
-   * 日付フォーマット変換用
-   * PHPから受け取った日付をそのまま出力すると
-   * " 2014-01-10 15:25:43 "みたいな形式になるので
-   * これを" 2014年1月10日(金) 15時25分43秒 "になおす。
-   */
-  function formatDate(str) {
-    //Chromeではないブラウザ対策
-    // yyyy-mm-dd ⇒ yyyy/mm/dd にしてからDate()に渡す
-    var date = new Date(str.replace(/-/g,'/'));
-    
-    var week = ["日","月","火","水","木","金","土"];//日本語曜日表示用
-    var month = date.getMonth()+1;//そのまま出力すると0月～11月表記になるので。
-    
-    //変換開始
-    var formatted = 
-      date.getFullYear()+"年"
-      +month +"月"
-      +date.getDate()+"日"
-      +"("+week[date.getDay()]+")"+"　"
-      +date.getHours()+"時"
-      +date.getMinutes()+"分"
-      +date.getSeconds()+"秒";
-    
-    return formatted;
-  }
-  
   /* *
    * 各種イベント別動作
    */
   
-  //submitボタンを押したときの動作
+  //｢検索開始｣ボタンを押したら通信
   searchSubmit.on('click', function(){
     searchSubmit.hide();
     loading.show();
@@ -106,15 +98,15 @@ $(function(){
     loadThread();
   });
   
-  //｢さらに表示｣ボタンを押したときの動作
+  //｢さらに表示｣ボタンを押したら通信
   searchMore.on('click', function(){
     searchMore.hide();
     loading.show();
     
-    //loadThread()の引数は data-next_pid の値を指定。    
+    //次ページIDを引数に渡す    
     loadThread($(".data-disp").attr("data-next_pid"));
   });
   
-  //ページのロード時に実行。
+  //ページのロード時に通信
   loadThread();
 });
