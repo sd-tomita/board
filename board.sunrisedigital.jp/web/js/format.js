@@ -5,6 +5,9 @@
  * これを" 2014年1月10日(金) 15時25分43秒 "になおす。
  */
 function formatDate(str) {
+  // デフォルト値を設定
+  str = str || "投稿がありません";
+
   //Chromeではないブラウザ対策
   // yyyy-mm-dd ⇒ yyyy/mm/dd にしてからDate()に渡す
   var date = new Date(str.replace(/-/g,'/'));
