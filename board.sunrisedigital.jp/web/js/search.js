@@ -26,10 +26,11 @@ $(function(){
     $(".data-disp").addClass("thread_list");
     $.ajax({
       type: "GET",
-      url: "/thread/entrance/thread-list", 
+      url: "/thread/entrance/thread-list",
+      dataType: "json",
       data: query+"&pid="+somePid
+
     }).done(function(data){
-      
         //検索条件に一致するものが1つも無ければメッセージを表示させる。
         if(data['records'].length === 0){
           nodata.show();
@@ -42,7 +43,6 @@ $(function(){
           $.each(this, function(key,value){
             //newest_dateだけは表示形式に手を加えたいので処理を分岐
             if(key==="newest_date"){
-              
               // formatDate()は yyyy-mm-dd　hh:mm:ss ⇒ yyyy年mm月dd日 hh時mm分ss秒 にします。
               html = html.split("%"+key+"%").join(formatDate(value));
             }
