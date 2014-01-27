@@ -42,23 +42,8 @@ $(function(){
           $.each(this, function(key,value){
             //newest_dateだけは表示形式に手を加えたいので処理を分岐
             if(key==="newest_date"){
-              //%key% で区切って、value で結合する。
-              /*---------------------------------
-               * .split().join()の一連の動作が
-               * 理解しにくかったのでイメージをメモ
-               * 
-               *   HTML文%KEY%HTML文 
-               * 　  ↓.split (%KEY%を区切り文字とする。配列になる)
-               *   HTML文, HTML文
-               *     ↓.join (valueで結合して文字列に戻す)
-               *   HTML文valueHTML文 
-               *   
-               * おそらくこういう動きをしていると思われる。
-               * いらなくなったらこのメモは消す。
-               ---------------------------------*/
               
-              // formatDate() は別ファイル(format.js)から呼んだ関数です。
-              // yyyy-mm-dd　hh:mm:ss ⇒ yyyy年mm月dd日 hh時mm分ss秒 にします。
+              // formatDate()は yyyy-mm-dd　hh:mm:ss ⇒ yyyy年mm月dd日 hh時mm分ss秒 にします。
               html = html.split("%"+key+"%").join(formatDate(value));
             }
             else
