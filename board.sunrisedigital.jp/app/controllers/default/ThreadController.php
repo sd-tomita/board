@@ -124,32 +124,40 @@ class ThreadController extends Sdx_Controller_Action_Http
     
     public function listAction()
     {
-      /*
-       * ここでは以下SQL文を生成しようとしている。
-       * SELECT * FROM entry 
+      /* * *
+       * エントリとエントリ作成者の情報を取る
+       * SELECT * FROM entry
        * LEFT JOIN account ON account_id = account.id
-       * LEFT JOIN thread ON ｔthread_id = thread.id
-       * WHERE thread.id = "thread_idのパラメータ値"
-       * ORDER BY entry.created_at ASC;
-       */  
-        
+       * ORDER BY entry.created_at;
+       * 
+       * スレッド名、スレッド番号表示に必要な情報はjoinいらないので別にとる
+       * SELECT * FROM thread WHERE id=スレッド番号;
+       */
+      
       //entryテーブルクラスの取得
       $t_entry = Bd_Orm_Main_Entry::createTable();
 
       //JOIN予定のAccountテーブルのテーブルクラスを取得
       $t_account = Bd_Orm_Main_Account::createTable();
-      $t_thread = Bd_Orm_Main_Thread::createTable();
       
       //JOIN
       $t_entry->addJoinLeft($t_account);
-      $t_entry->addJoinLeft($t_thread);
                 
       //selectを取得
       $select = $t_entry->getSelectWithJoin();
-      $select->order('entry.created_at ASC');
-      $select->add("thread.id", $this->_getParam('thread_id'));
-      $entry = $t_entry->fetchAll($select);
-      $this->view->assign("entry_list", $entry);
+      $select
+        ->order('entry.created_at ASC')
+        ->add('thread_id', $this->_getParam('thread_id'));
+      
+      //エントリ情報をアサイン
+      $entry_list = $t_entry->fetchAll($select);
+      $this->view->assign('entry_list', $entry_list);
+      
+      //Threadテーブルの情報は別に送る。ここでは1個しかとってないからfind()でおｋ。
+      $t_thread = Bd_Orm_Main_Thread::createTable();
+      $thread_select = $t_thread->getSelect();
+      $thread_select->add('id', $this->_getParam('thread_id'));
+      $this->view->assign('thread_info', $t_thread->find($thread_select));
       
       //コメント投稿関係
       $form = $this->createForm();
