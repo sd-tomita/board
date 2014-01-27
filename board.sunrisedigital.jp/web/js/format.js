@@ -8,6 +8,12 @@ function formatDate(str) {
   // デフォルト値を設定
   str = str || "投稿がありません";
 
+  // 日付以外が引数に入っているようだったら即returnする。
+  // Date()に日付以外を渡すと正常に動かないため。
+  if(!str.match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}\:\d{2}/)){
+    return str;
+  }
+
   //Chromeではないブラウザ対策
   // yyyy-mm-dd ⇒ yyyy/mm/dd にしてからDate()に渡す
   var date = new Date(str.replace(/-/g,'/'));
@@ -24,6 +30,6 @@ function formatDate(str) {
     +date.getHours()+"時"
     +date.getMinutes()+"分"
     +date.getSeconds()+"秒";
-    
+
   return formatted;
 }
