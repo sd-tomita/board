@@ -122,7 +122,7 @@ class ThreadController extends Sdx_Controller_Action_Http
        --------------------------------------------- */
     }
     
-    public function listAction()
+    public function entryListAction()
     {
       /* * *
        * エントリとエントリ作成者の情報を取る
@@ -153,13 +153,13 @@ class ThreadController extends Sdx_Controller_Action_Http
       $entry_list = $t_entry->fetchAll($select);
       $this->view->assign('entry_list', $entry_list);
       
-      //Threadテーブルの情報は別に送る。ここでは1個しかとってないからfind()でおｋ。
+      //Threadテーブルの情報は別に送る。ここでは1個しかとってないからfetchAll()じゃなくてfind()でおｋ。
       $t_thread = Bd_Orm_Main_Thread::createTable();
-      $thread_select = $t_thread->getSelect();
-      $thread_select->add('id', $this->_getParam('thread_id'));
+      $thread_select = $t_thread
+        ->getSelect()->add('id', $this->_getParam('thread_id'));
       $this->view->assign('thread_info', $t_thread->find($thread_select));
       
-      //コメント投稿関係
+      //フォームは別メソッドでつくる。
       $form = $this->createForm();
       
       //Validateエラー時のメッセージを出力させるためのif文
@@ -233,7 +233,7 @@ class ThreadController extends Sdx_Controller_Action_Http
           $error_session->params = $this->_getAllParams();  
         }
       }
-      $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/list#entry-form");         
+      $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/entry-list#entry-form");         
     }
     //Sdx_Session() は Zend_Session_Namespace の使い方とほぼ同じ。
     private function _createSession()

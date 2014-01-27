@@ -12,7 +12,7 @@
       <table class="table table-bordered">
         <thead>
           <tr class="success">
-            <th><a href="/thread/%id%/list"><i class="fa fa-play"></i> %title%</a></th>
+            <th><a href="/thread/%id%/entry-list"><i class="fa fa-play"></i> %title%</a></th>
           </tr>
         </thead>
         <tbody>
