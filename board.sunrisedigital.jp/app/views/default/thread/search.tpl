@@ -20,6 +20,12 @@
         </tbody>
       </table>
     </script>
+    
+   {* 投稿が1件も無いスレッドに表示させるメッセージのテンプレ *}
+    <script type="text/html" id="tpl_no_entry">
+      <i class="fa fa-exclamation-triangle"></i> 
+      <span style="color:#ff4500;font-weight:bold">まだ投稿がありません</span>
+    </script>
 {/block}
 {block title append} 検索用ページ{/block}
 {block main_contents}

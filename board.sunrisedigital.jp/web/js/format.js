@@ -8,12 +8,12 @@ var BoardSdjpObj = BoardSdjpObj||{};
  */
 BoardSdjpObj.formatDate = function(str) {
   // デフォルト値を設定
-  str = str || "投稿がありません";
+  str = str || "no_entry";
 
   // 日付以外が引数に入っているようだったら即returnする。
   // Date()に日付以外を渡すと正常に動かないため。
   if(!str.match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}\:\d{2}/)){
-    return str;
+    return $("#tpl_no_entry").text();
   }
 
   //Chromeではないブラウザ対策
