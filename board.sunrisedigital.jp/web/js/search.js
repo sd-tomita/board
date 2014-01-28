@@ -37,20 +37,27 @@ $(function(){
         }
         
         //レコードがあればそれを出力する。
-        $.each(data.records, function(){
-          //data.records[i]ごとに毎回テンプレを新しく取得
+        $.each(data.records, function(){          
+          //data.records[i]ごとに毎回テンプレを新しく取得         
           var html = tpl_html;
-          $.each(this, function(key,value){
+          
+          $.each(this, function(key,value){            
             //newest_dateだけは表示形式に手を加えたいので処理を分岐
-            if(key==="newest_date"){
-              // formatDate()は yyyy-mm-dd　hh:mm:ss ⇒ yyyy年mm月dd日 hh時mm分ss秒 にします。
-              html = html.split("%"+key+"%").join(formatDate(value));
+            if(key==="newest_date"){            
+              //表示形式を変換して代入
+              (function(){
+                var _bd = BoardSdjpObj;              
+                html = html.split("%newest_date%").join(_bd.formatDate(value));
+              })();
             }
+            //日付以外はそのまま代入
             else
             {
               html = html.split("%"+key+"%").join(value);
             }
           });
+          
+          //出来上がったHTMLをそのままappendする
           $(".data-disp").append(html);
         });
     

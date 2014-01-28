@@ -1,10 +1,12 @@
-/* * 
- * 日付フォーマット変換用
- * PHPから受け取った日付をそのまま出力すると
- * " 2014-01-10 15:25:43 "みたいな形式になるので
- * これを" 2014年1月10日(金) 15時25分43秒 "になおす。
+// {}は new オブジェクト();とやっていることはほぼ同じ
+var BoardSdjpObj = BoardSdjpObj||{};
+
+/** 
+ * 日付フォーマットを変換する
+ * "yyyy-mm-dd hh:mm:ss" 
+ *   → "yyyy年mm月dd日(曜日) hh時mm分ss秒 "
  */
-function formatDate(str) {
+BoardSdjpObj.formatDate = function(str) {
   // デフォルト値を設定
   str = str || "投稿がありません";
 
@@ -17,10 +19,10 @@ function formatDate(str) {
   //Chromeではないブラウザ対策
   // yyyy-mm-dd ⇒ yyyy/mm/dd にしてからDate()に渡す
   var date = new Date(str.replace(/-/g,'/'));
-    
+
   var week = ["日","月","火","水","木","金","土"];//日本語曜日表示用
   var month = date.getMonth()+1;//そのまま出力すると0月～11月表記になるので。
-    
+
   //変換開始
   var formatted = 
     date.getFullYear()+"年"
@@ -32,4 +34,4 @@ function formatDate(str) {
     +date.getSeconds()+"秒";
 
   return formatted;
-}
+};
