@@ -27,7 +27,15 @@
         </dt>
         <dd>{$record->getBody()|sdx_autolink_ex|nl2br|replace:'<br />':'<br>' nofilter}</dd>
     </dl>
-    {/foreach}   
+    {/foreach}
+    {if $entry_list->getFirstRecord()->isNull()}
+    <div class="thread-entrylistbox">
+      <div class="alert alert-warning">
+        <i class="fa fa-pencil-square-o"></i> まだ書き込みはありません
+      </div>
+    </div>
+    {/if}
+
 </div>
     
 {*------------コメントの投稿フォーム------------*}
