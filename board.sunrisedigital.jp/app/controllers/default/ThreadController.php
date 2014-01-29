@@ -98,26 +98,28 @@ class ThreadController extends Sdx_Controller_Action_Http
       $thread_list = $t_thread->fetchAll($main_sel);
       
       /* *
-       * json関係。必要なのはselectしたレコードの内容だけでいいはず？
-       * なので、toArray()を使っています。これをjson_encode()すれば
-       * ajaxで渡すためのデータはできあがり。。。のはず。
+       * json関係。selectしたレコードの内容と次ページIDを返す
        */
-      //ページ情報もjsonで渡すため、予め用意しておく
-      $json_obj = json_encode(
-        array(
-          'records' => $thread_list->toArray(), 
-          'next_pid' => $pager->getNextPageId()
-        )
-      );//json形式の配列にテキストを書き換える
-      header('Content-type: application/json');//jsonオブジェクトであることをヘッダに追記
-      echo $json_obj;
 
-      /* *
-       * これまでに使っていたもの。比較のたびにブランチ切るのは
-       * 手間がかかるので一応削除はせずコメントアウトに留める。
-       */
-      //$thread_list = $t_thread->fetchAll($main_sel);
-      //$this->view->assign('thread_list', $thread_list);
+      //jsonで返すためのdataを用意。レコード情報と次ページID
+      $data = array(
+        'records' => $thread_list->toArray(), 
+        'next_pid' => $pager->getNextPageId()
+      );
+      
+      //json_encodeしてレスポンスも返す。自分でecho不要。
+      $this->jsonResponse($data);
+      
+      /* ---------------------------------------------
+       * レスポンスヘッダを編集などしたいときは、以下の手法も可。
+       * $this->jsonResponse()の中で行われている処理とほぼ同じ。
+       * 
+       * $resp = $this->getResponse();
+       * $resp
+       *   ->setHeader('Content-type','application/json')
+       *   ->setBody(json_encode($data)
+       * );
+       --------------------------------------------- */
     }
     
     public function listAction()
