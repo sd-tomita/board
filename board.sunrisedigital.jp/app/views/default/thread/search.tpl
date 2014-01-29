@@ -1,19 +1,8 @@
 {extends file='default/base.tpl'}
 {block css}
     <link rel="stylesheet" href="/css/top.css" type="text/css">
-    {*---------一時使用CSSなので直書きしています--------*}
-    <style>
-      .sub_menu dd {
-        float: left;    
-      }
-      
-      .data-disp, .sub_menu dt {
-        clear:both;
-      }
-    
-    </style>
-    <link rel="stylesheet" href="/css/top.css" type="text/css">
     <link rel="stylesheet" href="/css/threadlist.css" type="text/css">
+    <link rel="stylesheet" href="/css/search.css" type="text/css">
 {/block}
 {block js}
     <script src="/js/search.js"></script>
@@ -35,23 +24,28 @@
 
 <div class="sub_menu">
 <form id="search-form" action="javascript:void(0);">
-<dl>
+<dl class="clearfix">
   <dt>ジャンル</dt>
     <dd><label><input type="radio" name="genre_id" value="">指定なし</label></dd>
   {foreach $genre_list as $record}
     <dd><label><input type="radio" name="genre_id" value="{$record->getId()}">{$record->getName()}</label></dd>
   {/foreach}
-  
+</dl>
+<dl class="clearfix">
   <dt>タグ</dt>
   {foreach $tag_list as $record}
     <dd><label><input type="checkbox" name="tag_id[{$record->getId()}]" value="{$record->getId()}">{$record->getName()}</label></dd>
   {/foreach}  
 </dl>
-<input type="submit" name="submit" value="検索開始">
+<div class="navbar-search">
+  <div class="icon-search"></div>
+  <input type="submit" name="submit" value="検索開始" class="btn btn-default">
+</div>
+<span class="loading"><img src="/img/loading.gif" alt="Now loading...">Now loading... </span>
 </form>
 
   {if $sdx_user->hasId()}
-  <dl>
+  <dl class="clearfix">
     <dt><i class="fa fa-lock"></i> 管理メニュー</dt>
       <dd><a href="/control/thread">スレッド管理</a></dd>
       <dd><a href="/control/genre">ジャンル管理</a></dd>
@@ -60,9 +54,12 @@
   {/if}
 </div>
   
-{*--------------表示テスト用---------------*}
+{*-------------ajaxで取得したdataの表示スペース--------------*}
+<h2>スレッドリスト</h2>
 <div class="data-disp">
 
 </div>
 
+<input type="button" name="more" value="さらに表示" >
+<span class="loading"><img src="/img/loading.gif" alt="Now loading...">Now loading... </span>
 {/block}

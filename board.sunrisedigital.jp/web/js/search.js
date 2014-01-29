@@ -1,38 +1,69 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-//js読み込み確認用。読み込みができていたら消す。
-//$(document).ready(function()
-//  {
-//    alert("jqueryの読み込みが完了しました");
-//  });
-
-//サーバー通信
 $(function(){
-  $("#search-form input[type='submit']").on('click', function(){
-    //通信終わるまで送信ボタン無効化
-    $("#search-form input[type='submit']").attr('value', 'please wait...').attr('disabled', true);
+  /* *
+   * 変数の用意
+   */
+  var searchSubmit = $("#search-form input[type='submit']");
+  var searchMore = $('input[name=more]');
+  var loading = $('.loading');
+  
+  /* *
+   * 通信用の使いまわしfunction
+   */
+  function loadThread(somePid){
     /* *
-     * フォームの値を取得、Ajax送信まで。
+     * somePid にデフォルト値として1を設定。
+     * somePid がnull、0、空文字、undefined だったら"1"になるようにする。
      */
-    //各種データを取得。serialize()でまとめてとる。
-    //→こうなるはず　genre_id=○○&tag_id[△△]=△△
+    somePid = somePid || 1;
+    searchSubmit.hide();//通信が開始したらすぐ隠す
+    searchMore.hide();//これも隠しておかないと通信開始直後｢さらに表示｣がいきなり見える。
     var $form = $("#search-form");
     var query = $form.serialize();
+    
     $.ajax({
       type: "GET",
       url: "/thread/entrance/thread-list", 
-      data: query,
+      data: query+"&pid="+somePid,
     }).done(function(data){
-        $('.data-disp').html(data);
-        $('.data-disp').append('<input type=button name="more" value="more">');
+        $('.data-disp').append(data);
     }).fail(function(data){
-          alert("ng");
+        alert("NG");
     }).always(function(data){
-        //通信完了時の処理。ここで送信ボタンを元に戻す
-        $("#search-form input[type='submit']").attr('value', '検索開始').attr('disabled', false);        
+        searchSubmit.show();//通信が終わったのでsubmitボタンの非表示を解除
+        loading.hide();
+        
+        //｢さらに表示｣ボタンは最後のページじゃない場合に限り表示させる
+        if(!$(".thread_list").is("[data-lastpage='on']")){
+          searchMore.show();
+        }
     });
+    
+    return this;
+  }
+  
+  /* *
+   * 各種イベント別動作
+   */
+  
+  //submitボタンを押したときの動作
+  searchSubmit.on('click', function(){
+    searchSubmit.hide();
+    loading.show();
+    $('.data-disp').html("");//これまでappendされたものを消す。
+    loadThread();
   });
+  
+  //｢さらに表示｣ボタンを押したときの動作
+  searchMore.on('click', function(){
+    searchMore.hide();
+    loading.show();
+    /* * *
+     * loadThread()の引数は一番末尾のclass="thread_list"内 data-nextpageidの値を指定。
+     * さらに表示を押す度に.thread_list が増えていくために行っている処理
+     */
+    loadThread($(".thread_list:last").data('nextpageid'));
+  });
+  
+  //ページのロード時に実行。
+  loadThread();
 });

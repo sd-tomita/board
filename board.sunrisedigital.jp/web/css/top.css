@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /*---------------------------------------
-　トップページ用
+　共通で使いそうなもの
 ---------------------------------------*/
 h2 {
   margin:1px;
@@ -9,55 +9,41 @@ h2 {
   border-bottom: solid 1px #CCC; 
   text-indent: 5px; 
   font-size: 1.6em;
-  font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+  font-family: "Lucida Grande", "segoe UI", "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Meiryo, Verdana, Arial, sans-serif;
 }
- 
-.sub_menu {
-   overflow: hidden;
-   margin: 15px;
-   padding: 15px;
-   text-indent: 10px;
-   background-image: -webkit-linear-gradient(top, #e6e6fa, #d3d3e6);
-   border: solid 1px #e6e6fa;
-   border-radius: 5px;
-   background-color: #e6e6fa;
- }
 
-.sub_menu p a {
-  font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+/*---------- ロード中の画像 ----------*/
+.loading {
+  background-color: #FFF;
+  font-family: "Lucida Grande", "segoe UI", "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Meiryo, Verdana, Arial, sans-serif;
   padding: 5px;
+}
+
+/*---------- さらに表示 のボタン ----------*/
+input[name="more"] {
+  border:solid 1px #595959;
   border-radius: 5px;
-  border: solid 1px #77AEFF;
-  color: white;
-  background-color: #77AEFF;
-  text-decoration: none;
-  text-align: center;
-  font-size: 14px;
+  font-family: "Lucida Grande", "segoe UI", "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Meiryo, Verdana, Arial, sans-serif;
+  width: 350px;
+  height: 35px;
+  margin-bottom: 10px;
+}
+  
+input[name="more"]:hover {
+  background-color: #595959;
+  color: #FFF;
 }
 
-.sub_menu p a:link {
-  color: white;    
-}
-
-.sub_menu p a:visited {
-  color: white;
-}
-
-.sub_menu p a:hover {
-  border: solid 1px #7777FF;
-  background-color: #7777FF;
-  color: white;
-}
-
-.sub_menu dl {
-  margin-bottom: 40px;
-}
-
-.sub_menu dd {
-  /*float: left;*/
-  margin-left: 20px;/*text-indent代わり*/
-}
-
-.clear_both {
-  clear:both;
-}
+/*---------- float解除に使う ----------*/
+  .clearfix:before,
+  .clearfix:after {
+    content:"";
+    display:table;
+  }
+  .clearfix:after {
+    clear: both;
+  }
+   /* For IE 6/7 */
+  .clearfix { 
+    zoom: 1; 
+  }

@@ -6,19 +6,16 @@
         Purpose of the stylesheet follows.
 */
 @charset "UTF-8";
-.status_disp {
-  width: 230px;
-  margin: 15px;
-  padding: 10px;
-  border: double 6px #FFF;
-  border-radius: 10px;
-  color: #FFF;
-  background-color: #666;
-}
-.status_disp dt {
-  font-family: 'メイリオ','Arial', 'Tahoma', sans-serif;
+/*---------------------------------------
+  スレッド一覧ページ用
+  ※Searchページにスレッド一覧を表示したので
+    Search.cssみたいなのを作ってそこにまとめる？かも。
+---------------------------------------*/
+.thread_list th {
+  font-family: "Lucida Grande", "segoe UI", "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Meiryo, Verdana, Arial, sans-serif;
 }
 
-.status_disp dd {
-  text-indent: 15px;
+.thread_list th, .thread_list td {
+  text-align: left;
 }
+
