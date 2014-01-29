@@ -1,6 +1,5 @@
 {extends file='default/base.tpl'}
 {block css}
-    <link rel="stylesheet" href="/css/top.css" type="text/css">
     <link rel="stylesheet" href="/css/threadlist.css" type="text/css">
     <link rel="stylesheet" href="/css/search.css" type="text/css">
 {/block}
@@ -41,7 +40,7 @@
   <div class="icon-search"></div>
   <input type="submit" name="submit" value="検索開始" class="btn btn-default">
 </div>
-<span class="loading"><img src="/img/loading.gif" alt="Now loading...">Now loading... </span>
+<div class="loading"><img src="/img/loading.gif" alt="Now loading...">Now loading... </div>
 </form>
 
   {if $sdx_user->hasId()}
@@ -61,5 +60,5 @@
 </div>
 
 <input type="button" name="more" value="さらに表示" >
-<span class="loading"><img src="/img/loading.gif" alt="Now loading...">Now loading... </span>
+<div class="loading"><img src="/img/loading.gif" alt="Now loading...">Now loading... </div>
 {/block}

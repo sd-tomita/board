@@ -16,6 +16,7 @@ h2 {
 .loading {
   background-color: #FFF;
   font-family: "Lucida Grande", "segoe UI", "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Meiryo, Verdana, Arial, sans-serif;
+  height: 35px;
   padding: 5px;
 }
 
@@ -26,7 +27,6 @@ input[name="more"] {
   font-family: "Lucida Grande", "segoe UI", "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Meiryo, Verdana, Arial, sans-serif;
   width: 350px;
   height: 35px;
-  margin-bottom: 10px;
 }
   
 input[name="more"]:hover {
