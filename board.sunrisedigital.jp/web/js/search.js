@@ -46,7 +46,7 @@ $(function(){
             if(key==="newest_date"){            
               //表示形式を変換して代入
               (function(){
-                var _bd = BoardSdjpObj;              
+                var _bd = BoardSdjpObj;
                 html = html.split("%newest_date%").join(_bd.formatDate(value));
               })();
             }
@@ -63,9 +63,9 @@ $(function(){
     
         //｢さらに表示｣ボタンの表示判定に使うdata-next_pid属性を追加
         $(".data-disp").attr("data-next_pid",data.next_pid);
-    }).fail(function(jsondata){
+    }).fail(function(data){
         alert("NG");
-    }).always(function(jsondata){
+    }).always(function(data){
         searchSubmit.show();//通信が終わったのでsubmitボタンの非表示を解除
         loading.hide();
         
