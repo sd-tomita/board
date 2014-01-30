@@ -236,7 +236,7 @@ class ThreadController extends Sdx_Controller_Action_Http
           $error_session->params = $this->_getAllParams();  
         }
       }
-      $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/entry-list#entry-form");         
+      $this->redirectAfterSave("thread/%d/entry-list#entry-form", $this->_getParam('thread_id'));               
     }
     //Sdx_Session() は Zend_Session_Namespace の使い方とほぼ同じ。
     private function _createSession()
