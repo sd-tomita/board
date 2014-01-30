@@ -26,54 +26,46 @@ $(function(){
     $(".data-disp").addClass("thread_list");
     $.ajax({
       type: "GET",
-      url: "/thread/entrance/thread-list", 
+      url: "/thread/entrance/thread-list",
+      dataType: "json",
       data: query+"&pid="+somePid
+
     }).done(function(data){
-      
         //検索条件に一致するものが1つも無ければメッセージを表示させる。
         if(data['records'].length === 0){
           nodata.show();
         }
         
         //レコードがあればそれを出力する。
-        $.each(data.records, function(){
-          //data.records[i]ごとに毎回テンプレを新しく取得
+        $.each(data.records, function(){          
+          //data.records[i]ごとに毎回テンプレを新しく取得         
           var html = tpl_html;
-          $.each(this, function(key,value){
+          
+          $.each(this, function(key,value){            
             //newest_dateだけは表示形式に手を加えたいので処理を分岐
-            if(key==="newest_date"){
-              //%key% で区切って、value で結合する。
-              /*---------------------------------
-               * .split().join()の一連の動作が
-               * 理解しにくかったのでイメージをメモ
-               * 
-               *   HTML文%KEY%HTML文 
-               * 　  ↓.split (%KEY%を区切り文字とする。配列になる)
-               *   HTML文, HTML文
-               *     ↓.join (valueで結合して文字列に戻す)
-               *   HTML文valueHTML文 
-               *   
-               * おそらくこういう動きをしていると思われる。
-               * いらなくなったらこのメモは消す。
-               ---------------------------------*/
-              
-              // formatDate() は別ファイル(format.js)から呼んだ関数です。
-              // yyyy-mm-dd　hh:mm:ss ⇒ yyyy年mm月dd日 hh時mm分ss秒 にします。
-              html = html.split("%"+key+"%").join(formatDate(value));
+            if(key==="newest_date"){            
+              //表示形式を変換して代入
+              (function(){
+                var _bd = BoardSdjpObj;
+                html = html.split("%newest_date%").join(_bd.formatDate(value));
+              })();
             }
+            //日付以外はそのまま代入
             else
             {
               html = html.split("%"+key+"%").join(value);
             }
           });
+          
+          //出来上がったHTMLをそのままappendする
           $(".data-disp").append(html);
         });
     
         //｢さらに表示｣ボタンの表示判定に使うdata-next_pid属性を追加
         $(".data-disp").attr("data-next_pid",data.next_pid);
-    }).fail(function(jsondata){
+    }).fail(function(data){
         alert("NG");
-    }).always(function(jsondata){
+    }).always(function(data){
         searchSubmit.show();//通信が終わったのでsubmitボタンの非表示を解除
         loading.hide();
         

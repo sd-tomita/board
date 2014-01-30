@@ -12,13 +12,19 @@
       <table class="table table-bordered">
         <thead>
           <tr class="success">
-            <th><a href="/thread/%id%/list"><i class="fa fa-play"></i> %title%</a></th>
+            <th><a href="/thread/%id%/entry-list"><i class="fa fa-play"></i> %title%</a></th>
           </tr>
         </thead>
         <tbody>
           <tr><td>最終更新日時：%newest_date%</td></tr>
         </tbody>
       </table>
+    </script>
+    
+   {* 投稿が1件も無いスレッドに表示させるメッセージのテンプレ *}
+    <script type="text/html" id="tpl_no_entry">
+      <i class="fa fa-exclamation-triangle"></i> 
+      <span style="color:#ff4500;font-weight:bold">まだ投稿がありません</span>
     </script>
 {/block}
 {block title append} 検索用ページ{/block}
