@@ -90,9 +90,12 @@ class ThreadController extends Sdx_Controller_Action_Http
       
       $main_sel
         ->limitPager($pager)
-        ->order(array(
+        ->order(
+          array(
             new Zend_Db_Expr('CASE when newest_date IS NULL then 1 else 2 END ASC'), 
-            'newest_date DESC', 'created_at DESC')
+            'newest_date DESC', 
+            'created_at DESC'
+          )
         );
 
       $thread_list = $t_thread->fetchAll($main_sel);
