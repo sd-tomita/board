@@ -194,6 +194,7 @@ class ThreadController extends Sdx_Controller_Action_Http
     }
     public function saveEntryAction()
     {
+      $this->_disableViewRenderer();//devモード時にチェックできるよう
       //ログインチェック
       if(!(Sdx_User::getInstance()->hasId()))
       {
@@ -204,10 +205,15 @@ class ThreadController extends Sdx_Controller_Action_Http
       if($this->_getParam('submit'))
       {
         $form = $this->createForm();
+        
+        //Validate前に空白入力チェック
+        $str = mb_convert_kana($this->_getParam('body'), "s", "utf-8");//全角スペースを半角に変換
+        $trimed_str = trim($str);//スペースが半角になったところをtrimする      
+        $this->_setParam('body', $trimed_str);//'body'パラメータに戻す
 
         //Validateを実行するためにformに値をセット
         $form->bind($this->_getAllParams());
-                
+
         //Validate実行。trueならトランザクション開始
         if($form->execValidate())
         {
@@ -236,7 +242,7 @@ class ThreadController extends Sdx_Controller_Action_Http
           $error_session->params = $this->_getAllParams();  
         }
       }
-      $this->redirectAfterSave("thread/%d/entry-list#entry-form", $this->_getParam('thread_id'));               
+      $this->redirectAfterSave("thread/%d/entry-list#entry-form", $this->_getParam('thread_id'));
     }
     //Sdx_Session() は Zend_Session_Namespace の使い方とほぼ同じ。
     private function _createSession()
