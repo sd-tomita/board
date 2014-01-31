@@ -205,12 +205,12 @@ class ThreadController extends Sdx_Controller_Action_Http
       if($this->_getParam('submit'))
       {
         $form = $this->createForm();
-        
-        //Validate前に空白入力チェック
-        $str = mb_convert_kana($this->_getParam('body'), "s", "utf-8");//全角スペースを半角に変換
-        $trimed_str = trim($str);//スペースが半角になったところをtrimする      
-        $this->_setParam('body', $trimed_str);//'body'パラメータに戻す
 
+        //bindする前に、入力された内容が空白「のみ」だったら空白をカットする
+        $str = $this->_getParam('body');//入力されたコメント
+        $trimed_str = preg_replace("/^[　\s]+$/u", "", $str);//置換条件はまだ未設定。
+        $this->_setParam('body', $trimed_str);
+        
         //Validateを実行するためにformに値をセット
         $form->bind($this->_getAllParams());
 
