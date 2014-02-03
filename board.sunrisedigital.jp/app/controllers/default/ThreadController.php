@@ -14,7 +14,7 @@ class ThreadController extends Sdx_Controller_Action_Http
     {
         
     }
-    /*
+    /**
      * スレッド一覧はthreadListActionに集約する。
      * どういう条件で検索されても、全てこのアクションで
      * 処理を行い、レコードリストを返すようにする。
@@ -124,19 +124,17 @@ class ThreadController extends Sdx_Controller_Action_Http
        * );
        --------------------------------------------- */
     }
-    
+    /**
+     * エントリとエントリ作成者の情報を取る
+     * SELECT * FROM entry
+     * LEFT JOIN account ON account_id = account.id
+     * ORDER BY entry.created_at;
+     * 
+     * スレッド名、スレッド番号表示に必要な情報はjoinいらないので別にとる
+     * SELECT * FROM thread WHERE id=スレッド番号;
+     */
     public function entryListAction()
-    {
-      /* * *
-       * エントリとエントリ作成者の情報を取る
-       * SELECT * FROM entry
-       * LEFT JOIN account ON account_id = account.id
-       * ORDER BY entry.created_at;
-       * 
-       * スレッド名、スレッド番号表示に必要な情報はjoinいらないので別にとる
-       * SELECT * FROM thread WHERE id=スレッド番号;
-       */
-      
+    {      
       //entryテーブルクラスの取得
       $t_entry = Bd_Orm_Main_Entry::createTable();
 
@@ -208,7 +206,7 @@ class ThreadController extends Sdx_Controller_Action_Http
 
         //bindする前に、入力された内容が空白「のみ」だったら空白をカットする
         $str = $this->_getParam('body');//入力されたコメント
-        $trimed_str = preg_replace("/^[　\s]+$/u", "", $str);//置換条件はまだ未設定。
+        $trimed_str = preg_replace("/^[　\s]+$/u", "", $str);
         $this->_setParam('body', $trimed_str);
         
         //Validateを実行するためにformに値をセット
@@ -248,17 +246,16 @@ class ThreadController extends Sdx_Controller_Action_Http
     private function _createSession()
     {
       //引数がキー名になる。省略するとdefaultキーになる。
-      return new Sdx_Session('THREAD_POST_FORM');    
+      return new Sdx_Session('THREAD_POST_FORM');
     }
+    /**
+     * スレッド検索条件に表示させる用
+     * ジャンル名とタグ名のリストをアサインしています。
+     * もともとIndexController.php でやっていたことを
+     * こっちに移しただけです。
+     */
     public function searchAction() 
     {
-      /* *
-       * スレッド検索用アクション
-       * もともとIndexController.php でやっていたことを
-       * こっちに移しただけです。
-       * ※元々searchThreadActionでしたが、今のところThread以外に
-       *   searchしているものもないのでSearchActionに名前を変えます。
-       */
       $this->view->assign('genre_list', Bd_Orm_Main_Genre::createTable()->fetchAllOrdered('id','DESC'));
       $this->view->assign('tag_list', Bd_Orm_Main_Tag::createTable()->fetchAllOrdered('id','DESC'));
     }
