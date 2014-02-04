@@ -13,9 +13,9 @@
 {*------------エントリ表示------------*}
 <div class="thread-entrylistbox">
     <div class="thread-titleinfo">
-        <i class="fa fa-tags" ></i>thread-{$entry_list->getFirstRecord()->getThread()->getId()}&nbsp;&nbsp;
-        {$entry_list->getFirstRecord()->getThread()->getTitle()}&nbsp;&nbsp;
-        <i class="fa fa-time" /></i>スレッド作成日時：{$entry_list->getFirstRecord()->getThread()->getFormatedDateByZend('created_at', 'yyyy年MM月dd日(E) HH時mm分ss秒')}
+        <i class="fa fa-tags" ></i>thread-{$thread_info->getId()}&nbsp;&nbsp;
+        {$thread_info->getTitle()}&nbsp;&nbsp;
+        <i class="fa fa-time" /></i>スレッド作成日時：{$thread_info->getFormatedDateByZend('created_at', 'yyyy年MM月dd日(E) HH時mm分ss秒')}
     </div>
     {foreach $entry_list as $record}
     <dl class="thread-entryinfo">
@@ -27,7 +27,15 @@
         </dt>
         <dd>{$record->getBody()|sdx_autolink_ex|nl2br|replace:'<br />':'<br>' nofilter}</dd>
     </dl>
-    {/foreach}   
+    {/foreach}
+    {if $entry_list->getFirstRecord()->isNull()}
+    <div class="thread-entrylistbox">
+      <div class="alert alert-warning">
+        <i class="fa fa-pencil-square-o"></i> まだ書き込みはありません
+      </div>
+    </div>
+    {/if}
+
 </div>
     
 {*------------コメントの投稿フォーム------------*}
