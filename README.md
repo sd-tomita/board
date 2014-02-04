@@ -17,19 +17,19 @@ master = proj/board と置き換えて、フィートブランチは命名規則
 
 フィートブランチでの作業内容が完了し、問題が無ければ  
 master(仮想proj/board)にマージしていく　ということにします。  
-基本的にはmaster 以外のブランチは常時1つだけという状態を保つ  
-ようにしようと考えています。  
+基本的には*master 以外のブランチは最大1つだけ*という状態を  
+つくっていくようにします。  
 
-基本の流れとしては  
-1)自分のパソコンでの作業、コミット  
+基本の流れとしては以下のとおりです。  
 
-2)SunriseDigitalStudy/tomita_boardへPush  
-  MasterにはPushしない。  
+1.自分のパソコンでの作業、コミット  
 
-3)MasterへPullRequestを出す。  
-  ここでレビュー等実施  
+2.SunriseDigitalStudy/tomita_boardへPush  
+**MasterにはPushしない。**  
 
-4)レビュー後にMerge する。  
+3.MasterへPullRequestを出す。ここでレビュー等実施  
+
+4.レビュー後にMerge する。  
 
 その他
 ------
