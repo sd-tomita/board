@@ -14,7 +14,7 @@ class ThreadController extends Sdx_Controller_Action_Http
     {
         
     }
-    /**
+    /*
      * スレッド一覧はthreadListActionに集約する。
      * どういう条件で検索されても、全てこのアクションで
      * 処理を行い、レコードリストを返すようにする。
@@ -124,17 +124,19 @@ class ThreadController extends Sdx_Controller_Action_Http
        * );
        --------------------------------------------- */
     }
-    /**
-     * エントリとエントリ作成者の情報を取る
-     * SELECT * FROM entry
-     * LEFT JOIN account ON account_id = account.id
-     * ORDER BY entry.created_at;
-     * 
-     * スレッド名、スレッド番号表示に必要な情報はjoinいらないので別にとる
-     * SELECT * FROM thread WHERE id=スレッド番号;
-     */
+    
     public function entryListAction()
-    {      
+    {
+      /* * *
+       * エントリとエントリ作成者の情報を取る
+       * SELECT * FROM entry
+       * LEFT JOIN account ON account_id = account.id
+       * ORDER BY entry.created_at;
+       * 
+       * スレッド名、スレッド番号表示に必要な情報はjoinいらないので別にとる
+       * SELECT * FROM thread WHERE id=スレッド番号;
+       */
+      
       //entryテーブルクラスの取得
       $t_entry = Bd_Orm_Main_Entry::createTable();
 
@@ -192,7 +194,6 @@ class ThreadController extends Sdx_Controller_Action_Http
     }
     public function saveEntryAction()
     {
-      $this->_disableViewRenderer();//devモード時にチェックできるよう
       //ログインチェック
       if(!(Sdx_User::getInstance()->hasId()))
       {
@@ -202,16 +203,17 @@ class ThreadController extends Sdx_Controller_Action_Http
       //submitされていれば
       if($this->_getParam('submit'))
       {
+        //連投制限中なら投稿させずにリダイレクト
+        if(isset($_COOKIE['post_cookie']))
+        {
+          $this->redirect("thread/{$this->_getParam('thread_id')}/entry-list#entry-form");
+        }
+        
         $form = $this->createForm();
 
-        //bindする前に、入力された内容が空白「のみ」だったら空白をカットする
-        $str = $this->_getParam('body');//入力されたコメント
-        $trimed_str = preg_replace("/^[　\s]+$/u", "", $str);
-        $this->_setParam('body', $trimed_str);
-        
         //Validateを実行するためにformに値をセット
         $form->bind($this->_getAllParams());
-
+                
         //Validate実行。trueならトランザクション開始
         if($form->execValidate())
         {
@@ -240,22 +242,29 @@ class ThreadController extends Sdx_Controller_Action_Http
           $error_session->params = $this->_getAllParams();  
         }
       }
-      $this->redirectAfterSave("thread/%d/entry-list#entry-form", $this->_getParam('thread_id'));
+      
+      //連投防止用のクッキーを仕込む
+      $expire = time()+1*30;//クッキーの有効期限
+      $value = "連続投稿制限中";//特にvalue自体は はなくてもいいが一応値を入れとく
+      setcookie('post_cookie', $value, $expire);
+      
+      $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/entry-list#entry-form");         
     }
     //Sdx_Session() は Zend_Session_Namespace の使い方とほぼ同じ。
     private function _createSession()
     {
       //引数がキー名になる。省略するとdefaultキーになる。
-      return new Sdx_Session('THREAD_POST_FORM');
+      return new Sdx_Session('THREAD_POST_FORM');    
     }
-    /**
-     * スレッド検索条件に表示させる用
-     * ジャンル名とタグ名のリストをアサインしています。
-     * もともとIndexController.php でやっていたことを
-     * こっちに移しただけです。
-     */
     public function searchAction() 
     {
+      /* *
+       * スレッド検索用アクション
+       * もともとIndexController.php でやっていたことを
+       * こっちに移しただけです。
+       * ※元々searchThreadActionでしたが、今のところThread以外に
+       *   searchしているものもないのでSearchActionに名前を変えます。
+       */
       $this->view->assign('genre_list', Bd_Orm_Main_Genre::createTable()->fetchAllOrdered('id','DESC'));
       $this->view->assign('tag_list', Bd_Orm_Main_Tag::createTable()->fetchAllOrdered('id','DESC'));
     }
