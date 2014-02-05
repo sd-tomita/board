@@ -223,7 +223,7 @@ class ThreadController extends Sdx_Controller_Action_Http
         if($form->execValidate())
         {
           //連投防止用のクッキーを仕込む
-          $expire = time()+1*30;//クッキーの有効期限
+          $expire = time()+1*10;//クッキーの有効期限
           $value = "連続投稿制限中";//特にvalue自体はなくてもいいが一応値を入れとく
           setcookie('post_cookie', $value, $expire);
           
