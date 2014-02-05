@@ -211,6 +211,11 @@ class ThreadController extends Sdx_Controller_Action_Http
         
         $form = $this->createForm();
 
+        //bindする前に、入力された内容が空白「のみ」だったら空白をカットする
+        $str = $this->_getParam('body');//入力されたコメント
+        $trimed_str = preg_replace("/^[　\s]+$/u", "", $str);//置換条件はまだ未設定。
+        $this->_setParam('body', $trimed_str);
+        
         //Validateを実行するためにformに値をセット
         $form->bind($this->_getAllParams());
                 
