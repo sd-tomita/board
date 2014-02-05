@@ -217,6 +217,11 @@ class ThreadController extends Sdx_Controller_Action_Http
         //Validate実行。trueならトランザクション開始
         if($form->execValidate())
         {
+          //連投防止用のクッキーを仕込む
+          $expire = time()+1*30;//クッキーの有効期限
+          $value = "連続投稿制限中";//特にvalue自体はなくてもいいが一応値を入れとく
+          setcookie('post_cookie', $value, $expire);
+          
           $entry = new Bd_Orm_Main_Entry();//データベース入出力関係のクラスはこっちにある。
           $db = $entry->updateConnection();
           $db->beginTransaction();
@@ -242,11 +247,6 @@ class ThreadController extends Sdx_Controller_Action_Http
           $error_session->params = $this->_getAllParams();  
         }
       }
-      
-      //連投防止用のクッキーを仕込む
-      $expire = time()+1*30;//クッキーの有効期限
-      $value = "連続投稿制限中";//特にvalue自体はなくてもいいが一応値を入れとく
-      setcookie('post_cookie', $value, $expire);
       
       $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/entry-list#entry-form");         
     }
