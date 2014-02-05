@@ -39,7 +39,9 @@
 </div>
     
 {*------------コメントの投稿フォーム------------*}
-{if $sdx_user->hasId()}
+{if $sdx_user->hasId() && $smarty.cookies.post_cookie}
+  <div class="alert alert-danger">連投制限テスト中です。30秒まってね。</div>
+{elseif $sdx_user->hasId()}
 <div id="entry-form" class="panel panel-default thread-entryform">
   <p><i class="fa fa-pencil"></i>コメント投稿フォーム</p>
   <div class="panel-body">
@@ -55,4 +57,5 @@
   </div>
 </div>
 {/if}
+
 {/block}
