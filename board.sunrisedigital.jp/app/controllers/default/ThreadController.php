@@ -124,21 +124,17 @@ class ThreadController extends Sdx_Controller_Action_Http
        * );
        --------------------------------------------- */
     }
-    
+    /**
+     * エントリとエントリ作成者の情報を取る
+     * SELECT * FROM entry
+     * LEFT JOIN account ON account_id = account.id
+     * ORDER BY entry.created_at;
+     * 
+     * スレッド名、スレッド番号表示に必要な情報はjoinいらないので別にとる
+     * SELECT * FROM thread WHERE id=スレッド番号;
+     */
     public function entryListAction()
-    {
-      Sdx_Debug::dump($_SESSION,'session');
-      Sdx_Debug::dump($_COOKIE,'cookie');
-      /* * *
-       * エントリとエントリ作成者の情報を取る
-       * SELECT * FROM entry
-       * LEFT JOIN account ON account_id = account.id
-       * ORDER BY entry.created_at;
-       * 
-       * スレッド名、スレッド番号表示に必要な情報はjoinいらないので別にとる
-       * SELECT * FROM thread WHERE id=スレッド番号;
-       */
-      
+    {     
       //entryテーブルクラスの取得
       $t_entry = Bd_Orm_Main_Entry::createTable();
 
@@ -178,6 +174,7 @@ class ThreadController extends Sdx_Controller_Action_Http
 
       $this->view->assign('form', $form);
     }
+    
     private function createForm()
     {
       $form = new Sdx_Form();
@@ -194,6 +191,7 @@ class ThreadController extends Sdx_Controller_Action_Http
        
       return $form;
     }
+    
     public function saveEntryAction()
     {
       //ログインチェック
@@ -269,10 +267,11 @@ class ThreadController extends Sdx_Controller_Action_Http
     
     /**
      * 連続投稿回数のカウンター
-     * ・カウント開始クッキーがあったら、カウントをアップする。
-     * ・カウント開始クッキーがなければ新規発行する。
-     * ・クッキーの生存中に次回投稿があれば連続投稿とみなす。
-     * ・カウントが規定回数に達した時点で、また別に投稿ストップ用クッキーを出す。
+     * 
+     * カウント開始クッキーがあったら、カウントをアップする。  
+     * カウント開始クッキーがなければ新規発行する。  
+     * クッキーの生存中に次回投稿があれば連続投稿とみなす。  
+     * カウントが規定回数に達した時点で、また別に投稿ストップ用クッキーを出す。  
      */
     private function _setPostCounter()
     {
