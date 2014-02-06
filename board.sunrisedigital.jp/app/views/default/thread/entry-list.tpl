@@ -39,7 +39,7 @@
 </div>
     
 {*------------コメントの投稿フォーム------------*}
-{if $sdx_user->hasId() && $smarty.cookies.post_cookie}
+{if $sdx_user->hasId() && $smarty.cookies.stop_entry}
   <div class="alert alert-danger">連投制限テスト中です。お手数ですが時間を空けて再度お越しください。</div>
 {elseif $sdx_user->hasId()}
 <div id="entry-form" class="panel panel-default thread-entryform">

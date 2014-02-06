@@ -203,12 +203,9 @@ class ThreadController extends Sdx_Controller_Action_Http
       //submitされていれば
       if($this->_getParam('submit'))
       {
-        //連投制限中なら投稿させずにリダイレクト
-        if(isset($_COOKIE['post_cookie']))
-        {
-          $this->redirect("thread/{$this->_getParam('thread_id')}/entry-list#entry-form");
-        }
-        
+        //連続投稿の監視と制限
+        $this->_checkRepeatPost();
+
         $form = $this->createForm();
 
         //bindする前に、入力された内容が空白「のみ」だったら空白をカットする
@@ -222,8 +219,9 @@ class ThreadController extends Sdx_Controller_Action_Http
         //Validate実行。trueならトランザクション開始
         if($form->execValidate())
         {
-          //連投防止用のクッキーを仕込む
-          $expire = time()+1*10;//クッキーの有効期限
+          //エントリ回数カウント開始用クッキー。_checkRepeatPost()内で必要
+          //補足：言い換えれば10秒以内の連続投稿が無ければカウント開始されない とも言う。
+          $expire = time()+1*10;//クッキーの有効期限。
           $value = "連続投稿制限中";//特にvalue自体はなくてもいいが一応値を入れとく
           setcookie('post_cookie', $value, $expire);
           
@@ -272,6 +270,32 @@ class ThreadController extends Sdx_Controller_Action_Http
        */
       $this->view->assign('genre_list', Bd_Orm_Main_Genre::createTable()->fetchAllOrdered('id','DESC'));
       $this->view->assign('tag_list', Bd_Orm_Main_Tag::createTable()->fetchAllOrdered('id','DESC'));
+    }
+    /**
+     * 連続投稿の回数をカウントし、一定回数に達したら
+     * しばらくの間投稿ができないようにします。
+     */
+    private function _checkRepeatPost()
+    {
+      //カウント開始クッキーがあったら、カウントをアップする。
+      if(isset($_COOKIE['post_cookie']))
+      {
+        $entry_count = new Sdx_Session('ENTRY_POST_COUNT');
+        $entry_count->total +=1;
+      }
+      
+      //カウント数が○回に達していたら投稿制限用のクッキーを発行。
+      if($entry_count->total >= 3)
+      {
+        setcookie('stop_entry','規定エントリ回数到達' ,time()+180);
+      }
+      
+      //投稿制限用クッキーがあったらその時点でリダイレクト
+      if(isset($_COOKIE['stop_entry']))
+      {
+        unset($entry_count->total);//カウント用セッションはいらないので消す
+        $this->redirect("/thread/{$this->_getParam('thread_id')}/entry-list");
+      }
     }
 } 
 ?>
