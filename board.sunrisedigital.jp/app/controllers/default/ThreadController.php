@@ -127,6 +127,8 @@ class ThreadController extends Sdx_Controller_Action_Http
     
     public function entryListAction()
     {
+      Sdx_Debug::dump($_SESSION,'session');
+      Sdx_Debug::dump($_COOKIE,'cookie');
       /* * *
        * エントリとエントリ作成者の情報を取る
        * SELECT * FROM entry
@@ -200,12 +202,17 @@ class ThreadController extends Sdx_Controller_Action_Http
         $this->forward500();
       }
       
+      //投稿回数チェック
+      //規定投稿回数に達しているときは、tpl側でsubmitボタン隠すので本来は不要のチェック。
+      //submitボタンを介さないスクリプト攻撃対策。なので500に飛ばす。
+      if(isset($_COOKIE['stop_entry']))
+      {
+        $this->forward500();
+      }
+      
       //submitされていれば
       if($this->_getParam('submit'))
       {
-        //連続投稿の監視と制限
-        $this->_checkRepeatPost();
-
         $form = $this->createForm();
 
         //bindする前に、入力された内容が空白「のみ」だったら空白をカットする
@@ -216,15 +223,8 @@ class ThreadController extends Sdx_Controller_Action_Http
         //Validateを実行するためにformに値をセット
         $form->bind($this->_getAllParams());
                 
-        //Validate実行。trueならトランザクション開始
         if($form->execValidate())
-        {
-          //エントリ回数カウント開始用クッキー。_checkRepeatPost()内で必要
-          //補足：言い換えれば10秒以内の連続投稿が無ければカウント開始されない とも言う。
-          $expire = time()+1*10;//クッキーの有効期限。
-          $value = "連続投稿制限中";//特にvalue自体はなくてもいいが一応値を入れとく
-          setcookie('post_cookie', $value, $expire);
-          
+        {      
           $entry = new Bd_Orm_Main_Entry();//データベース入出力関係のクラスはこっちにある。
           $db = $entry->updateConnection();
           $db->beginTransaction();
@@ -236,21 +236,22 @@ class ThreadController extends Sdx_Controller_Action_Http
               ->setThreadId($this->_getParam('thread_id'))
               ->setAccountId(Sdx_Context::getInstance()->getVar('signed_account')->getId());//$_SESSIONから直接とらないように。
             $entry->save();
-            $db->commit();  
+            $db->commit();
           }
           catch (Exception $e)
           {
             $db->rollBack();
             throw $e;
           }
+          //連続投稿回数のカウンターを仕込む
+          $this->_setPostCounter();
         }
         else
         {
           $error_session = $this->_createSession();
           $error_session->params = $this->_getAllParams();  
         }
-      }
-      
+      }     
       $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/entry-list#entry-form");         
     }
     //Sdx_Session() は Zend_Session_Namespace の使い方とほぼ同じ。
@@ -259,42 +260,42 @@ class ThreadController extends Sdx_Controller_Action_Http
       //引数がキー名になる。省略するとdefaultキーになる。
       return new Sdx_Session('THREAD_POST_FORM');    
     }
+
     public function searchAction() 
     {
-      /* *
-       * スレッド検索用アクション
-       * もともとIndexController.php でやっていたことを
-       * こっちに移しただけです。
-       * ※元々searchThreadActionでしたが、今のところThread以外に
-       *   searchしているものもないのでSearchActionに名前を変えます。
-       */
       $this->view->assign('genre_list', Bd_Orm_Main_Genre::createTable()->fetchAllOrdered('id','DESC'));
       $this->view->assign('tag_list', Bd_Orm_Main_Tag::createTable()->fetchAllOrdered('id','DESC'));
     }
+    
     /**
-     * 連続投稿の回数をカウントし、一定回数に達したら
-     * しばらくの間投稿ができないようにします。
+     * 連続投稿回数のカウンター
+     * ・カウント開始クッキーがあったら、カウントをアップする。
+     * ・カウント開始クッキーがなければ新規発行する。
+     * ・クッキーの生存中に次回投稿があれば連続投稿とみなす。
+     * ・カウントが規定回数に達した時点で、また別に投稿ストップ用クッキーを出す。
      */
-    private function _checkRepeatPost()
+    private function _setPostCounter()
     {
-      //カウント開始クッキーがあったら、カウントをアップする。
-      if(isset($_COOKIE['post_cookie']))
+      $entry_count = new Sdx_Session('ENTRY_POST_COUNT');
+      
+      //カウンターが無ければ作成し、既にあればカウントアップ
+      if(!isset($_COOKIE['post_cookie']))
       {
-        $entry_count = new Sdx_Session('ENTRY_POST_COUNT');
+        $expire = time()+1*30;//クッキーの有効期限。30秒は微妙かも。
+        $value = "連続投稿制限中";//特にvalue自体はなくてもいいが一応構文通りの値を入れとく
+        setcookie('post_cookie', $value, $expire);
+        $entry_count->total = 1;//これが初期値
+      }
+      else
+      {      
         $entry_count->total +=1;
       }
-      
-      //カウント数が○回に達していたら投稿制限用のクッキーを発行。
-      if($entry_count->total >= 3)
+
+      //カウント数が規定回数に達していたら投稿制限用のクッキーを発行。
+      if($entry_count->total === 3)
       {
         setcookie('stop_entry','規定エントリ回数到達' ,time()+180);
-      }
-      
-      //投稿制限用クッキーがあったらその時点でリダイレクト
-      if(isset($_COOKIE['stop_entry']))
-      {
         unset($entry_count->total);//カウント用セッションはいらないので消す
-        $this->redirect("/thread/{$this->_getParam('thread_id')}/entry-list");
       }
     }
 } 
