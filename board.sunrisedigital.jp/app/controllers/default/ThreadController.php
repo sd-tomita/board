@@ -124,21 +124,17 @@ class ThreadController extends Sdx_Controller_Action_Http
        * );
        --------------------------------------------- */
     }
-    
+    /**
+     * エントリとエントリ作成者の情報を取る
+     * SELECT * FROM entry
+     * LEFT JOIN account ON account_id = account.id
+     * ORDER BY entry.created_at;
+     * 
+     * スレッド名、スレッド番号表示に必要な情報はjoinいらないので別にとる
+     * SELECT * FROM thread WHERE id=スレッド番号;
+     */
     public function entryListAction()
-    {
-      Sdx_Debug::dump($_SESSION,'session');
-      Sdx_Debug::dump($_COOKIE,'cookie');
-      /* * *
-       * エントリとエントリ作成者の情報を取る
-       * SELECT * FROM entry
-       * LEFT JOIN account ON account_id = account.id
-       * ORDER BY entry.created_at;
-       * 
-       * スレッド名、スレッド番号表示に必要な情報はjoinいらないので別にとる
-       * SELECT * FROM thread WHERE id=スレッド番号;
-       */
-      
+    {     
       //entryテーブルクラスの取得
       $t_entry = Bd_Orm_Main_Entry::createTable();
 
@@ -178,6 +174,7 @@ class ThreadController extends Sdx_Controller_Action_Http
 
       $this->view->assign('form', $form);
     }
+    
     private function createForm()
     {
       $form = new Sdx_Form();
@@ -194,6 +191,7 @@ class ThreadController extends Sdx_Controller_Action_Http
        
       return $form;
     }
+    
     public function saveEntryAction()
     {
       //ログインチェック
@@ -203,8 +201,8 @@ class ThreadController extends Sdx_Controller_Action_Http
       }
       
       //投稿回数チェック
-      //規定投稿回数に達しているときは、tpl側でsubmitボタン隠すので本来は不要のチェック。
-      //submitボタンを介さないスクリプト攻撃対策。なので500に飛ばす。
+      //規定投稿回数に達しているときは、tpl側でsubmitボタン隠すので
+      //submitボタンを介さないスクリプト攻撃対策。
       if(isset($_COOKIE['stop_entry']))
       {
         $this->forward500();
@@ -216,8 +214,8 @@ class ThreadController extends Sdx_Controller_Action_Http
         $form = $this->createForm();
 
         //bindする前に、入力された内容が空白「のみ」だったら空白をカットする
-        $str = $this->_getParam('body');//入力されたコメント
-        $trimed_str = preg_replace("/^[　\s]+$/u", "", $str);//置換条件はまだ未設定。
+        $str = $this->_getParam('body');
+        $trimed_str = preg_replace("/^[　\s]+$/u", "", $str);
         $this->_setParam('body', $trimed_str);
         
         //Validateを実行するためにformに値をセット
@@ -269,10 +267,11 @@ class ThreadController extends Sdx_Controller_Action_Http
     
     /**
      * 連続投稿回数のカウンター
-     * ・カウント開始クッキーがあったら、カウントをアップする。
-     * ・カウント開始クッキーがなければ新規発行する。
-     * ・クッキーの生存中に次回投稿があれば連続投稿とみなす。
-     * ・カウントが規定回数に達した時点で、また別に投稿ストップ用クッキーを出す。
+     * 
+     * カウント専用セッションを作成し、カウント開始クッキーがあったら、
+     * カウントアップし、そこに記録。カウント開始クッキーがなければ新規発行する。
+     * クッキーの生存中に次回投稿があれば連続投稿とみなす。
+     * カウントが規定回数に達した時点で、また別に投稿ストップ用クッキーを出す。
      */
     private function _setPostCounter()
     {
@@ -281,7 +280,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       //カウンターが無ければ作成し、既にあればカウントアップ
       if(!isset($_COOKIE['post_cookie']))
       {
-        $expire = time()+1*30;//クッキーの有効期限。30秒は微妙かも。
+        $expire = time()+30;//30秒以内に次の投稿があると連投カウントが増える
         $value = "連続投稿制限中";//特にvalue自体はなくてもいいが一応構文通りの値を入れとく
         setcookie('post_cookie', $value, $expire);
         $entry_count->total = 1;//これが初期値
@@ -294,7 +293,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       //カウント数が規定回数に達していたら投稿制限用のクッキーを発行。
       if($entry_count->total === 3)
       {
-        setcookie('stop_entry','規定エントリ回数到達' ,time()+180);
+        setcookie('stop_entry','規定エントリ回数到達' ,time()+180);//180秒間は投稿できない
         unset($entry_count->total);//カウント用セッションはいらないので消す
       }
     }
