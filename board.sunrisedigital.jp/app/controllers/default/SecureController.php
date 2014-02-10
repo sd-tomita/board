@@ -33,7 +33,7 @@ class SecureController extends Sdx_Controller_Action_Http {
       $parsed_url = parse_url($_SERVER['HTTP_REFERER']);
       
       //リファラのパスが/secure/login、/secure/logout以外ならセッションにしまう
-      if ($parsed_url['path']!= '/secure/login' && $parsed_url['path']!= '/secure/logout') 
+      if (!in_array($parsed_url['path'],array('/secure/login', '/secure/logout'))) 
       {
         $ref_info = $this->_createSession();
         $ref_info->url = $_SERVER['HTTP_REFERER'];
