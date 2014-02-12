@@ -39,7 +39,9 @@
 </div>
     
 {*------------コメントの投稿フォーム------------*}
-{if $sdx_user->hasId()}
+{if $sdx_user->hasId() && $smarty.cookies.stop_entry}
+  <div class="alert alert-danger">連続投稿数が上限値となりました。お手数ですが時間を空けて再度お越しください。</div>
+{elseif $sdx_user->hasId()}
 <div id="entry-form" class="panel panel-default thread-entryform">
   <p><i class="fa fa-pencil"></i>コメント投稿フォーム</p>
   <div class="panel-body">
@@ -55,4 +57,5 @@
   </div>
 </div>
 {/if}
+
 {/block}

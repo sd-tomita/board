@@ -66,7 +66,12 @@ class AccountController extends Sdx_Controller_Action_Http
              
                     $account->save();
                     $db->commit();
-                    $this->redirectAfterSave('/account/create');
+                    
+                    //ログイン処理
+                    $login_process = new Bd_Controller_Action_Helper_Secure();
+                    $login_process->loginProcess($this->_getParam('login_id'), $this->_getParam('password'));
+
+                    $this->redirectAfterSave('/');
                 }
                 else
                 {
