@@ -1,6 +1,18 @@
 <?php
 class ThreadController extends Sdx_Controller_Action_Http
 {
+    /**
+     * setPostCounter()で使用
+     * 連続投稿と見なす投稿間隔
+     */
+    const POST_INTERVAL = 30;
+    
+    /**
+     * setPostCounter()で使用
+     * 連続投稿回数の上限値
+     */
+    const MAX_POST_COUNT = 3;
+    
     public function indexAction()
     {
       Sdx_Debug::dump($this->_getParam('thread_id'), 'title');
@@ -277,40 +289,40 @@ class ThreadController extends Sdx_Controller_Action_Http
      */
     private function _setPostCounter()
     {
-      $user = Sdx_User::getInstance();//Sdx_Userはシングルトンクラス
+      $user = Sdx_User::getInstance();//Sdx_Userは外ではnewできないので。
       
       //カウンターが無ければ作成し、既にあれば比較する
       if(!$user->getAttribute('post_time'))
       {
-        $first_time = time();
-        $user->setAttribute('post_time', $first_time);//ここがスタート地点
+        $first_post_time = time();
+        $user->setAttribute('post_time', $first_post_time);//ここがスタート地点
         $user->setAttribute('post_count', 1);//count初期値
       }
       else
       { 
-        $now_time = time();
+        $current_time = time();
         /**
          * 初回投稿から30秒以内の投稿ならカウントを上げる。
          * 30秒以上経っていた場合は初回投稿時刻の更新だけ行い、
          * 連続投稿かどうかのチェックは次回に以降に持ち越す。
          */
-        if(($now_time - $user->getAttribute('post_time')) < 30)
+        if(($current_time - $user->getAttribute('post_time')) <= self::POST_INTERVAL)
         {
           $post_count = $user->getAttribute('post_count');
           $user->setAttribute('post_count', $post_count+1);
         }
-        elseif(($now_time - $user->getAttribute('post_time')) > 30)
+        elseif(($current_time - $user->getAttribute('post_time')) > self::POST_INTERVAL)
         {
           //初回の'post_time'をクリアする
-          $user->setAttribute('post_time', $now_time);
+          $user->setAttribute('post_time', $current_time);
         }
       }
 
       //カウント数が規定回数に達していたら
-      if($user->getAttribute('post_count') === 3)
+      if($user->getAttribute('post_count') === self::MAX_POST_COUNT)
       {
         $user->setAttribute('post_count','stop_entry');//投稿ストップさせる
-        $user->deleteAttribute('post_time');//不要になったので削除
+        $user->deleteAttribute('post_time');
       }
     }
 } 
