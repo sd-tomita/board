@@ -5,7 +5,7 @@ class ThreadController extends Sdx_Controller_Action_Http
      * setPostCounter()で使用
      * 連続投稿と見なす投稿間隔
      */
-    const POST_INTERVAL = 30;
+    const POST_INTERVAL_SECONDS = 30;
     
     /**
      * setPostCounter()で使用
