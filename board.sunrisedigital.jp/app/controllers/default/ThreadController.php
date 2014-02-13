@@ -306,12 +306,12 @@ class ThreadController extends Sdx_Controller_Action_Http
          * 30秒以上経っていた場合は初回投稿時刻の更新だけ行い、
          * 連続投稿かどうかのチェックは次回に以降に持ち越す。
          */
-        if(($current_time - $user->getAttribute('post_time')) <= self::POST_INTERVAL)
+        if(($current_time - $user->getAttribute('post_time')) <= self::POST_INTERVAL_SECONDS)
         {
           $post_count = $user->getAttribute('post_count');
           $user->setAttribute('post_count', $post_count+1);
         }
-        elseif(($current_time - $user->getAttribute('post_time')) > self::POST_INTERVAL)
+        elseif(($current_time - $user->getAttribute('post_time')) > self::POST_INTERVAL_SECONDS)
         {
           //初回の'post_time'をクリアする
           $user->setAttribute('post_time', $current_time);
