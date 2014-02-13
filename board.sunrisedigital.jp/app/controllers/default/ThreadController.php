@@ -289,7 +289,7 @@ class ThreadController extends Sdx_Controller_Action_Http
      */
     private function _setPostCounter()
     {
-      $user = Sdx_User::getInstance();//Sdx_Userは外ではnewできないので。
+      $user = Sdx_User::getInstance();
       
       //カウンターが無ければ作成し、既にあれば比較する
       if(!$user->getAttribute('post_time'))
