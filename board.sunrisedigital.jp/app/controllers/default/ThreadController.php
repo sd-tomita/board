@@ -1,6 +1,18 @@
 <?php
 class ThreadController extends Sdx_Controller_Action_Http
-{   
+{
+    /**
+     * setPostCounter()で使用
+     * 連続投稿と見なす投稿間隔
+     */
+    const POST_INTERVAL_SECONDS = 30;
+    
+    /**
+     * setPostCounter()で使用
+     * 連続投稿回数の上限値
+     */
+    const MAX_POST_COUNT = 3;
+    
     public function indexAction()
     {
       Sdx_Debug::dump($this->_getParam('thread_id'), 'title');
@@ -134,7 +146,7 @@ class ThreadController extends Sdx_Controller_Action_Http
      * SELECT * FROM thread WHERE id=スレッド番号;
      */
     public function entryListAction()
-    {     
+    {
       //entryテーブルクラスの取得
       $t_entry = Bd_Orm_Main_Entry::createTable();
 
@@ -194,16 +206,15 @@ class ThreadController extends Sdx_Controller_Action_Http
     
     public function saveEntryAction()
     {
+      $this->_disableViewRenderer();
       //ログインチェック
       if(!(Sdx_User::getInstance()->hasId()))
       {
         $this->forward500();
       }
       
-      //投稿回数チェック
-      //規定投稿回数に達しているときは、tpl側でsubmitボタン隠すので
-      //submitボタンを介さないスクリプト攻撃対策。
-      if(isset($_COOKIE['stop_entry']))
+      //投稿制限中かどうかのチェック
+      if(Sdx_User::getInstance()->getAttribute('post_count')=='stop_entry')
       {
         $this->forward500();
       }
@@ -268,33 +279,50 @@ class ThreadController extends Sdx_Controller_Action_Http
     /**
      * 連続投稿回数のカウンター
      * 
-     * カウント専用セッションを作成し、カウント開始クッキーがあったら、
-     * カウントアップし、そこに記録。カウント開始クッキーがなければ新規発行する。
-     * クッキーの生存中に次回投稿があれば連続投稿とみなす。
-     * カウントが規定回数に達した時点で、また別に投稿ストップ用クッキーを出す。
+     * 初回投稿から30秒以内に次回投稿があった場合、連続投稿とみなし
+     * カウントする。連続投稿カウントが3つまでいったら、投稿を停止
+     * させるフラグを立てる。(あとはsaveEntry()の頭でフラグの有無で
+     * 投稿させるかはじくかを判断させる)
+     * 
+     * 言い換えるなら30秒以上間隔を空けながらコメント投稿すれば
+     * カウントが進むことはないとも言える。 
      */
     private function _setPostCounter()
     {
-      $entry_count = new Sdx_Session('ENTRY_POST_COUNT');
+      $user = Sdx_User::getInstance();
       
-      //カウンターが無ければ作成し、既にあればカウントアップ
-      if(!isset($_COOKIE['post_cookie']))
+      //カウンターが無ければ作成し、既にあれば比較する
+      if(!$user->getAttribute('post_time'))
       {
-        $expire = time()+30;//30秒以内に次の投稿があると連投カウントが増える
-        $value = "連続投稿制限中";//特にvalue自体はなくてもいいが一応構文通りの値を入れとく
-        setcookie('post_cookie', $value, $expire);
-        $entry_count->total = 1;//これが初期値
+        $first_post_time = time();
+        $user->setAttribute('post_time', $first_post_time);//ここがスタート地点
+        $user->setAttribute('post_count', 1);//count初期値
       }
       else
-      {      
-        $entry_count->total +=1;
+      { 
+        $current_time = time();
+        /**
+         * 初回投稿から30秒以内の投稿ならカウントを上げる。
+         * 30秒以上経っていた場合は初回投稿時刻の更新だけ行い、
+         * 連続投稿かどうかのチェックは次回に以降に持ち越す。
+         */
+        if(($current_time - $user->getAttribute('post_time')) <= self::POST_INTERVAL_SECONDS)
+        {
+          $post_count = $user->getAttribute('post_count');
+          $user->setAttribute('post_count', $post_count+1);
+        }
+        elseif(($current_time - $user->getAttribute('post_time')) > self::POST_INTERVAL_SECONDS)
+        {
+          //初回の'post_time'をクリアする
+          $user->setAttribute('post_time', $current_time);
+        }
       }
 
-      //カウント数が規定回数に達していたら投稿制限用のクッキーを発行。
-      if($entry_count->total === 3)
+      //カウント数が規定回数に達していたら
+      if($user->getAttribute('post_count') === self::MAX_POST_COUNT)
       {
-        setcookie('stop_entry','規定エントリ回数到達' ,time()+180);//180秒間は投稿できない
-        unset($entry_count->total);//カウント用セッションはいらないので消す
+        $user->setAttribute('post_count','stop_entry');//投稿ストップさせる
+        $user->deleteAttribute('post_time');
       }
     }
 } 

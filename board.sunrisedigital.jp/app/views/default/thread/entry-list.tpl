@@ -39,8 +39,18 @@
 </div>
     
 {*------------コメントの投稿フォーム------------*}
-{if $sdx_user->hasId() && $smarty.cookies.stop_entry}
-  <div class="alert alert-danger">連続投稿数が上限値となりました。お手数ですが時間を空けて再度お越しください。</div>
+{if $sdx_user->hasId() && ($sdx_context->getUser()->getAttribute('post_count')==='stop_entry')}
+  <div id="entry-form" class="alert alert-danger">
+    <p><strong><i class="fa fa-exclamation-circle"></i> 連続投稿数が上限値となりました。</strong></p><hr>
+    <figure>
+      <figcaption><i class="fa fa-user"></i> 連続投稿制限について</figcaption>
+      <p>サーバー負荷軽減のため、一定時間内に同一アカウントから複数回のエントリが確認された際に
+      新規投稿を制限させていただく場合がございます。
+      お手数ですが、一旦ログアウトし再度ログインをお願いいたします。</p>
+    </figure>
+  </div>
+
+
 {elseif $sdx_user->hasId()}
 <div id="entry-form" class="panel panel-default thread-entryform">
   <p><i class="fa fa-pencil"></i>コメント投稿フォーム</p>
