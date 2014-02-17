@@ -39,7 +39,7 @@
 </div>
     
 {*------------コメントの投稿フォーム------------*}
-{if $sdx_user->hasId() && ($sdx_context->getUser()->getAttribute('post_count')==='stop_entry')}
+{if $sdx_user->hasId() && ($sdx_context->getUser()->getAttribute('post_limit_data')->is_limited)}
   <div id="entry-form" class="alert alert-danger">
     <p><strong><i class="fa fa-exclamation-circle"></i> 連続投稿数が上限値となりました。</strong></p><hr>
     <figure>

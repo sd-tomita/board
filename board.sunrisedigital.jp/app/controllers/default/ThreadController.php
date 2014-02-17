@@ -2,16 +2,18 @@
 class ThreadController extends Sdx_Controller_Action_Http
 {
     /**
-     * setPostCounter()で使用
      * 連続投稿と見なす投稿間隔
+     * 
+     * @see _setPostCounter()
      */
-    const POST_INTERVAL_SECONDS = 30;
+    const POST_INTERVAL_SECONDS = 10;
     
     /**
-     * setPostCounter()で使用
      * 連続投稿回数の上限値
+     * 
+     * @see _setPostCounter()
      */
-    const MAX_POST_COUNT = 3;
+    const MAX_POST_COUNT = 5;
     
     public function indexAction()
     {
@@ -147,6 +149,13 @@ class ThreadController extends Sdx_Controller_Action_Http
      */
     public function entryListAction()
     {
+      /*-------------------------------------------
+      //debug(いらなくなったら消す)
+      $data = Sdx_User::getInstance()->getAttribute('post_limit_data');
+      Sdx_Debug::dump($data->last_post_time);
+      Sdx_Debug::dump($data->post_count);
+      Sdx_Debug::dump($data->is_limited);
+      -------------------------------------------*/
       //entryテーブルクラスの取得
       $t_entry = Bd_Orm_Main_Entry::createTable();
 
@@ -214,7 +223,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       }
       
       //投稿制限中かどうかのチェック
-      if(Sdx_User::getInstance()->getAttribute('post_count')=='stop_entry')
+      if(Sdx_User::getInstance()->getAttribute('post_limit_data')->is_limited)
       {
         $this->forward500();
       }
@@ -279,50 +288,45 @@ class ThreadController extends Sdx_Controller_Action_Http
     /**
      * 連続投稿回数のカウンター
      * 
-     * 初回投稿から30秒以内に次回投稿があった場合、連続投稿とみなし
-     * カウントする。連続投稿カウントが3つまでいったら、投稿を停止
-     * させるフラグを立てる。(あとはsaveEntry()の頭でフラグの有無で
-     * 投稿させるかはじくかを判断させる)
-     * 
-     * 言い換えるなら30秒以上間隔を空けながらコメント投稿すれば
-     * カウントが進むことはないとも言える。 
+     * self::POST_INTERVAL_SECONDS 以内に投稿があれば連続投稿と判断。
+     * 連続投稿が self::MAX_POST_COUNT まで溜まったら新規投稿を制限。
+     * (このメソッドではフラグを立てるだけで、制限自体はしない。)
      */
     private function _setPostCounter()
     {
       $user = Sdx_User::getInstance();
       
-      //カウンターが無ければ作成し、既にあれば比較する
-      if(!$user->getAttribute('post_time'))
+      // 初回コメント投稿後
+      if(!$user->getAttribute('post_limit_data'))
       {
-        $first_post_time = time();
-        $user->setAttribute('post_time', $first_post_time);//ここがスタート地点
-        $user->setAttribute('post_count', 1);//count初期値
+        $user->setAttribute('post_limit_data', new stdClass());
+        $data = $user->getAttribute('post_limit_data'); 
+        $data->last_post_time = time();
+        $data->post_count = 1;
+        $data->is_limited = false;
       }
+      // 2回目以降
       else
       { 
-        $current_time = time();
-        /**
-         * 初回投稿から30秒以内の投稿ならカウントを上げる。
-         * 30秒以上経っていた場合は初回投稿時刻の更新だけ行い、
-         * 連続投稿かどうかのチェックは次回に以降に持ち越す。
-         */
-        if(($current_time - $user->getAttribute('post_time')) <= self::POST_INTERVAL_SECONDS)
+        $data = $user->getAttribute('post_limit_data'); //setAttributeは初回のみ
+
+        // POST_INTERVAL_SECONDS 以内なら
+        if((time() - $data->last_post_time) <= self::POST_INTERVAL_SECONDS)
         {
-          $post_count = $user->getAttribute('post_count');
-          $user->setAttribute('post_count', $post_count+1);
+          $data->post_count += 1;          
         }
-        elseif(($current_time - $user->getAttribute('post_time')) > self::POST_INTERVAL_SECONDS)
+        // POST_INTERVAL_SECONDS を過ぎていれば
+        else
         {
-          //初回の'post_time'をクリアする
-          $user->setAttribute('post_time', $current_time);
+          $data->post_count = 1;//カウントはリセットする
+          $data->last_post_time = time();//次回投稿時はこの時刻と比較
         }
       }
 
-      //カウント数が規定回数に達していたら
-      if($user->getAttribute('post_count') === self::MAX_POST_COUNT)
+      //カウント数が規定回数(self::MAX_POST_COUNT)に達していたら
+      if($data->post_count === self::MAX_POST_COUNT)
       {
-        $user->setAttribute('post_count','stop_entry');//投稿ストップさせる
-        $user->deleteAttribute('post_time');
+        $data->is_limited = true;
       }
     }
 } 
