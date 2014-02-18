@@ -6,7 +6,7 @@ class ThreadController extends Sdx_Controller_Action_Http
      * 
      * @see _setPostCounter()
      */
-    const POST_INTERVAL_SECONDS = 10;
+    const POST_INTERVAL_SECONDS = 30;//自分の動作確認用に長めにとっています。
     
     /**
      * 連続投稿回数の上限値
@@ -149,13 +149,11 @@ class ThreadController extends Sdx_Controller_Action_Http
      */
     public function entryListAction()
     {
-      /*-------------------------------------------
       //debug(いらなくなったら消す)
       $data = Sdx_User::getInstance()->getAttribute('post_limit_data');
       Sdx_Debug::dump($data->last_post_time);
       Sdx_Debug::dump($data->post_count);
       Sdx_Debug::dump($data->is_limited);
-      -------------------------------------------*/
       //entryテーブルクラスの取得
       $t_entry = Bd_Orm_Main_Entry::createTable();
 
@@ -207,7 +205,8 @@ class ThreadController extends Sdx_Controller_Action_Http
       $elem = new Sdx_Form_Element_Textarea();
       $elem
         ->setName('body')
-        ->addValidator(new Sdx_Validate_NotEmpty('何も入力ないのは寂しいです'));
+        ->addValidator(new Sdx_Validate_NotEmpty('何も入力ないのは寂しいです'))
+        ->addValidator(new Bd_CheckRepeatPost());
       $form->setElement($elem);
        
       return $form;
@@ -221,13 +220,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       {
         $this->forward500();
       }
-      
-      //投稿制限中かどうかのチェック
-      if(Sdx_User::getInstance()->getAttribute('post_limit_data')->is_limited)
-      {
-        $this->forward500();
-      }
-      
+            
       //submitされていれば
       if($this->_getParam('submit'))
       {
@@ -261,8 +254,6 @@ class ThreadController extends Sdx_Controller_Action_Http
             $db->rollBack();
             throw $e;
           }
-          //連続投稿回数のカウンターを仕込む
-          $this->_setPostCounter();
         }
         else
         {
@@ -286,11 +277,7 @@ class ThreadController extends Sdx_Controller_Action_Http
     }
     
     /**
-     * 連続投稿回数のカウンター
-     * 
-     * self::POST_INTERVAL_SECONDS 以内に投稿があれば連続投稿と判断。
-     * 連続投稿が self::MAX_POST_COUNT まで溜まったら新規投稿を制限。
-     * (このメソッドではフラグを立てるだけで、制限自体はしない。)
+     * Validatorが完成するまでは残しておく
      */
     private function _setPostCounter()
     {
