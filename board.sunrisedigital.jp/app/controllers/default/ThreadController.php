@@ -151,9 +151,10 @@ class ThreadController extends Sdx_Controller_Action_Http
     {
       //debug(いらなくなったら消す)
       $data = Sdx_User::getInstance()->getAttribute('post_limit_data');
-      Sdx_Debug::dump($data->last_post_time);
-      Sdx_Debug::dump($data->post_count);
-      Sdx_Debug::dump($data->is_limited);
+      Sdx_Debug::dump($data->last_post_time, 'last_post_time');
+      Sdx_Debug::dump($data->post_count, 'post_count');
+      Sdx_Debug::dump($_SESSION['Sdx_THREAD_POST_FORM'],'Sdx_THREAD_POST_FORM');
+
       //entryテーブルクラスの取得
       $t_entry = Bd_Orm_Main_Entry::createTable();
 

@@ -5,7 +5,7 @@
  * @author  Yuichiro Tomita <tomita@sunrisedigital.jp>
  * @create  2014/02/18
  * @copyright 2014 Sunrise Digital Corporation.
- * @version  v 1.0 2014/02/18 18:31
+ * @version  v 1.01 2014/02/19 11:45
  **/
 
 require_once 'Zend/Validate/Abstract.php';
@@ -27,7 +27,7 @@ class Bd_CheckRepeatPost extends Zend_Validate_Abstract
   const REPEAT_POST = "hoge";
   
   protected $_messageTemplates = array(
-      self::REPEAT_POST => "連続投稿数が上限値に達しています。30秒待ってください。"
+      self::REPEAT_POST => "連続投稿数が上限値になっています。30秒待ってください。"
   );
   
   public function isValid($value) 
@@ -41,7 +41,6 @@ class Bd_CheckRepeatPost extends Zend_Validate_Abstract
       $data = $user->getAttribute('post_limit_data'); 
       $data->last_post_time = time();
       $data->post_count = 1;
-      $data->not_limited = true;
     }
     // 2回目以降
     else
@@ -52,6 +51,7 @@ class Bd_CheckRepeatPost extends Zend_Validate_Abstract
       if((time() - $data->last_post_time) <= self::POST_INTERVAL_SECONDS)
       {
         $data->post_count += 1;
+        $data->last_post_time = time();
       }
       // 前回投稿から POST_INTERVAL_SECONDS を過ぎていれば
       else
@@ -61,13 +61,15 @@ class Bd_CheckRepeatPost extends Zend_Validate_Abstract
       }
     }
 
-    //カウント数が規定回数(self::MAX_POST_COUNT)に達していたら
-    if($data->post_count >= self::MAX_POST_COUNT)
+    // post_count数によって最終的な戻り値を決定
+    if($data->post_count > self::MAX_POST_COUNT)
     {
       $this->_error(self::REPEAT_POST);
-      $data->not_limited = false;
-      return $data->not_limited;
+      return false;
     }
-    return $data->not_limited;
+    else
+    {
+      return true;
+    }
   }
 }
