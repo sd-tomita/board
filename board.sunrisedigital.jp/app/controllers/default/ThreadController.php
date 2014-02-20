@@ -201,13 +201,17 @@ class ThreadController extends Sdx_Controller_Action_Http
       $form
         ->setAction('/thread/'.$this->_getParam('thread_id').'/save-entry') //アクション先を設定
         ->setMethodToPost();     //メソッドをポストに変更
- 
+     
       //エレメントをフォームにセット
       $elem = new Sdx_Form_Element_Textarea();
       $elem
         ->setName('body')
         ->addValidator(new Sdx_Validate_NotEmpty('何も入力ないのは寂しいです'))
-        ->addValidator(new Bd_CheckRepeatPost());
+        ->addValidator(new Bd_Validate_CountCheck(
+            Sdx_User::getInstance()->getAttribute('post_limit_data')->post_count,
+            self::MAX_POST_COUNT, 
+            "連続投稿多いので制限入りました(#・д・)"
+      ));
       $form->setElement($elem);
        
       return $form;
@@ -255,6 +259,7 @@ class ThreadController extends Sdx_Controller_Action_Http
             $db->rollBack();
             throw $e;
           }
+          $this->_setPostCounter();
         }
         else
         {
@@ -264,7 +269,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       }     
       $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/entry-list#entry-form");         
     }
-    //Sdx_Session() は Zend_Session_Namespace の使い方とほぼ同じ。
+    //Sdx_Session() は Zend_Session_Namespace に接頭辞 "Sdx_" が付く
     private function _createSession()
     {
       //引数がキー名になる。省略するとdefaultキーになる。
@@ -276,9 +281,12 @@ class ThreadController extends Sdx_Controller_Action_Http
       $this->view->assign('genre_list', Bd_Orm_Main_Genre::createTable()->fetchAllOrdered('id','DESC'));
       $this->view->assign('tag_list', Bd_Orm_Main_Tag::createTable()->fetchAllOrdered('id','DESC'));
     }
-    
+
     /**
-     * Validatorが完成するまでは残しておく
+     * 連続投稿回数のカウンター
+     * 
+     * 回数の合計はセッションに格納されているので
+     * 戻り値は特になし。
      */
     private function _setPostCounter()
     {
@@ -291,7 +299,6 @@ class ThreadController extends Sdx_Controller_Action_Http
         $data = $user->getAttribute('post_limit_data'); 
         $data->last_post_time = time();
         $data->post_count = 1;
-        $data->is_limited = false;
       }
       // 2回目以降
       else
@@ -301,7 +308,8 @@ class ThreadController extends Sdx_Controller_Action_Http
         // POST_INTERVAL_SECONDS 以内なら
         if((time() - $data->last_post_time) <= self::POST_INTERVAL_SECONDS)
         {
-          $data->post_count += 1;          
+          $data->post_count += 1; 
+          $data->last_post_time = time();
         }
         // POST_INTERVAL_SECONDS を過ぎていれば
         else
@@ -309,12 +317,6 @@ class ThreadController extends Sdx_Controller_Action_Http
           $data->post_count = 1;//カウントはリセットする
           $data->last_post_time = time();//次回投稿時はこの時刻と比較
         }
-      }
-
-      //カウント数が規定回数(self::MAX_POST_COUNT)に達していたら
-      if($data->post_count === self::MAX_POST_COUNT)
-      {
-        $data->is_limited = true;
       }
     }
 } 
