@@ -3,17 +3,18 @@ class ThreadController extends Sdx_Controller_Action_Http
 {
     /**
      * 連続投稿と見なす投稿間隔
-     * 
-     * @see _setPostCounter()
      */
     const POST_INTERVAL_SECONDS = 10;
     
     /**
      * 連続投稿回数の上限値
-     * 
-     * @see _setPostCounter()
      */
     const MAX_POST_COUNT = 5;
+    
+    /**
+     * 連続投稿を制限する期間
+     */
+    const POST_LOCK_PERIOD = 30;
     
     public function indexAction()
     {
@@ -139,6 +140,8 @@ class ThreadController extends Sdx_Controller_Action_Http
        --------------------------------------------- */
     }
     /**
+     * エントリ一覧表示
+     * 
      * エントリとエントリ作成者の情報を取る
      * SELECT * FROM entry
      * LEFT JOIN account ON account_id = account.id
@@ -152,8 +155,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       //debug(いらなくなったら消す)
       $data = Sdx_User::getInstance()->getAttribute('post_limit_data');
       Sdx_Debug::dump($data->last_post_time, 'last_post_time');
-      Sdx_Debug::dump($data->post_count, 'post_count');
-      Sdx_Debug::dump($_SESSION['Sdx_THREAD_POST_FORM'],'Sdx_THREAD_POST_FORM');
+      Sdx_Debug::dump($data->total_post_count, 'total_post_count');
 
       //entryテーブルクラスの取得
       $t_entry = Bd_Orm_Main_Entry::createTable();
@@ -208,9 +210,9 @@ class ThreadController extends Sdx_Controller_Action_Http
         ->setName('body')
         ->addValidator(new Sdx_Validate_NotEmpty('何も入力ないのは寂しいです'))
         ->addValidator(new Bd_Validate_CountCheck(
-            Sdx_User::getInstance()->getAttribute('post_limit_data')->post_count,
+            Sdx_User::getInstance()->getAttribute('post_limit_data')->total_post_count,
             self::MAX_POST_COUNT, 
-            "連続投稿制限中です(#・д・) [ 投稿する！]ボタンを押さずに30秒待ってから投稿しなおしてください"
+            "連続投稿制限中です(#・д・) [ 投稿する！]ボタンを押さずに30秒待ってから投稿してください"
       ));
       $form->setElement($elem);
        
@@ -226,20 +228,22 @@ class ThreadController extends Sdx_Controller_Action_Http
         $this->forward500();
       }
 
-      if(Sdx_User::getInstance()->getAttribute('post_limit_data')->post_count >= self::MAX_POST_COUNT)
+      /**
+       * 連続投稿制限中(_setPostCounter()機能停止)の動作
+       * memo: これメソッドにすべき？ _unlockPostStop()とかにして。
+       */
+      if(Sdx_User::getInstance()->getAttribute('post_limit_data')->total_post_count >= self::MAX_POST_COUNT)
       {
-        //連投ペナルティ中の場合、解除するかどうかをここで判断。条件の右辺が制限の有効期間(秒)
-        if((time() - Sdx_User::getInstance()
-                ->getAttribute('post_limit_data')->last_post_time) > 30)
+        //条件の右辺が制限の有効期間(秒)
+        if((time() - Sdx_User::getInstance()->getAttribute('post_limit_data')->last_post_time) > self::POST_LOCK_PERIOD)
         {
-          Sdx_User::getInstance()->getAttribute('post_limit_data')->post_count = 1;
+          Sdx_User::getInstance()->getAttribute('post_limit_data')->total_post_count = 1;
         }
         else
         {
-          //submitを押している限りはカウントが継続するようにするための処理。
-          //※連投ペナルティ中は_setPostCounter()が呼ばれないので。
+          //submitが続く限り連投制限が解除されないようにするようにするための処理。
           Sdx_User::getInstance()->getAttribute('post_limit_data')->last_post_time = time();
-          Sdx_User::getInstance()->getAttribute('post_limit_data')->post_count += 1;
+          Sdx_User::getInstance()->getAttribute('post_limit_data')->total_post_count += 1;
         }
       }
 
@@ -316,7 +320,7 @@ class ThreadController extends Sdx_Controller_Action_Http
         $user->setAttribute('post_limit_data', new stdClass());
         $data = $user->getAttribute('post_limit_data'); 
         $data->last_post_time = time();
-        $data->post_count = 1;
+        $data->total_post_count = 1;
       }
       // 2回目以降
       else
@@ -326,13 +330,13 @@ class ThreadController extends Sdx_Controller_Action_Http
         // POST_INTERVAL_SECONDS 以内なら
         if((time() - $data->last_post_time) <= self::POST_INTERVAL_SECONDS)
         {
-          $data->post_count += 1; 
+          $data->total_post_count += 1; 
           $data->last_post_time = time();
         }
         // POST_INTERVAL_SECONDS を過ぎていれば
         else
         {
-          $data->post_count = 1;//カウントはリセットする
+          $data->total_post_count = 1;//カウントはリセットする
           $data->last_post_time = time();//次回投稿時はこの時刻と比較
         }
       }
