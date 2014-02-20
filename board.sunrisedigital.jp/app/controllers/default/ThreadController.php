@@ -6,7 +6,7 @@ class ThreadController extends Sdx_Controller_Action_Http
      * 
      * @see _setPostCounter()
      */
-    const POST_INTERVAL_SECONDS = 30;//自分の動作確認用に長めにとっています。
+    const POST_INTERVAL_SECONDS = 10;
     
     /**
      * 連続投稿回数の上限値
@@ -210,7 +210,7 @@ class ThreadController extends Sdx_Controller_Action_Http
         ->addValidator(new Bd_Validate_CountCheck(
             Sdx_User::getInstance()->getAttribute('post_limit_data')->post_count,
             self::MAX_POST_COUNT, 
-            "連続投稿多いので制限入りました(#・д・)"
+            "連続投稿制限中です(#・д・) [ 投稿する！]ボタンを押さずに30秒待ってから投稿しなおしてください"
       ));
       $form->setElement($elem);
        
@@ -225,7 +225,24 @@ class ThreadController extends Sdx_Controller_Action_Http
       {
         $this->forward500();
       }
-            
+
+      if(Sdx_User::getInstance()->getAttribute('post_limit_data')->post_count >= self::MAX_POST_COUNT)
+      {
+        //連投ペナルティ中の場合、解除するかどうかをここで判断。条件の右辺が制限の有効期間(秒)
+        if((time() - Sdx_User::getInstance()
+                ->getAttribute('post_limit_data')->last_post_time) > 30)
+        {
+          Sdx_User::getInstance()->getAttribute('post_limit_data')->post_count = 1;
+        }
+        else
+        {
+          //submitを押している限りはカウントが継続するようにするための処理。
+          //※連投ペナルティ中は_setPostCounter()が呼ばれないので。
+          Sdx_User::getInstance()->getAttribute('post_limit_data')->last_post_time = time();
+          Sdx_User::getInstance()->getAttribute('post_limit_data')->post_count += 1;
+        }
+      }
+
       //submitされていれば
       if($this->_getParam('submit'))
       {
@@ -235,7 +252,7 @@ class ThreadController extends Sdx_Controller_Action_Http
         $str = $this->_getParam('body');
         $trimed_str = preg_replace("/^[　\s]+$/u", "", $str);
         $this->_setParam('body', $trimed_str);
-        
+
         //Validateを実行するためにformに値をセット
         $form->bind($this->_getAllParams());
                 
@@ -259,6 +276,7 @@ class ThreadController extends Sdx_Controller_Action_Http
             $db->rollBack();
             throw $e;
           }
+          //投稿回数のカウンターを設置
           $this->_setPostCounter();
         }
         else
@@ -292,7 +310,7 @@ class ThreadController extends Sdx_Controller_Action_Http
     {
       $user = Sdx_User::getInstance();
       
-      // 初回コメント投稿後
+      // 初回コメント投稿時
       if(!$user->getAttribute('post_limit_data'))
       {
         $user->setAttribute('post_limit_data', new stdClass());
