@@ -12,7 +12,7 @@ class ThreadController extends Sdx_Controller_Action_Http
     const MAX_POST_COUNT = 5;
     
     /**
-     * 連続投稿を制限する期間
+     * 投稿を制限する期間(秒)
      */
     const POST_LOCK_PERIOD = 30;
     
@@ -29,18 +29,12 @@ class ThreadController extends Sdx_Controller_Action_Http
     {
         
     }
-    /*
-     * スレッド一覧はthreadListActionに集約する。
-     * どういう条件で検索されても、全てこのアクションで
-     * 処理を行い、レコードリストを返すようにする。
+    
+    /**
+     * スレッド一覧表示
      */
     public function threadListAction()
     {
-      /* *
-       * JSON で値の配列だけを送信するようにするため
-       * テンプレによるレンダリングは止めておく。
-       * (HTMLタグが付与されるのを防ぐ)
-       */
       $this->_disableViewRenderer();
       
       /* *
@@ -115,10 +109,6 @@ class ThreadController extends Sdx_Controller_Action_Http
 
       $thread_list = $t_thread->fetchAll($main_sel);
       
-      /* *
-       * json関係。selectしたレコードの内容と次ページIDを返す
-       */
-
       //jsonで返すためのdataを用意。レコード情報と次ページID
       $data = array(
         'records' => $thread_list->toArray(), 
@@ -126,19 +116,9 @@ class ThreadController extends Sdx_Controller_Action_Http
       );
       
       //json_encodeしてレスポンスも返す。自分でecho不要。
-      $this->jsonResponse($data);
-      
-      /* ---------------------------------------------
-       * レスポンスヘッダを編集などしたいときは、以下の手法も可。
-       * $this->jsonResponse()の中で行われている処理とほぼ同じ。
-       * 
-       * $resp = $this->getResponse();
-       * $resp
-       *   ->setHeader('Content-type','application/json')
-       *   ->setBody(json_encode($data)
-       * );
-       --------------------------------------------- */
+      $this->jsonResponse($data);      
     }
+
     /**
      * エントリ一覧表示
      * 
@@ -152,11 +132,6 @@ class ThreadController extends Sdx_Controller_Action_Http
      */
     public function entryListAction()
     {
-      //debug(いらなくなったら消す)
-      $data = Sdx_User::getInstance()->getAttribute('post_limit_data');
-      Sdx_Debug::dump($data->last_post_time, 'last_post_time');
-      Sdx_Debug::dump($data->total_post_count, 'total_post_count');
-
       //entryテーブルクラスの取得
       $t_entry = Bd_Orm_Main_Entry::createTable();
 
@@ -212,7 +187,7 @@ class ThreadController extends Sdx_Controller_Action_Http
         ->addValidator(new Bd_Validate_CountCheck(
             Sdx_User::getInstance()->getAttribute('post_limit_data')->total_post_count,
             self::MAX_POST_COUNT, 
-            "連続投稿制限中です(#・д・) [ 投稿する！]ボタンを押さずに30秒待ってから投稿してください"
+            "連続投稿制限中です(#・д・) [ 投稿する！]ボタンを押さずに".self::POST_LOCK_PERIOD."秒後に再度投稿してください"
       ));
       $form->setElement($elem);
        
@@ -229,21 +204,24 @@ class ThreadController extends Sdx_Controller_Action_Http
       }
 
       /**
-       * 連続投稿制限中(_setPostCounter()機能停止)の動作
-       * memo: これメソッドにすべき？ _unlockPostStop()とかにして。
+       * 連続投稿制限中(_setPostCounter()が呼ばれなくなる)の動作
+       * memo: 
+       *  ちょっと長いからこれメソッドにすべき？ _unlockPostStop()とか。
+       *  ただ、ここでしか使わなそうだし、あまり他メソッドに飛び飛びになるのも
+       *  かえって読みづらくなる気がする。微妙。
        */
-      if(Sdx_User::getInstance()->getAttribute('post_limit_data')->total_post_count >= self::MAX_POST_COUNT)
+      $post_limit_data = Sdx_User::getInstance()->getAttribute('post_limit_data');
+      if($post_limit_data->total_post_count >= self::MAX_POST_COUNT)
       {
-        //条件の右辺が制限の有効期間(秒)
-        if((time() - Sdx_User::getInstance()->getAttribute('post_limit_data')->last_post_time) > self::POST_LOCK_PERIOD)
+        if((time() - $post_limit_data->last_post_time) > self::POST_LOCK_PERIOD)
         {
-          Sdx_User::getInstance()->getAttribute('post_limit_data')->total_post_count = 1;
+          $post_limit_data->total_post_count = 1;//これで制限解除される
         }
         else
         {
-          //submitが続く限り連投制限が解除されないようにするようにするための処理。
-          Sdx_User::getInstance()->getAttribute('post_limit_data')->last_post_time = time();
-          Sdx_User::getInstance()->getAttribute('post_limit_data')->total_post_count += 1;
+          //submitが続く限り last_post_time を更新し連投制限が解除されないようにする。
+          $post_limit_data->last_post_time = time();
+          $post_limit_data->total_post_count += 1;
         }
       }
 
@@ -280,6 +258,7 @@ class ThreadController extends Sdx_Controller_Action_Http
             $db->rollBack();
             throw $e;
           }
+          
           //投稿回数のカウンターを設置
           $this->_setPostCounter();
         }
@@ -291,7 +270,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       }     
       $this->redirectAfterSave("thread/{$this->_getParam('thread_id')}/entry-list#entry-form");         
     }
-    //Sdx_Session() は Zend_Session_Namespace に接頭辞 "Sdx_" が付く
+
     private function _createSession()
     {
       //引数がキー名になる。省略するとdefaultキーになる。
@@ -307,8 +286,8 @@ class ThreadController extends Sdx_Controller_Action_Http
     /**
      * 連続投稿回数のカウンター
      * 
-     * 回数の合計はセッションに格納されているので
-     * 戻り値は特になし。
+     * 最新投稿とその1つ前の投稿からの時間差を見て、間が短いものは
+     * 連続投稿としてカウントし、そうでなければカウントしない。
      */
     private function _setPostCounter()
     {
@@ -325,7 +304,7 @@ class ThreadController extends Sdx_Controller_Action_Http
       // 2回目以降
       else
       { 
-        $data = $user->getAttribute('post_limit_data'); //setAttributeは初回のみ
+        $data = $user->getAttribute('post_limit_data');
 
         // POST_INTERVAL_SECONDS 以内なら
         if((time() - $data->last_post_time) <= self::POST_INTERVAL_SECONDS)
@@ -336,8 +315,8 @@ class ThreadController extends Sdx_Controller_Action_Http
         // POST_INTERVAL_SECONDS を過ぎていれば
         else
         {
-          $data->total_post_count = 1;//カウントはリセットする
-          $data->last_post_time = time();//次回投稿時はこの時刻と比較
+          $data->total_post_count = 1;
+          $data->last_post_time = time();
         }
       }
     }
