@@ -221,7 +221,6 @@ class ThreadController extends Sdx_Controller_Action_Http
         {
           //submitが続く限り last_post_time を更新し連投制限が解除されないようにする。
           $post_limit_data->last_post_time = time();
-          $post_limit_data->total_post_count += 1;
         }
       }
 
