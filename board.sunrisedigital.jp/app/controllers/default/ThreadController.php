@@ -183,12 +183,18 @@ class ThreadController extends Sdx_Controller_Action_Http
       $elem = new Sdx_Form_Element_Textarea();
       $elem
         ->setName('body')
-        ->addValidator(new Sdx_Validate_NotEmpty('何も入力ないのは寂しいです'))
-        ->addValidator(new Bd_Validate_CountCheck(
-            Sdx_User::getInstance()->getAttribute('post_limit_data')->total_post_count,
-            self::MAX_POST_COUNT, 
-            "連続投稿制限中です(#・д・) [ 投稿する！]ボタンを押さずに".self::POST_LOCK_PERIOD."秒後に再度投稿してください"
-      ));
+        ->addValidator(new Sdx_Validate_NotEmpty('何も入力ないのは寂しいです'));
+      
+      if(Sdx_User::getInstance()->hasId())
+      {
+        $elem
+          ->addValidator(new Bd_Validate_CountCheck(
+              Sdx_User::getInstance()->getAttribute('post_limit_data')->total_post_count,
+              self::MAX_POST_COUNT, 
+              "連続投稿制限中です(#・д・) [ 投稿する！]ボタンを押さずに".self::POST_LOCK_PERIOD."秒後に再度投稿してください"
+        ));
+      }
+      
       $form->setElement($elem);
        
       return $form;
