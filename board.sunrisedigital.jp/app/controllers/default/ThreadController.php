@@ -35,8 +35,6 @@ class ThreadController extends Sdx_Controller_Action_Http
      */
     public function threadListAction()
     {
-      $this->_disableViewRenderer();
-      
       /* *
        * ①全スレッド取得
        * エントリがあった順
@@ -64,25 +62,25 @@ class ThreadController extends Sdx_Controller_Action_Http
        * ②ジャンルで絞りこみをかけたい場合
        * テーブル内に既にgenre_idがあるのでそれを使う
        */
-      if($this->_getParam('genre_id'))
+      if($this->_getParam('genre'))
       {
-        $main_sel->add('genre_id', $this->_getParam('genre_id'));       
+        $main_sel->add('genre_id', $this->_getParam('genre'));
       }
     
       /* *
        * ③タグも絞込みに使いたい場合。
        * 絞込みに必要なスレッドID番号群を取得する。
        */
-      if($this->_getParam('tag_id'))
+      if($this->_getParam('tag'))
       {
         $t_threadtag = Bd_Orm_Main_ThreadTag::createTable();
         $tag_sel = $t_threadtag->addJoinInner($t_thread)->getSelectWithJoin();
         
         $tag_sel
           ->setColumns('thread_id')
-          ->add('tag_id', $this->_getParam('tag_id'))
+          ->add('tag_id', $this->_getParam('tag'))
           ->group('thread_id')
-          ->having('COUNT(tag_id) ='.count($this->_getParam('tag_id')));
+          ->having('COUNT(tag_id) ='.count($this->_getParam('tag')));
       
         //タグ未指定時にエラーになるのを防ぐためif文の中で$main_selにadd
         $main_sel
@@ -108,15 +106,7 @@ class ThreadController extends Sdx_Controller_Action_Http
         );
 
       $thread_list = $t_thread->fetchAll($main_sel);
-      
-      //jsonで返すためのdataを用意。レコード情報と次ページID
-      $data = array(
-        'records' => $thread_list->toArray(), 
-        'next_pid' => $pager->getNextPageId()
-      );
-      
-      //json_encodeしてレスポンスも返す。自分でecho不要。
-      $this->jsonResponse($data);      
+      $this->view->assign('thread_list', $thread_list);
     }
 
     /**
@@ -282,10 +272,40 @@ class ThreadController extends Sdx_Controller_Action_Http
       return new Sdx_Session('THREAD_POST_FORM');    
     }
 
-    public function searchAction() 
+    /**
+     * 検索ページ用 Action
+     */
+    public function searchAction()
     {
-      $this->view->assign('genre_list', Bd_Orm_Main_Genre::createTable()->fetchAllOrdered('id','DESC'));
-      $this->view->assign('tag_list', Bd_Orm_Main_Tag::createTable()->fetchAllOrdered('id','DESC'));
+      $form = new Sdx_Form();
+      $form
+        ->setAction('/thread/thread-list')
+        ->setMethodToPost();
+
+      //ジャンル
+      $genre_elem = new Sdx_Form_Element_Group_Radio();
+      $genre_elem
+        ->setName('genre')
+        ->addChildren(
+            Bd_Orm_Main_Genre::createTable()->getSelect()->fetchPairs()
+      );
+
+      $form->setElement($genre_elem);
+
+      //タグ
+      $tag_elem = new Sdx_Form_Element_Group_Checkbox();
+      $tag_elem
+        ->setName('tag')
+        ->addChildren(
+            Bd_Orm_Main_Tag::createTable()->getSelect()->fetchPairs()
+      );
+
+      $form->setElement($tag_elem);
+
+      //検索結果ページから「戻る」を押したときは検索条件がまた bind される
+      $form->bind($this->_getAllParams());
+
+      $this->view->assign('form', $form);
     }
 
     /**
