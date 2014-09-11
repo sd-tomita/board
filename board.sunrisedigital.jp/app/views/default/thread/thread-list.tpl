@@ -2,6 +2,11 @@
 {block css}
 {/block}
 {block main_contents}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h1 class="panel-title">スレッド一覧ページ</h1>
+  </div>
+</div>
 {if $thread_list->isEmpty()}
 <div class="alert alert-warning">検索条件に合致するスレッドはありません。</div>
 {/if}
