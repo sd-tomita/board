@@ -56,27 +56,6 @@
   </header>
   {block main_contents}{/block}
   <footer class="origin_footer">
-  <div class="footer_menu clearfix">
-    <dl>
-      <dt><i class="fa fa-lock"></i> サンライズ関連</dt>
-        <dd><a href="#">会社公式</a></dd>
-        <dd><a href="#">チャットワーク</a></dd>
-        <dd><a href="#">GitHub</a></dd>
-    </dl>
-    <dl>
-      <dt><i class="fa fa-lock"></i> 参考サイト</dt>
-        <dd><a href="#">Google</a></dd>
-        <dd><a href="#">Yahoo!JAPAN</a></dd>
-        <dd><a href="#">サルでもわかるGit入門</a></dd>
-    </dl>
-    <dl>
-      <dt><i class="fa fa-lock"></i> その他</dt>
-        <dd><a href="#">Vagrant</a></dd>
-        <dd><a href="#">php.net</a></dd>
-        <dd><a href="#">jquery.com</a></dd>
-        <dd><a href="#">Oracle VM VirtualBox</a></dd>
-    </dl>
-  </div>
   <div class="footer_end">
     &copy;Copyright Sunrise Digital Corporation. All rights reserved.
   </div>
